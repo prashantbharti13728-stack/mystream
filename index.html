@@ -37,17 +37,24 @@
     </div>
 
     <script>
-        // Supabase Client Config (Apni Details Yahan Check Karein)
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const SUPABASE_URL = 'https://tkrrvseibcgsasqlfjbu.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_-3GqiSqvlunpjVtJN4aQOA_aQFV04QB';
         const BUCKET_NAME = 'videos';
 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabaseClient;
+        if (window.supabase) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
 
         async function uploadVideo() {
             const fileInput = document.getElementById('videoInput');
             const uploadBtn = document.getElementById('uploadBtn');
             const status = document.getElementById('status');
+
+            if (!supabaseClient) {
+                status.innerText = "Error: Supabase connection fail ho gaya.";
+                return;
+            }
 
             if (!fileInput.files.length) {
                 alert("Kripya pehle video select karein!");
@@ -68,7 +75,6 @@
 
                 if (error) {
                     status.innerText = "Upload Error: " + error.message;
-                    console.error("Upload error:", error);
                 } else {
                     status.innerText = "Video kamyabi se upload ho gayi!";
                     fileInput.value = '';
@@ -76,7 +82,6 @@
                 }
             } catch (err) {
                 status.innerText = "Unexpected Error: " + err.message;
-                console.error(err);
             } finally {
                 uploadBtn.disabled = false;
             }
@@ -85,6 +90,11 @@
         async function fetchVideos() {
             const videoGrid = document.getElementById('videoGrid');
             const loadingText = document.getElementById('loadingText');
+
+            if (!supabaseClient) {
+                if (loadingText) loadingText.innerText = "Error: Supabase connection fail ho gaya.";
+                return;
+            }
 
             try {
                 const { data, error } = await supabaseClient.storage
@@ -123,8 +133,9 @@
             }
         }
 
-        // Load videos on startup
-        fetchVideos();
+        window.onload = function() {
+            fetchVideos();
+        };
     </script>
 </body>
 </html>
