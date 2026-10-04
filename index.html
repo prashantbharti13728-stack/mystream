@@ -499,9 +499,67 @@
             font-size: 16px; 
             color: #fff; 
         }
+
+        /* Modern Toast Notification Style */
+        .toast-notification {
+            position: fixed;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #282828;
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid #444;
+            z-index: 4000;
+            display: none;
+            white-space: nowrap;
+        }
+
+        /* Custom Thanks Dialog Modal */
+        .custom-dialog-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 3500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .custom-dialog {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            max-width: 320px;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Toast Notification Container -->
+    <div id="toastNotification" class="toast-notification"></div>
+
+    <!-- Super Thanks Custom Modal Dialog -->
+    <div id="thanksModal" class="custom-dialog-bg">
+        <div class="custom-dialog">
+            <h3 style="font-size:14px; margin-bottom:10px; color:#fff;">Support Creator (Super Thanks)</h3>
+            <div class="form-group">
+                <label>Amount (₹):</label>
+                <input type="number" id="thanksAmountInput" value="40" min="10">
+            </div>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button class="btn-action" style="background:#333;" onclick="closeThanksModal()">Cancel</button>
+                <button class="btn-action" onclick="confirmSuperThanks()">Send</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Top Header -->
     <header>
@@ -517,7 +575,7 @@
 
         <div class="header-actions">
             <i class="fa-solid fa-circle-half-stroke" title="Ambient Mode" onclick="toggleAmbientMode()"></i>
-            <i class="fa-solid fa-bell" onclick="alert('No new notifications')"></i>
+            <i class="fa-solid fa-bell" onclick="showToast('No new notifications')"></i>
         </div>
     </header>
 
@@ -720,7 +778,6 @@
 
     <!-- Application JavaScript Logic -->
     <script>
-        // Data Structures
         let categories = ["All", "Music", "Gaming", "Tech", "Podcasts", "Entertainment"];
         let videos = [
             { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", type: "Long Video", src: "https://www.w3schools.com/html/mov_bbb.mp4", isMonetized: true, likes: 0 },
@@ -729,13 +786,22 @@
         let savedVideos = [];
         let currentPlayingVideo = null;
 
-        // Initialize App
         window.onload = function() {
             renderCategories();
             renderVideos(videos);
             renderManageVideos();
             populateCategoryDropdowns();
         };
+
+        // App-like Toast Function
+        function showToast(message) {
+            let toast = document.getElementById('toastNotification');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
 
         // Navigation Management
         function openTab(tabId) {
@@ -750,12 +816,10 @@
             }
         }
 
-        // Dark/Ambient Mode Toggle
         function toggleAmbientMode() {
             document.body.classList.toggle('ambient-mode');
         }
 
-        // Category Rendering
         function renderCategories() {
             let nav = document.getElementById('categoryNav');
             nav.innerHTML = categories.map((cat, idx) => 
@@ -773,7 +837,6 @@
             }
         }
 
-        // Render Home Videos
         function renderVideos(list) {
             let grid = document.getElementById('homeVideoGrid');
             if (list.length === 0) {
@@ -798,7 +861,6 @@
             `).join('');
         }
 
-        // Video Player Functions
         function playVideo(id) {
             let v = videos.find(item => item.id === id);
             if (!v) return;
@@ -823,23 +885,30 @@
             modal.classList.remove('active');
         }
 
-        // Super Thanks Integration
+        // Super Thanks Trigger
         function triggerSuperThanks() {
-            let amount = prompt("Enter Super Thanks Amount (e.g. ₹40, ₹100, ₹500):", "40");
-            if (amount) {
-                alert("Thank you! Super Thanks of ₹" + amount + " received successfully!");
-            }
+            document.getElementById('thanksModal').style.display = 'flex';
         }
 
-        // Save / Watch Later Functionality
+        function closeThanksModal() {
+            document.getElementById('thanksModal').style.display = 'none';
+        }
+
+        function confirmSuperThanks() {
+            let amount = document.getElementById('thanksAmountInput').value;
+            closeThanksModal();
+            showToast(`Thank you! Super Thanks of ₹${amount} sent!`);
+        }
+
+        // Save To Watch Later
         function saveToWatchLater() {
             if (currentPlayingVideo) {
                 let exists = savedVideos.some(v => v.id === currentPlayingVideo.id);
                 if (!exists) {
                     savedVideos.push(currentPlayingVideo);
-                    alert(" Video '" + currentPlayingVideo.title + "' Watch Later me Save ho gayi hai!");
+                    showToast("Video Saved to Watch Later!");
                 } else {
-                    alert("Ye video pehle se Watch Later me saved hai!");
+                    showToast("Video already in Watch Later!");
                 }
             }
         }
@@ -865,6 +934,7 @@
             if (currentPlayingVideo) {
                 currentPlayingVideo.likes = (currentPlayingVideo.likes || 0) + 1;
                 document.getElementById('likeCount').innerText = currentPlayingVideo.likes;
+                showToast("Liked video!");
             }
         }
 
@@ -872,7 +942,7 @@
             if (navigator.share && currentPlayingVideo) {
                 navigator.share({ title: currentPlayingVideo.title, url: window.location.href });
             } else {
-                alert("Link copied to clipboard!");
+                showToast("Link copied to clipboard!");
             }
         }
 
@@ -890,16 +960,15 @@
             `;
             list.appendChild(item);
             input.value = '';
+            showToast("Comment added!");
         }
 
-        // Search Filter
         function filterVideos() {
             let q = document.getElementById('searchInput').value.toLowerCase();
             let filtered = videos.filter(v => v.title.toLowerCase().includes(q) || v.category.toLowerCase().includes(q));
             renderVideos(filtered);
         }
 
-        // Content Management & Upload
         function populateCategoryDropdowns() {
             let sel = document.getElementById('videoCategoryInput');
             sel.innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
@@ -913,7 +982,7 @@
                 renderCategories();
                 populateCategoryDropdowns();
                 input.value = '';
-                alert('Category added!');
+                showToast('Category added!');
             }
         }
 
@@ -924,7 +993,7 @@
             let isMonetized = document.getElementById('videoMonetizeInput').value === 'true';
 
             if (!title) {
-                alert('Please enter a video title!');
+                showToast('Please enter a video title!');
                 return;
             }
 
@@ -944,7 +1013,7 @@
             renderVideos(videos);
             renderManageVideos();
             document.getElementById('videoTitleInput').value = '';
-            alert('Video Published Successfully!');
+            showToast('Video Published Successfully!');
             openTab('home');
         }
 
@@ -966,9 +1035,9 @@
             videos = videos.filter(v => v.id !== id);
             renderVideos(videos);
             renderManageVideos();
+            showToast('Video deleted');
         }
 
-        // Community Post Functionality
         function publishPost() {
             let input = document.getElementById('communityPostInput');
             let val = input.value.trim();
@@ -976,13 +1045,14 @@
 
             let container = document.getElementById('communityPostsList');
             let card = document.createElement('div');
-            card.className = 'post-card';
+            card.className = 'card';
             card.innerHTML = `
                 <strong style="font-size:13px; color:#00d2ff;">My Channel</strong>
                 <p style="font-size:12px; margin-top:6px; color:#ddd;">${val}</p>
             `;
             container.prepend(card);
             input.value = '';
+            showToast('Community post created!');
         }
     </script>
 </body>
