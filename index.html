@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mystreem - Watch & Stream</title>
     
-    <!-- FontAwesome CDN for Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -17,19 +17,14 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        html, body { 
-            width: 100%; 
-            height: 100%; 
+        body { 
+            width: 100vw; 
+            height: 100vh; 
             background-color: #0f0f0f; 
             color: #ffffff; 
-            overflow: hidden;
-        }
-
-        .main-app {
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            width: 100vw;
+            overflow: hidden;
         }
 
         /* Top Header */
@@ -73,7 +68,6 @@
             -webkit-text-fill-color: transparent; 
         }
 
-        /* Search Bar Header */
         .search-box-container {
             flex: 1;
             display: flex;
@@ -81,7 +75,7 @@
             background: #181818;
             border: 1px solid #333;
             border-radius: 20px;
-            padding: 4px 12px;
+            padding: 6px 12px;
             max-width: 400px;
         }
 
@@ -92,7 +86,7 @@
             color: #fff;
             outline: none;
             font-size: 13px;
-            padding: 4px 6px;
+            padding-left: 6px;
         }
 
         .search-box-container i {
@@ -100,24 +94,9 @@
             font-size: 14px;
         }
 
-        .header-actions { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            flex-shrink: 0;
-        }
-
-        .header-btn { 
-            background: none; 
-            border: none; 
-            color: #fff; 
-            font-size: 18px; 
-            cursor: pointer; 
-        }
-
         /* Filter Pills Scroll Bar */
         .category-nav { 
-            height: 44px;
+            height: 48px;
             display: flex; 
             gap: 8px; 
             overflow-x: auto; 
@@ -146,12 +125,13 @@
             color: #0f0f0f; 
         }
 
-        /* Main Scrollable Body Area */
+        /* Content Area */
         .content-container {
             flex: 1;
             overflow-y: auto;
             padding: 12px;
             background: #0f0f0f;
+            padding-bottom: 20px;
         }
 
         .section-panel { display: none; }
@@ -167,9 +147,6 @@
         @media (min-width: 600px) {
             .video-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        @media (min-width: 900px) {
-            .video-grid { grid-template-columns: repeat(3, 1fr); }
-        }
 
         /* Video Card Component */
         .video-card {
@@ -178,8 +155,6 @@
             overflow: hidden;
             cursor: pointer;
             border: 1px solid #1f1f1f;
-            display: flex;
-            flex-direction: column;
         }
 
         .thumbnail-box {
@@ -192,21 +167,10 @@
             justify-content: center;
         }
 
-        .thumbnail-box video, .thumbnail-box img {
+        .thumbnail-box video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .duration-badge {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.8);
-            color: #fff;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
         }
 
         .video-details {
@@ -233,7 +197,6 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            flex: 1;
         }
 
         .video-title {
@@ -241,10 +204,6 @@
             font-weight: 600;
             color: #f1f1f1;
             line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         .channel-name, .video-stats {
@@ -252,7 +211,7 @@
             color: #aaa;
         }
 
-        /* Single Video Player View */
+        /* Player Modal */
         .player-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -286,41 +245,7 @@
             height: 100%;
         }
 
-        .player-info-box {
-            padding: 12px;
-        }
-
-        .player-actions {
-            display: flex;
-            gap: 10px;
-            margin: 12px 0;
-            overflow-x: auto;
-            padding-bottom: 6px;
-        }
-
-        .action-chip {
-            background: #272727;
-            border: none;
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 18px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .subscribe-btn {
-            background: #fff;
-            color: #000;
-            font-weight: 700;
-            border-radius: 18px;
-            padding: 6px 16px;
-            border: none;
-            font-size: 12px;
-        }
+        .player-info-box { padding: 12px; }
 
         /* Shorts Container */
         .shorts-container {
@@ -333,7 +258,7 @@
         .short-card {
             width: 100%;
             max-width: 360px;
-            height: 520px;
+            height: 500px;
             background: #181818;
             border-radius: 16px;
             position: relative;
@@ -345,37 +270,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .short-overlay {
-            position: absolute;
-            bottom: 16px;
-            left: 12px;
-            right: 60px;
-            z-index: 10;
-        }
-
-        .short-sidebar {
-            position: absolute;
-            right: 12px;
-            bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .short-side-btn {
-            background: rgba(0,0,0,0.5);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 16px;
         }
 
         /* Studio & Form Styles */
@@ -399,7 +293,7 @@
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea { 
+        .form-group input, .form-group select { 
             width: 100%; 
             padding: 10px; 
             background: #0f0f0f; 
@@ -409,19 +303,6 @@
             font-size: 13px; 
             outline: none; 
         }
-
-        .file-upload-box {
-            border: 2px dashed #00d2ff;
-            background: #111;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
-
-        .file-upload-box i { font-size: 28px; color: #00d2ff; margin-bottom: 8px; }
-        .file-upload-box p { font-size: 12px; color: #aaa; }
 
         .btn-action { 
             background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); 
@@ -445,20 +326,12 @@
             cursor: pointer;
         }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .stat-box { background: #111; border: 1px solid #252525; border-radius: 10px; padding: 12px; text-align: center; }
-        .stat-num { font-size: 18px; font-weight: 700; color: #fff; margin-top: 4px; }
-        .stat-lbl { font-size: 11px; color: #aaa; }
-
-        .progress-bar-bg { background: #282828; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
-        .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 0%; transition: width 0.3s ease; }
-
         .manage-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #252525; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
 
-        /* Bottom Nav */
+        /* FIXED Bottom Nav */
         .bottom-nav { 
-            height: 56px;
-            background: #0d0d0d; 
+            height: 60px;
+            background: #121212; 
             border-top: 1px solid #222; 
             display: flex; 
             justify-content: space-around; 
@@ -469,7 +342,7 @@
 
         .nav-item { 
             color: #888; 
-            font-size: 10px; 
+            font-size: 11px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -483,319 +356,222 @@
         }
 
         .nav-item.active { color: #fff; }
-        .nav-item i, .nav-item span { pointer-events: none; }
-        
+        .nav-item i { font-size: 18px; }
+
         .nav-item-plus { 
             background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); 
-            width: 40px; 
-            height: 28px; 
-            border-radius: 14px; 
+            width: 42px; 
+            height: 30px; 
+            border-radius: 15px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            font-size: 15px; 
+            font-size: 16px; 
             color: #fff; 
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-app">
-        <!-- Top Header Bar -->
-        <header>
-            <div class="logo-container" onclick="openTab('home')">
-                <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
-                <div class="logo-text">Mystreem</div>
-            </div>
-
-            <!-- Live Functional Search Box -->
-            <div class="search-box-container">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Search videos, tutorials..." oninput="filterVideos()">
-            </div>
-
-            <div class="header-actions">
-                <button class="header-btn" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-line"></i></button>
-            </div>
-        </header>
-
-        <!-- Category Pills Bar -->
-        <div class="category-nav">
-            <button class="cat-pill active" onclick="filterCategory('All', this)">All</button>
-            <button class="cat-pill" onclick="filterCategory('Tech & Electronics', this)">Tech & Electronics</button>
-            <button class="cat-pill" onclick="filterCategory('Mobile Repairing', this)">Mobile Repairing</button>
-            <button class="cat-pill" onclick="filterCategory('Indian Soap Operas', this)">Indian Soap Operas</button>
-            <button class="cat-pill" onclick="filterCategory('Business Ideas', this)">Business Ideas</button>
+    <!-- Top Header -->
+    <header>
+        <div class="logo-container" onclick="openTab('home')">
+            <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
+            <div class="logo-text">Mystreem</div>
         </div>
 
-        <!-- Scrollable Content Area -->
-        <div class="content-container">
+        <div class="search-box-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search videos..." oninput="filterVideos()">
+        </div>
+    </header>
 
-            <!-- 1. HOME FEED (View Videos) -->
-            <div id="home" class="section-panel active">
-                <div class="video-grid" id="homeVideoGrid">
-                    <!-- Dynamic Videos Render Here -->
-                </div>
-            </div>
+    <!-- Category Pills -->
+    <div class="category-nav">
+        <button class="cat-pill active" onclick="filterCategory('All', this)">All</button>
+        <button class="cat-pill" onclick="filterCategory('Tech & Electronics', this)">Tech & Electronics</button>
+        <button class="cat-pill" onclick="filterCategory('Mobile Repairing', this)">Mobile Repairing</button>
+        <button class="cat-pill" onclick="filterCategory('Business Ideas', this)">Business Ideas</button>
+    </div>
 
-            <!-- 2. SHORTS FEED -->
-            <div id="shorts" class="section-panel">
-                <div class="shorts-container" id="shortsFeedGrid">
-                    <!-- Dynamic Shorts Render Here -->
-                </div>
-            </div>
+    <!-- Main Content -->
+    <div class="content-container">
 
-            <!-- 3. UPLOAD VIDEO (Creator Section) -->
-            <div id="upload" class="section-panel">
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Video or Short</div>
-                    
-                    <div class="form-group">
-                        <label>Video Format Type</label>
-                        <select id="uploadTypeSelect">
-                            <option value="Long Video">Long Video (Horizontal)</option>
-                            <option value="Shorts">YouTube Short (Vertical)</option>
-                        </select>
-                    </div>
-
-                    <!-- File Picker -->
-                    <div class="file-upload-box" onclick="document.getElementById('videoFileInput').click()">
-                        <i class="fa-solid fa-file-video"></i>
-                        <p id="fileSelectedText">Tap to select Video File from Phone</p>
-                        <input type="file" id="videoFileInput" accept="video/*" style="display:none;" onchange="handleFileSelect(this)">
-                    </div>
-
-                    <!-- Preview -->
-                    <div id="videoPreviewBox" style="display:none; margin-bottom:12px;">
-                        <video id="videoPreview" controls style="width:100%; max-height:180px; border-radius:8px; background:#000;"></video>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Video Title</label>
-                        <input type="text" id="videoTitleInput" placeholder="Enter video title...">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="videoCategoryInput">
-                            <option value="Tech & Electronics">Tech & Electronics</option>
-                            <option value="Mobile Repairing">Mobile Repairing</option>
-                            <option value="Indian Soap Operas">Indian Soap Operas</option>
-                            <option value="Business Ideas">Business Ideas</option>
-                        </select>
-                    </div>
-
-                    <button class="btn-action" onclick="publishVideo()">Publish Now</button>
-                </div>
-            </div>
-
-            <!-- 4. DASHBOARD (Analytics) -->
-            <div id="dashboard" class="section-panel">
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Creator Studio Analytics</div>
-                    <div class="stats-grid">
-                        <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="dashViews">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="dashLikes">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="dashVideos">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1,240</div></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Goal</div>
-                    <p style="font-size: 12px; color: #ccc;">Target: 10,000 Views for Google AdSense Approval</p>
-                    <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViews" style="color: #fff;">0 / 10,000</b></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progBar"></div></div>
-                </div>
-            </div>
-
-            <!-- 5. MANAGE VIDEOS -->
-            <div id="manage" class="section-panel">
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-list-check"></i> Manage Uploaded Content</div>
-                    <div id="manageVideosList"></div>
-                </div>
-            </div>
-
+        <!-- 1. HOME -->
+        <div id="home" class="section-panel active">
+            <div class="video-grid" id="homeVideoGrid"></div>
         </div>
 
-        <!-- Single Video Watch Overlay Player -->
-        <div id="playerModal" class="player-modal">
-            <div class="player-header">
-                <span style="font-size:14px; font-weight:bold;">Mystreem Player</span>
-                <button onclick="closePlayer()" style="background:none; border:none; color:#fff; font-size:18px;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="video-screen">
-                <video id="mainActiveVideo" controls autoplay></video>
-            </div>
-            <div class="player-info-box">
-                <h3 id="playerTitle" style="font-size:15px; margin-bottom:6px;">Video Title</h3>
-                <p id="playerStats" style="font-size:11px; color:#aaa;">1.2K views • 2 hours ago</p>
+        <!-- 2. SHORTS -->
+        <div id="shorts" class="section-panel">
+            <div class="shorts-container" id="shortsFeedGrid"></div>
+        </div>
+
+        <!-- 3. UPLOAD -->
+        <div id="upload" class="section-panel">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Video</div>
                 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <div class="channel-avatar">M</div>
-                        <div>
-                            <div id="playerChannel" style="font-size:13px; font-weight:bold;">Mystreem Official</div>
-                            <div style="font-size:10px; color:#aaa;">1.24K Subscribers</div>
-                        </div>
-                    </div>
-                    <button class="subscribe-btn" onclick="alert('Subscribed!')">Subscribe</button>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="uploadTypeSelect">
+                        <option value="Long Video">Long Video</option>
+                        <option value="Shorts">YouTube Short</option>
+                    </select>
                 </div>
 
-                <div class="player-actions">
-                    <button class="action-chip" onclick="incrementLike()"><i class="fa-regular fa-thumbs-up"></i> <span id="playerLikeCount">120</span></button>
-                    <button class="action-chip" onclick="alert('Shared!')"><i class="fa-solid fa-share"></i> Share</button>
-                    <button class="action-chip" onclick="alert('Downloaded!')"><i class="fa-solid fa-download"></i> Download</button>
+                <div class="form-group">
+                    <label>Select Video File</label>
+                    <input type="file" id="videoFileInput" accept="video/*">
                 </div>
 
-                <div style="border-top:1px solid #222; padding-top:12px; margin-top:10px;">
-                    <h4 style="font-size:13px; margin-bottom:8px;">Comments</h4>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="commentInput" placeholder="Add a comment..." style="flex:1; background:#181818; border:1px solid #333; color:#fff; padding:8px; border-radius:6px; font-size:12px;">
-                        <button onclick="addComment()" style="background:#00d2ff; color:#000; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; font-size:11px;">Post</button>
-                    </div>
-                    <div id="commentsList" style="margin-top:10px; font-size:12px; color:#ccc;"></div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="videoTitleInput" placeholder="Video title...">
                 </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="videoCategoryInput">
+                        <option value="Tech & Electronics">Tech & Electronics</option>
+                        <option value="Mobile Repairing">Mobile Repairing</option>
+                        <option value="Business Ideas">Business Ideas</option>
+                    </select>
+                </div>
+
+                <button class="btn-action" onclick="publishVideo()">Publish</button>
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <div class="bottom-nav">
-            <button class="nav-item active" id="bnav-home" onclick="openTab('home')">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-item" id="bnav-shorts" onclick="openTab('shorts')">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Shorts</span>
-            </button>
-            <button class="nav-item" id="bnav-upload" onclick="openTab('upload')">
-                <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
-            </button>
-            <button class="nav-item" id="bnav-manage" onclick="openTab('manage')">
-                <i class="fa-solid fa-film"></i>
-                <span>Manage</span>
-            </button>
-            <button class="nav-item" id="bnav-dashboard" onclick="openTab('dashboard')">
-                <i class="fa-solid fa-chart-pie"></i>
-                <span>Studio</span>
-            </button>
+        <!-- 4. DASHBOARD -->
+        <div id="dashboard" class="section-panel">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Analytics</div>
+                <p>Total Views: <b id="dashViews">0</b></p>
+                <p>Total Videos: <b id="dashVideos">0</b></p>
+            </div>
+        </div>
+
+        <!-- 5. MANAGE -->
+        <div id="manage" class="section-panel">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-list-check"></i> Manage Videos</div>
+                <div id="manageVideosList"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="playerModal" class="player-modal">
+        <div class="player-header">
+            <span>Mystreem Player</span>
+            <button onclick="closePlayer()" style="background:none; border:none; color:#fff; font-size:18px;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="video-screen">
+            <video id="mainActiveVideo" controls autoplay></video>
+        </div>
+        <div class="player-info-box">
+            <h3 id="playerTitle">Video Title</h3>
+            <p id="playerStats" style="font-size:11px; color:#aaa; margin-top:4px;">0 views</p>
         </div>
     </div>
 
+    <!-- FIXED BOTTOM NAVIGATION BAR -->
+    <div class="bottom-nav">
+        <button class="nav-item active" id="bnav-home" onclick="openTab('home')">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" id="bnav-shorts" onclick="openTab('shorts')">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Shorts</span>
+        </button>
+        <button class="nav-item" id="bnav-upload" onclick="openTab('upload')">
+            <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
+        </button>
+        <button class="nav-item" id="bnav-manage" onclick="openTab('manage')">
+            <i class="fa-solid fa-film"></i>
+            <span>Manage</span>
+        </button>
+        <button class="nav-item" id="bnav-dashboard" onclick="openTab('dashboard')">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Studio</span>
+        </button>
+    </div>
+
     <script>
-        // Default Sample Videos Data
-        let defaultVideos = [
+        let videos = JSON.parse(localStorage.getItem('mystreem_videos')) || [
             {
                 id: 101,
-                title: "How to Repair Mobile Folder Screen - Step by Step Guide",
+                title: "How to Repair Mobile Screen - Complete Guide",
                 category: "Mobile Repairing",
                 type: "Long Video",
                 videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                views: 1420,
-                likes: 180,
-                channel: "Tech Master",
-                timeAgo: "2 hours ago"
+                views: 120,
+                channel: "Tech Master"
             },
             {
                 id: 102,
-                title: "Top 5 Business Ideas to Start in 2026",
-                category: "Business Ideas",
-                type: "Long Video",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-                views: 3100,
-                likes: 410,
-                channel: "Business Guru",
-                timeAgo: "1 day ago"
-            },
-            {
-                id: 103,
-                title: "Mobile Screen Replacement Trick #Shorts",
+                title: "Mobile Screen Replacement #Shorts",
                 category: "Mobile Repairing",
                 type: "Shorts",
                 videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                views: 8900,
-                likes: 920,
-                channel: "Shorts King",
-                timeAgo: "3 hours ago"
+                views: 450,
+                channel: "Shorts King"
             }
         ];
-
-        let videos = JSON.parse(localStorage.getItem('mystreem_videos')) || defaultVideos;
-        let selectedFileBlob = null;
-        let activeVideoObj = null;
 
         function saveStorage() {
             localStorage.setItem('mystreem_videos', JSON.stringify(videos));
         }
 
         function openTab(tabId) {
-            var panels = document.querySelectorAll('.section-panel');
-            panels.forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
 
-            var panel = document.getElementById(tabId);
-            if(panel) panel.classList.add('active');
-
-            var bnavs = document.querySelectorAll('.nav-item');
-            bnavs.forEach(b => b.classList.remove('active'));
-
-            var activeBnav = document.getElementById('bnav-' + tabId);
-            if(activeBnav) activeBnav.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('bnav-' + tabId).classList.add('active');
 
             renderAll();
-        }
-
-        function handleFileSelect(input) {
-            if(input.files && input.files[0]) {
-                const file = input.files[0];
-                selectedFileBlob = URL.createObjectURL(file);
-                document.getElementById('fileSelectedText').innerText = "Selected: " + file.name;
-                document.getElementById('videoPreview').src = selectedFileBlob;
-                document.getElementById('videoPreviewBox').style.display = 'block';
-            }
         }
 
         function publishVideo() {
             const title = document.getElementById('videoTitleInput').value.trim();
             const category = document.getElementById('videoCategoryInput').value;
             const type = document.getElementById('uploadTypeSelect').value;
+            const fileInput = document.getElementById('videoFileInput');
 
-            if(!title) { alert('Please enter Video Title!'); return; }
-            
-            const newVideo = {
+            if(!title) { alert('Please enter Title!'); return; }
+
+            let videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+            if(fileInput.files && fileInput.files[0]) {
+                videoUrl = URL.createObjectURL(fileInput.files[0]);
+            }
+
+            videos.unshift({
                 id: Date.now(),
                 title: title,
                 category: category,
                 type: type,
-                videoUrl: selectedFileBlob || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                videoUrl: videoUrl,
                 views: 1,
-                likes: 0,
-                channel: "Mystreem Channel",
-                timeAgo: "Just now"
-            };
+                channel: "My Channel"
+            });
 
-            videos.unshift(newVideo);
             saveStorage();
-
+            alert('Video Uploaded!');
             document.getElementById('videoTitleInput').value = '';
-            document.getElementById('videoFileInput').value = '';
-            document.getElementById('fileSelectedText').innerText = 'Tap to select Video File from Phone';
-            document.getElementById('videoPreviewBox').style.display = 'none';
-
-            alert('Video Published Successfully to Home Feed!');
             openTab('home');
         }
 
-        function renderHomeVideos(filterList) {
+        function renderHomeVideos(list) {
             const grid = document.getElementById('homeVideoGrid');
             grid.innerHTML = '';
-
-            const displayList = filterList || videos.filter(v => v.type === 'Long Video');
+            const displayList = list || videos.filter(v => v.type === 'Long Video');
 
             if(displayList.length === 0) {
-                grid.innerHTML = `<p style="text-align:center; color:#888; grid-column: 1/-1; padding:20px;">No videos found.</p>`;
+                grid.innerHTML = `<p style="color:#888; text-align:center; padding:20px;">No videos available.</p>`;
                 return;
             }
 
@@ -806,14 +582,13 @@
                 card.innerHTML = `
                     <div class="thumbnail-box">
                         <video src="${v.videoUrl}#t=0.5" preload="metadata"></video>
-                        <div class="duration-badge">03:45</div>
                     </div>
                     <div class="video-details">
-                        <div class="channel-avatar">${v.channel.charAt(0)}</div>
+                        <div class="channel-avatar">M</div>
                         <div class="video-meta">
                             <div class="video-title">${v.title}</div>
                             <div class="channel-name">${v.channel}</div>
-                            <div class="video-stats">${v.views} views • ${v.timeAgo}</div>
+                            <div class="video-stats">${v.views} views</div>
                         </div>
                     </div>
                 `;
@@ -824,113 +599,55 @@
         function renderShorts() {
             const grid = document.getElementById('shortsFeedGrid');
             grid.innerHTML = '';
+            const list = videos.filter(v => v.type === 'Shorts');
 
-            const shortsList = videos.filter(v => v.type === 'Shorts');
-
-            if(shortsList.length === 0) {
-                grid.innerHTML = `<p style="text-align:center; color:#888; padding:20px;">No Shorts available. Upload one!</p>`;
-                return;
-            }
-
-            shortsList.forEach(s => {
+            list.forEach(s => {
                 const card = document.createElement('div');
                 card.className = 'short-card';
-                card.innerHTML = `
-                    <video src="${s.videoUrl}" controls autoplay loop muted></video>
-                    <div class="short-overlay">
-                        <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">@${s.channel}</div>
-                        <div style="font-size:12px; color:#fff;">${s.title}</div>
-                    </div>
-                    <div class="short-sidebar">
-                        <div class="short-side-btn"><i class="fa-solid fa-heart"></i></div>
-                        <span style="font-size:10px; color:#fff;">${s.likes}</span>
-                        <div class="short-side-btn"><i class="fa-solid fa-comment"></i></div>
-                        <div class="short-side-btn"><i class="fa-solid fa-share"></i></div>
-                    </div>
-                `;
+                card.innerHTML = `<video src="${s.videoUrl}" controls autoplay loop muted></video>`;
                 grid.appendChild(card);
             });
         }
 
         function playVideo(v) {
-            activeVideoObj = v;
             v.views += 1;
             saveStorage();
-
             document.getElementById('playerTitle').innerText = v.title;
-            document.getElementById('playerStats').innerText = `${v.views} views • ${v.timeAgo}`;
-            document.getElementById('playerChannel').innerText = v.channel;
-            document.getElementById('playerLikeCount').innerText = v.likes;
-            
+            document.getElementById('playerStats').innerText = `${v.views} views`;
             const playerVid = document.getElementById('mainActiveVideo');
             playerVid.src = v.videoUrl;
-            
             document.getElementById('playerModal').classList.add('active');
-            renderAll();
         }
 
         function closePlayer() {
             const playerVid = document.getElementById('mainActiveVideo');
             playerVid.pause();
-            playerVid.src = '';
             document.getElementById('playerModal').classList.remove('active');
-        }
-
-        function incrementLike() {
-            if(activeVideoObj) {
-                activeVideoObj.likes += 1;
-                saveStorage();
-                document.getElementById('playerLikeCount').innerText = activeVideoObj.likes;
-                renderAll();
-            }
-        }
-
-        function addComment() {
-            const input = document.getElementById('commentInput');
-            if(input.value.trim() !== '') {
-                const cList = document.getElementById('commentsList');
-                const p = document.createElement('p');
-                p.style.marginBottom = '6px';
-                p.innerHTML = `<b>You:</b> ${input.value}`;
-                cList.appendChild(p);
-                input.value = '';
-            }
         }
 
         function filterVideos() {
             const q = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = videos.filter(v => v.title.toLowerCase().includes(q) || v.category.toLowerCase().includes(q));
-            renderHomeVideos(filtered);
+            renderHomeVideos(videos.filter(v => v.title.toLowerCase().includes(q)));
         }
 
         function filterCategory(cat, btn) {
             document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
 
-            if(cat === 'All') {
-                renderHomeVideos();
-            } else {
-                const filtered = videos.filter(v => v.category === cat);
-                renderHomeVideos(filtered);
-            }
+            if(cat === 'All') renderHomeVideos();
+            else renderHomeVideos(videos.filter(v => v.category === cat));
         }
 
         function renderManageVideos() {
             const list = document.getElementById('manageVideosList');
             list.innerHTML = '';
-
-            if(videos.length === 0) {
-                list.innerHTML = `<p style="font-size:12px; color:#888; text-align:center;">No videos uploaded.</p>`;
-                return;
-            }
-
             videos.forEach(v => {
                 const div = document.createElement('div');
                 div.className = 'manage-item';
                 div.innerHTML = `
                     <div>
                         <div style="font-size:13px; font-weight:600;">${v.title}</div>
-                        <div style="font-size:11px; color:#888;">${v.type} • ${v.views} views • ${v.likes} likes</div>
+                        <div style="font-size:11px; color:#888;">${v.type} • ${v.views} views</div>
                     </div>
                     <button class="btn-danger" onclick="deleteVideo(${v.id})"><i class="fa-solid fa-trash"></i></button>
                 `;
@@ -939,24 +656,15 @@
         }
 
         function deleteVideo(id) {
-            if(confirm("Are you sure you want to delete this video?")) {
-                videos = videos.filter(v => v.id !== id);
-                saveStorage();
-                renderAll();
-            }
+            videos = videos.filter(v => v.id !== id);
+            saveStorage();
+            renderAll();
         }
 
         function renderDashboard() {
             let totalViews = videos.reduce((acc, v) => acc + v.views, 0);
-            let totalLikes = videos.reduce((acc, v) => acc + v.likes, 0);
-
             document.getElementById('dashViews').innerText = totalViews;
-            document.getElementById('dashLikes').innerText = totalLikes;
             document.getElementById('dashVideos').innerText = videos.length;
-
-            document.getElementById('progViews').innerText = `${totalViews} / 10,000`;
-            let pct = Math.min((totalViews / 10000) * 100, 100);
-            document.getElementById('progBar').style.width = pct + '%';
         }
 
         function renderAll() {
@@ -966,7 +674,6 @@
             renderDashboard();
         }
 
-        // Initialize App
         renderAll();
     </script>
 </body>
