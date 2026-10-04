@@ -457,15 +457,6 @@
             margin-bottom: 10px; 
         }
 
-        /* Community Post Card */
-        .post-card {
-            background: #181818;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid #282828;
-        }
-
         /* FIXED Bottom Nav */
         .bottom-nav { 
             position: fixed;
@@ -650,21 +641,13 @@
                     </div>
                     <div style="background:#111; padding:10px; border-radius:8px;">
                         <span style="color:#aaa;">Est. Revenue</span>
-                        <h3 id="dashRev" style="color:#2e7d32;">$0.00</h3>
-                    </div>
-                    <div style="background:#111; padding:10px; border-radius:8px;">
-                        <span style="color:#aaa;">Impressions CTR</span>
-                        <h3>8.4%</h3>
-                    </div>
-                    <div style="background:#111; padding:10px; border-radius:8px;">
-                        <span style="color:#aaa;">Total Content</span>
-                        <h3 id="dashVideos">0</h3>
+                        <h3 style="color:#2e7d32;">$12.50</h3>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title"><i class="fa-solid fa-list-check"></i> Content Manager</div>
+                <div class="card-title"><i class="fa-solid fa-photo-film"></i> Content Manager</div>
                 <div id="manageVideosList"></div>
             </div>
         </div>
@@ -672,12 +655,8 @@
         <!-- 7. LIBRARY PANEL -->
         <div id="library" class="section-panel">
             <div class="card">
-                <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Watch History</div>
-                <div id="historyList" style="font-size: 12px; color:#aaa;">No history yet.</div>
-            </div>
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-bookmark"></i> Watch Later & Playlists</div>
-                <div id="playlistList" style="font-size: 12px; color:#aaa;">No saved videos.</div>
+                <div class="card-title"><i class="fa-solid fa-bookmark"></i> Saved Videos (Watch Later)</div>
+                <div id="savedVideosList"></div>
             </div>
         </div>
 
@@ -686,385 +665,325 @@
     <!-- Video Player Modal -->
     <div id="playerModal" class="player-modal">
         <div class="player-header">
-            <span style="font-size: 13px; font-weight:600;">Mystreem Player</span>
-            <button onclick="closePlayer()" style="background:none; border:none; color:#fff; font-size:18px;"><i class="fa-solid fa-xmark"></i></button>
+            <span style="font-size:14px; font-weight:bold;">Mystreem Player</span>
+            <i class="fa-solid fa-xmark" style="font-size:18px; cursor:pointer;" onclick="closePlayer()"></i>
         </div>
         <div class="video-screen">
-            <video id="mainActiveVideo" controls autoplay></video>
+            <video id="mainVideoPlayer" controls autoplay></video>
         </div>
-        
         <div class="player-controls-bar">
-            <button class="player-btn" onclick="toggleLike()"><i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">1.2K</span></button>
-            <button class="player-btn" onclick="alert('Super Thanks sent!')"><i class="fa-solid fa-heart-circle-bolt" style="color:#e53935;"></i> Super Thanks</button>
-            <button class="player-btn" onclick="toggleSpeed()"><i class="fa-solid fa-gauge"></i> Speed <span id="speedTxt">1x</span></button>
-            <button class="player-btn" onclick="toggleQuality()"><i class="fa-solid fa-sliders"></i> Quality <span id="qualTxt">Auto</span></button>
-            <button class="player-btn" onclick="togglePiP()"><i class="fa-solid fa-window-restore"></i> PiP</button>
+            <button class="player-btn" onclick="toggleLikeVideo()"><i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">0</span></button>
+            <button class="player-btn" onclick="triggerSuperThanks()"><i class="fa-solid fa-heart-circle-bolt" style="color:#e53935;"></i> Super Thanks</button>
             <button class="player-btn" onclick="saveToWatchLater()"><i class="fa-solid fa-bookmark"></i> Save</button>
+            <button class="player-btn" onclick="shareVideo()"><i class="fa-solid fa-share"></i> Share</button>
         </div>
-
         <div class="player-info-box">
-            <h3 id="playerTitle" style="font-size: 15px;">Video Title</h3>
-            <p id="playerStats" style="font-size:11px; color:#aaa; margin-top:4px;">0 views • Mystreem Channel</p>
+            <h3 id="playerVideoTitle" style="font-size:15px;">Video Title</h3>
+            <p id="playerVideoMeta" style="font-size:12px; color:#aaa; margin-top:4px;">0 views • My Channel</p>
         </div>
-
         <div class="comments-section">
-            <h4 style="font-size: 13px; margin-bottom: 8px;">Comments</h4>
-            <div style="display:flex; gap:8px;">
-                <input type="text" id="commentInput" placeholder="Add a comment..." style="flex:1; background:#181818; border:1px solid #333; color:#fff; padding:6px 12px; border-radius:16px; font-size:12px;">
-                <button onclick="addComment()" class="player-btn">Post</button>
+            <h4 style="font-size:13px;">Comments</h4>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+                <input type="text" id="commentInput" placeholder="Add a comment..." style="flex:1; padding:8px; background:#181818; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px;">
+                <button class="btn-action" style="width:auto; padding:8px 16px;" onclick="addComment()">Post</button>
             </div>
             <div id="commentsList"></div>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <button class="nav-item active" id="bnav-home" onclick="openTab('home')">
+        <button class="nav-item active" onclick="openTab('home')">
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </button>
-        <button class="nav-item" id="bnav-shorts" onclick="openTab('shorts')">
+        <button class="nav-item" onclick="openTab('shorts')">
             <i class="fa-solid fa-bolt"></i>
             <span>Shorts</span>
         </button>
-        <button class="nav-item" id="bnav-upload" onclick="openTab('upload')">
+        <button class="nav-item" onclick="openTab('upload')">
             <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
         </button>
-        <button class="nav-item" id="bnav-monetization" onclick="openTab('monetization')">
-            <i class="fa-solid fa-dollar-sign"></i>
-            <span>Earn</span>
+        <button class="nav-item" onclick="openTab('community')">
+            <i class="fa-solid fa-users"></i>
+            <span>Community</span>
         </button>
-        <button class="nav-item" id="bnav-studio" onclick="openTab('studio')">
+        <button class="nav-item" onclick="openTab('studio')">
             <i class="fa-solid fa-chart-pie"></i>
             <span>Studio</span>
         </button>
-        <button class="nav-item" id="bnav-library" onclick="openTab('library')">
+        <button class="nav-item" onclick="openTab('library')">
             <i class="fa-solid fa-folder"></i>
             <span>Library</span>
         </button>
     </div>
 
+    <!-- Application JavaScript Logic -->
     <script>
-        // Dynamic Unlimited Categories
-        let categories = JSON.parse(localStorage.getItem('mystreem_cats')) || [
-            "All", "Tech & Electronics", "Mobile Repairing", "Business Ideas", "Gaming", 
-            "Music", "Entertainment", "Education", "Vlogs", "News & Politics", 
-            "Sports", "Podcasts", "Cooking", "Automobiles", "Beauty & Fashion"
+        // Data Structures
+        let categories = ["All", "Music", "Gaming", "Tech", "Podcasts", "Entertainment"];
+        let videos = [
+            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", type: "Long Video", src: "https://www.w3schools.com/html/mov_bbb.mp4", isMonetized: true, likes: 0 },
+            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", type: "Long Video", src: "https://www.w3schools.com/html/mov_bbb.mp4", isMonetized: false, likes: 5 }
         ];
-
-        // Working MP4 Videos Default Array
-        let videos = JSON.parse(localStorage.getItem('mystreem_videos')) || [
-            {
-                id: 101,
-                title: "How to Repair Mobile Screen Step-by-Step",
-                category: "Mobile Repairing",
-                type: "Long Video",
-                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-                views: 1420,
-                monetized: true,
-                channel: "Tech Master"
-            },
-            {
-                id: 102,
-                title: "Quick Screen Replacement #Shorts",
-                category: "Mobile Repairing",
-                type: "Shorts",
-                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-                views: 8500,
-                monetized: true,
-                channel: "Shorts Lab"
-            }
-        ];
-
-        let historyList = [];
-        let watchLaterList = [];
-        let communityPosts = [];
+        let savedVideos = [];
         let currentPlayingVideo = null;
 
-        function saveStorage() {
-            localStorage.setItem('mystreem_videos', JSON.stringify(videos));
-            localStorage.setItem('mystreem_cats', JSON.stringify(categories));
-        }
+        // Initialize App
+        window.onload = function() {
+            renderCategories();
+            renderVideos(videos);
+            renderManageVideos();
+            populateCategoryDropdowns();
+        };
 
-        function renderCategories() {
-            const catNav = document.getElementById('categoryNav');
-            const catSelect = document.getElementById('videoCategoryInput');
-            
-            catNav.innerHTML = '';
-            catSelect.innerHTML = '';
-
-            categories.forEach((cat, idx) => {
-                const btn = document.createElement('button');
-                btn.className = `cat-pill ${idx === 0 ? 'active' : ''}`;
-                btn.innerText = cat;
-                btn.onclick = () => filterCategory(cat, btn);
-                catNav.appendChild(btn);
-
-                if(cat !== "All") {
-                    const opt = document.createElement('option');
-                    opt.value = cat;
-                    opt.innerText = cat;
-                    catSelect.appendChild(opt);
-                }
-            });
-        }
-
-        function addNewCategory() {
-            const input = document.getElementById('newCategoryInput');
-            const newCat = input.value.trim();
-            if(newCat && !categories.includes(newCat)) {
-                categories.push(newCat);
-                saveStorage();
-                renderCategories();
-                input.value = '';
-                alert('New Category Added Successfully!');
-            }
-        }
-
+        // Navigation Management
         function openTab(tabId) {
-            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.section-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            
+            let selectedPanel = document.getElementById(tabId);
+            if (selectedPanel) selectedPanel.classList.add('active');
 
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            const activeNav = document.getElementById('bnav-' + tabId);
-            if(activeNav) activeNav.classList.add('active');
-
-            renderAll();
-        }
-
-        function publishVideo() {
-            const title = document.getElementById('videoTitleInput').value.trim();
-            const category = document.getElementById('videoCategoryInput').value;
-            const type = document.getElementById('uploadTypeSelect').value;
-            const monetized = document.getElementById('videoMonetizeInput').value === 'true';
-            const fileInput = document.getElementById('videoFileInput');
-
-            if(!title) { alert('Please enter Title!'); return; }
-
-            let videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
-            if(fileInput.files && fileInput.files[0]) {
-                videoUrl = URL.createObjectURL(fileInput.files[0]);
-            }
-
-            videos.unshift({
-                id: Date.now(),
-                title: title,
-                category: category,
-                type: type,
-                videoUrl: videoUrl,
-                views: 1,
-                monetized: monetized,
-                channel: "My Channel"
-            });
-
-            saveStorage();
-            alert('Video Published Successfully!');
-            document.getElementById('videoTitleInput').value = '';
-            openTab('home');
-        }
-
-        function renderHomeVideos(list) {
-            const grid = document.getElementById('homeVideoGrid');
-            grid.innerHTML = '';
-            const displayList = list || videos.filter(v => v.type === 'Long Video' || v.type === 'Podcast');
-
-            if(displayList.length === 0) {
-                grid.innerHTML = `<p style="color:#888; text-align:center; padding:20px;">No videos found.</p>`;
-                return;
-            }
-
-            displayList.forEach(v => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.onclick = () => playVideo(v);
-                card.innerHTML = `
-                    <div class="thumbnail-box">
-                        ${v.monetized ? '<div class="ad-badge">AD ENABLED</div>' : ''}
-                        <video src="${v.videoUrl}#t=0.5" preload="metadata"></video>
-                    </div>
-                    <div class="video-details">
-                        <div class="channel-avatar">M</div>
-                        <div class="video-meta">
-                            <div class="video-title">${v.title}</div>
-                            <div class="channel-name">${v.channel} • ${v.category}</div>
-                            <div class="video-stats">${v.views} views</div>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function renderShorts() {
-            const grid = document.getElementById('shortsFeedGrid');
-            grid.innerHTML = '';
-            const list = videos.filter(v => v.type === 'Shorts');
-
-            list.forEach(s => {
-                const card = document.createElement('div');
-                card.className = 'short-card';
-                card.innerHTML = `
-                    <video src="${s.videoUrl}" controls autoplay loop muted></video>
-                    <div class="short-overlay-actions">
-                        <div class="short-action-btn"><i class="fa-solid fa-thumbs-up"></i></div>
-                        <div class="short-action-btn"><i class="fa-solid fa-comment"></i></div>
-                        <div class="short-action-btn"><i class="fa-solid fa-share"></i></div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function playVideo(v) {
-            currentPlayingVideo = v;
-            v.views += 1;
-            saveStorage();
-
-            if(!historyList.includes(v.title)) historyList.unshift(v.title);
-
-            document.getElementById('playerTitle').innerText = v.title;
-            document.getElementById('playerStats').innerText = `${v.views} views • ${v.channel}`;
-            const playerVid = document.getElementById('mainActiveVideo');
-            playerVid.src = v.videoUrl;
-            document.getElementById('playerModal').classList.add('active');
-        }
-
-        function closePlayer() {
-            const playerVid = document.getElementById('mainActiveVideo');
-            playerVid.pause();
-            document.getElementById('playerModal').classList.remove('active');
-        }
-
-        function toggleSpeed() {
-            const vid = document.getElementById('mainActiveVideo');
-            const speeds = [1, 1.25, 1.5, 2, 0.5];
-            let next = speeds[(speeds.indexOf(vid.playbackRate) + 1) % speeds.length];
-            vid.playbackRate = next;
-            document.getElementById('speedTxt').innerText = next + 'x';
-        }
-
-        function toggleQuality() {
-            const quals = ["Auto", "1080p 60fps", "720p", "480p", "360p", "144p"];
-            let cur = document.getElementById('qualTxt').innerText;
-            let next = quals[(quals.indexOf(cur) + 1) % quals.length];
-            document.getElementById('qualTxt').innerText = next;
-        }
-
-        async function togglePiP() {
-            const vid = document.getElementById('mainActiveVideo');
-            if (document.pictureInPictureElement) {
-                await document.exitPictureInPicture();
-            } else if (document.pictureInPictureEnabled) {
-                await vid.requestPictureInPicture();
+            if (tabId === 'library') {
+                renderSavedVideos();
             }
         }
 
-        function saveToWatchLater() {
-            if(currentPlayingVideo && !watchLaterList.includes(currentPlayingVideo.title)) {
-                watchLaterList.push(currentPlayingVideo.title);
-                alert('Saved to Watch Later!');
-            }
-        }
-
-        function addComment() {
-            const input = document.getElementById('commentInput');
-            if(input.value.trim()) {
-                const list = document.getElementById('commentsList');
-                const div = document.createElement('div');
-                div.className = 'comment-item';
-                div.innerHTML = `
-                    <div class="comment-avatar">U</div>
-                    <div class="comment-text"><b>User:</b> ${input.value}</div>
-                `;
-                list.prepend(div);
-                input.value = '';
-            }
-        }
-
-        function publishPost() {
-            const txt = document.getElementById('communityPostInput').value.trim();
-            if(txt) {
-                communityPosts.unshift(txt);
-                document.getElementById('communityPostInput').value = '';
-                renderCommunity();
-            }
-        }
-
-        function renderCommunity() {
-            const list = document.getElementById('communityPostsList');
-            list.innerHTML = '';
-            communityPosts.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'post-card';
-                div.innerHTML = `<p style="font-size:13px; color:#fff;">${p}</p>`;
-                list.appendChild(div);
-            });
-        }
-
-        function filterVideos() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            renderHomeVideos(videos.filter(v => v.title.toLowerCase().includes(q)));
-        }
-
-        function filterCategory(cat, btn) {
-            document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-
-            if(cat === 'All') renderHomeVideos();
-            else renderHomeVideos(videos.filter(v => v.category === cat));
-        }
-
+        // Dark/Ambient Mode Toggle
         function toggleAmbientMode() {
             document.body.classList.toggle('ambient-mode');
         }
 
-        function renderManageVideos() {
-            const list = document.getElementById('manageVideosList');
-            list.innerHTML = '';
-            videos.forEach(v => {
-                const div = document.createElement('div');
-                div.className = 'manage-item';
-                div.innerHTML = `
-                    <div>
-                        <div style="font-size:13px; font-weight:600;">${v.title}</div>
-                        <div style="font-size:11px; color:#888;">${v.type} • ${v.category} • ${v.views} views</div>
+        // Category Rendering
+        function renderCategories() {
+            let nav = document.getElementById('categoryNav');
+            nav.innerHTML = categories.map((cat, idx) => 
+                `<button class="cat-pill ${idx === 0 ? 'active' : ''}" onclick="filterCategory('${cat}', this)">${cat}</button>`
+            ).join('');
+        }
+
+        function filterCategory(cat, el) {
+            document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            if (cat === "All") {
+                renderVideos(videos);
+            } else {
+                renderVideos(videos.filter(v => v.category === cat));
+            }
+        }
+
+        // Render Home Videos
+        function renderVideos(list) {
+            let grid = document.getElementById('homeVideoGrid');
+            if (list.length === 0) {
+                grid.innerHTML = `<p style="color:#aaa; font-size:12px;">No videos available.</p>`;
+                return;
+            }
+            grid.innerHTML = list.map(v => `
+                <div class="video-card" onclick="playVideo(${v.id})">
+                    <div class="thumbnail-box">
+                        <video src="${v.src}#t=0.5" preload="metadata"></video>
+                        ${v.isMonetized ? `<span class="ad-badge">Ad</span>` : ''}
                     </div>
-                    <button class="btn-danger" onclick="deleteVideo(${v.id})"><i class="fa-solid fa-trash"></i></button>
-                `;
-                list.appendChild(div);
-            });
+                    <div class="video-details">
+                        <div class="channel-avatar">${v.channel.charAt(0)}</div>
+                        <div class="video-meta">
+                            <div class="video-title">${v.title}</div>
+                            <div class="channel-name">${v.channel}</div>
+                            <div class="video-stats">${v.views} views • Just now</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Video Player Functions
+        function playVideo(id) {
+            let v = videos.find(item => item.id === id);
+            if (!v) return;
+            currentPlayingVideo = v;
+
+            let modal = document.getElementById('playerModal');
+            let player = document.getElementById('mainVideoPlayer');
+            
+            player.src = v.src;
+            document.getElementById('playerVideoTitle').innerText = v.title;
+            document.getElementById('playerVideoMeta').innerText = `${v.views} views • ${v.channel}`;
+            document.getElementById('likeCount').innerText = v.likes || 0;
+            
+            modal.classList.add('active');
+            player.play();
+        }
+
+        function closePlayer() {
+            let modal = document.getElementById('playerModal');
+            let player = document.getElementById('mainVideoPlayer');
+            player.pause();
+            modal.classList.remove('active');
+        }
+
+        // Super Thanks Integration
+        function triggerSuperThanks() {
+            let amount = prompt("Enter Super Thanks Amount (e.g. ₹40, ₹100, ₹500):", "40");
+            if (amount) {
+                alert("Thank you! Super Thanks of ₹" + amount + " received successfully!");
+            }
+        }
+
+        // Save / Watch Later Functionality
+        function saveToWatchLater() {
+            if (currentPlayingVideo) {
+                let exists = savedVideos.some(v => v.id === currentPlayingVideo.id);
+                if (!exists) {
+                    savedVideos.push(currentPlayingVideo);
+                    alert(" Video '" + currentPlayingVideo.title + "' Watch Later me Save ho gayi hai!");
+                } else {
+                    alert("Ye video pehle se Watch Later me saved hai!");
+                }
+            }
+        }
+
+        function renderSavedVideos() {
+            let container = document.getElementById('savedVideosList');
+            if (savedVideos.length === 0) {
+                container.innerHTML = `<p style="color:#aaa; font-size:12px;">Koi saved video nahi hai.</p>`;
+                return;
+            }
+            container.innerHTML = savedVideos.map(v => `
+                <div class="manage-item">
+                    <div>
+                        <strong style="font-size:13px; color:#fff;">${v.title}</strong>
+                        <p style="font-size:11px; color:#aaa;">${v.channel}</p>
+                    </div>
+                    <button class="btn-action" style="width:auto; padding:6px 12px; font-size:11px;" onclick="playVideo(${v.id})">Play</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleLikeVideo() {
+            if (currentPlayingVideo) {
+                currentPlayingVideo.likes = (currentPlayingVideo.likes || 0) + 1;
+                document.getElementById('likeCount').innerText = currentPlayingVideo.likes;
+            }
+        }
+
+        function shareVideo() {
+            if (navigator.share && currentPlayingVideo) {
+                navigator.share({ title: currentPlayingVideo.title, url: window.location.href });
+            } else {
+                alert("Link copied to clipboard!");
+            }
+        }
+
+        function addComment() {
+            let input = document.getElementById('commentInput');
+            let text = input.value.trim();
+            if (!text) return;
+
+            let list = document.getElementById('commentsList');
+            let item = document.createElement('div');
+            item.className = 'comment-item';
+            item.innerHTML = `
+                <div class="comment-avatar">U</div>
+                <div class="comment-text"><strong>User:</strong> ${text}</div>
+            `;
+            list.appendChild(item);
+            input.value = '';
+        }
+
+        // Search Filter
+        function filterVideos() {
+            let q = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = videos.filter(v => v.title.toLowerCase().includes(q) || v.category.toLowerCase().includes(q));
+            renderVideos(filtered);
+        }
+
+        // Content Management & Upload
+        function populateCategoryDropdowns() {
+            let sel = document.getElementById('videoCategoryInput');
+            sel.innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function addNewCategory() {
+            let input = document.getElementById('newCategoryInput');
+            let val = input.value.trim();
+            if (val && !categories.includes(val)) {
+                categories.push(val);
+                renderCategories();
+                populateCategoryDropdowns();
+                input.value = '';
+                alert('Category added!');
+            }
+        }
+
+        function publishVideo() {
+            let title = document.getElementById('videoTitleInput').value.trim();
+            let category = document.getElementById('videoCategoryInput').value;
+            let type = document.getElementById('uploadTypeSelect').value;
+            let isMonetized = document.getElementById('videoMonetizeInput').value === 'true';
+
+            if (!title) {
+                alert('Please enter a video title!');
+                return;
+            }
+
+            let newVid = {
+                id: Date.now(),
+                title: title,
+                channel: "My Channel",
+                views: 0,
+                category: category,
+                type: type,
+                src: "https://www.w3schools.com/html/mov_bbb.mp4",
+                isMonetized: isMonetized,
+                likes: 0
+            };
+
+            videos.unshift(newVid);
+            renderVideos(videos);
+            renderManageVideos();
+            document.getElementById('videoTitleInput').value = '';
+            alert('Video Published Successfully!');
+            openTab('home');
+        }
+
+        function renderManageVideos() {
+            let list = document.getElementById('manageVideosList');
+            list.innerHTML = videos.map(v => `
+                <div class="manage-item">
+                    <div>
+                        <strong style="font-size:13px; color:#fff;">${v.title}</strong>
+                        <p style="font-size:11px; color:#aaa;">${v.category} • ${v.views} views</p>
+                    </div>
+                    <button class="btn-danger" onclick="deleteVideo(${v.id})">Delete</button>
+                </div>
+            `).join('');
+            document.getElementById('dashViews').innerText = videos.reduce((acc, curr) => acc + curr.views, 0);
         }
 
         function deleteVideo(id) {
             videos = videos.filter(v => v.id !== id);
-            saveStorage();
-            renderAll();
-        }
-
-        function renderDashboard() {
-            let totalViews = videos.reduce((acc, v) => acc + v.views, 0);
-            document.getElementById('dashViews').innerText = totalViews;
-            document.getElementById('dashVideos').innerText = videos.length;
-            document.getElementById('dashRev').innerText = '$' + (totalViews * 0.0025).toFixed(2);
-        }
-
-        function renderLibrary() {
-            document.getElementById('historyList').innerText = historyList.length ? historyList.join(', ') : 'No history yet.';
-            document.getElementById('playlistList').innerText = watchLaterList.length ? watchLaterList.join(', ') : 'No saved videos.';
-        }
-
-        function renderAll() {
-            renderHomeVideos();
-            renderShorts();
+            renderVideos(videos);
             renderManageVideos();
-            renderDashboard();
-            renderCommunity();
-            renderLibrary();
         }
 
-        // Initialize App
-        renderCategories();
-        renderAll();
+        // Community Post Functionality
+        function publishPost() {
+            let input = document.getElementById('communityPostInput');
+            let val = input.value.trim();
+            if (!val) return;
+
+            let container = document.getElementById('communityPostsList');
+            let card = document.createElement('div');
+            card.className = 'post-card';
+            card.innerHTML = `
+                <strong style="font-size:13px; color:#00d2ff;">My Channel</strong>
+                <p style="font-size:12px; margin-top:6px; color:#ddd;">${val}</p>
+            `;
+            container.prepend(card);
+            input.value = '';
+        }
     </script>
 </body>
 </html>
