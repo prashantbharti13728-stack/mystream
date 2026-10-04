@@ -27,12 +27,10 @@
             overflow: hidden;
         }
 
-        /* Ambient Glow Effect */
         body.ambient-mode {
             background: radial-gradient(circle at 50% 20%, rgba(161, 0, 255, 0.15), #0f0f0f 70%);
         }
 
-        /* Top Header */
         header { 
             height: 56px;
             background: #0f0f0f; 
@@ -107,7 +105,6 @@
             cursor: pointer;
         }
 
-        /* Category Nav */
         .category-nav { 
             height: 48px;
             display: flex; 
@@ -138,7 +135,6 @@
             color: #0f0f0f; 
         }
 
-        /* Content Area */
         .content-container {
             flex: 1;
             overflow-y: auto;
@@ -150,7 +146,6 @@
         .section-panel { display: none; }
         .section-panel.active { display: block; }
 
-        /* Video Feed Grid */
         .video-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -240,7 +235,6 @@
             color: #aaa;
         }
 
-        /* Player Modal */
         .player-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -298,9 +292,29 @@
             white-space: nowrap;
         }
 
+        .player-btn.liked {
+            background: #00d2ff;
+            color: #000;
+        }
+
+        .subscribe-btn {
+            background: #ffffff;
+            color: #0f0f0f;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .subscribe-btn.subscribed {
+            background: #333333;
+            color: #ffffff;
+        }
+
         .player-info-box { padding: 12px; }
 
-        /* Comments Section */
         .comments-section {
             padding: 12px;
             border-top: 1px solid #222;
@@ -328,55 +342,6 @@
             color: #ddd;
         }
 
-        /* Shorts Container */
-        .shorts-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .short-card {
-            width: 100%;
-            max-width: 360px;
-            height: 520px;
-            background: #181818;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #282828;
-        }
-
-        .short-card video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .short-overlay-actions {
-            position: absolute;
-            right: 12px;
-            bottom: 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .short-action-btn {
-            background: rgba(0,0,0,0.5);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* Cards & Forms */
         .card { 
             background: #181818; 
             border: 1px solid #282828; 
@@ -430,34 +395,6 @@
             cursor: pointer;
         }
 
-        /* Progress Bar */
-        .progress-bar-bg {
-            background: #252525;
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 8px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #a100ff, #00d2ff);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .manage-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: #111; 
-            border: 1px solid #252525; 
-            border-radius: 8px; 
-            padding: 10px; 
-            margin-bottom: 10px; 
-        }
-
-        /* FIXED Bottom Nav */
         .bottom-nav { 
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -500,7 +437,6 @@
             color: #fff; 
         }
 
-        /* Modern Toast Notification Style */
         .toast-notification {
             position: fixed;
             bottom: 75px;
@@ -519,7 +455,6 @@
             white-space: nowrap;
         }
 
-        /* Custom Thanks Dialog Modal */
         .custom-dialog-bg {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -543,10 +478,8 @@
 </head>
 <body>
 
-    <!-- Toast Notification Container -->
     <div id="toastNotification" class="toast-notification"></div>
 
-    <!-- Super Thanks Custom Modal Dialog -->
     <div id="thanksModal" class="custom-dialog-bg">
         <div class="custom-dialog">
             <h3 style="font-size:14px; margin-bottom:10px; color:#fff;">Support Creator (Super Thanks)</h3>
@@ -561,7 +494,7 @@
         </div>
     </div>
 
-    <!-- Top Header -->
+    <!-- Header -->
     <header>
         <div class="logo-container" onclick="openTab('home')">
             <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
@@ -570,7 +503,7 @@
 
         <div class="search-box-container">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="Search videos, podcasts, shorts..." oninput="filterVideos()">
+            <input type="text" id="searchInput" placeholder="Search videos, podcasts..." oninput="filterVideos()">
         </div>
 
         <div class="header-actions">
@@ -579,116 +512,28 @@
         </div>
     </header>
 
-    <!-- Category Pills Bar -->
     <div class="category-nav" id="categoryNav"></div>
 
-    <!-- Main Content Container -->
     <div class="content-container">
-
-        <!-- 1. HOME PANEL -->
         <div id="home" class="section-panel active">
             <div class="video-grid" id="homeVideoGrid"></div>
         </div>
 
-        <!-- 2. SHORTS PANEL -->
-        <div id="shorts" class="section-panel">
-            <div class="shorts-container" id="shortsFeedGrid"></div>
-        </div>
-
-        <!-- 3. COMMUNITY PANEL -->
-        <div id="community" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-pen-to-square"></i> Create Community Post</div>
-                <div class="form-group">
-                    <textarea id="communityPostInput" rows="3" placeholder="Share an update or poll idea..."></textarea>
-                </div>
-                <button class="btn-action" onclick="publishPost()">Post</button>
-            </div>
-            <div id="communityPostsList"></div>
-        </div>
-
-        <!-- 4. UPLOAD / CREATION PANEL -->
         <div id="upload" class="section-panel">
             <div class="card">
-                <div class="card-title"><i class="fa-solid fa-upload"></i> Upload / Create Content</div>
-                
-                <div class="form-group">
-                    <label>Content Format</label>
-                    <select id="uploadTypeSelect">
-                        <option value="Long Video">Standard Video (16:9)</option>
-                        <option value="Shorts">YouTube Short (Vertical)</option>
-                        <option value="Podcast">Podcast Episode</option>
-                        <option value="Live Stream">Live Stream Streamer Setup</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Select Video File</label>
-                    <input type="file" id="videoFileInput" accept="video/*">
-                </div>
-
+                <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Content</div>
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" id="videoTitleInput" placeholder="Enter video title...">
+                    <input type="text" id="videoTitleInput" placeholder="Enter title...">
                 </div>
-
                 <div class="form-group">
                     <label>Category</label>
                     <select id="videoCategoryInput"></select>
                 </div>
-
-                <div class="form-group">
-                    <label>Monetization / Ad Settings</label>
-                    <select id="videoMonetizeInput">
-                        <option value="true">Enable Ads (Monetized)</option>
-                        <option value="false">Disable Ads</option>
-                    </select>
-                </div>
-
                 <button class="btn-action" onclick="publishVideo()">Publish Video</button>
             </div>
-
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-folder-plus"></i> Add Custom Category</div>
-                <div class="form-group">
-                    <input type="text" id="newCategoryInput" placeholder="Enter new category name...">
-                </div>
-                <button class="btn-action" onclick="addNewCategory()">Add Category</button>
-            </div>
         </div>
 
-        <!-- 5. MONETIZATION & YPP PANEL -->
-        <div id="monetization" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization & YPP Hub</div>
-                <p style="font-size: 12px; color:#aaa; margin-bottom: 12px;">Earn money from Ads, Super Thanks, Memberships & Shopping.</p>
-                
-                <h4 style="font-size: 13px; color:#fff;">Partner Program Eligibility</h4>
-                
-                <div style="margin-top: 10px;">
-                    <span style="font-size: 12px;">Subscribers (<span id="subCount">450</span> / 1,000)</span>
-                    <div class="progress-bar-bg"><div class="progress-fill" id="subProgress" style="width: 45%;"></div></div>
-                </div>
-
-                <div style="margin-top: 10px;">
-                    <span style="font-size: 12px;">Watch Hours (<span id="watchCount">2,100</span> / 4,000)</span>
-                    <div class="progress-bar-bg"><div class="progress-fill" id="watchProgress" style="width: 52%;"></div></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-gem"></i> Revenue Streams & Tipping</div>
-                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
-                    <label><input type="checkbox" checked> Watch Page Ads (Pre-roll, Mid-roll)</label>
-                    <label><input type="checkbox" checked> Shorts Feed Ad Revenue Sharing</label>
-                    <label><input type="checkbox" checked> Super Chat & Super Stickers</label>
-                    <label><input type="checkbox" checked> Super Thanks Video Donations</label>
-                    <label><input type="checkbox" checked> Channel Memberships Perks</label>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. STUDIO & ANALYTICS PANEL -->
         <div id="studio" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-chart-line"></i> Analytics Overview</div>
@@ -698,26 +543,23 @@
                         <h3 id="dashViews" style="color:#00d2ff;">0</h3>
                     </div>
                     <div style="background:#111; padding:10px; border-radius:8px;">
-                        <span style="color:#aaa;">Est. Revenue</span>
-                        <h3 style="color:#2e7d32;">$12.50</h3>
+                        <span style="color:#aaa;">Total Subscribers</span>
+                        <h3 id="dashSubs" style="color:#00d2ff;">1.2K</h3>
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-photo-film"></i> Content Manager</div>
                 <div id="manageVideosList"></div>
             </div>
         </div>
 
-        <!-- 7. LIBRARY PANEL -->
         <div id="library" class="section-panel">
             <div class="card">
-                <div class="card-title"><i class="fa-solid fa-bookmark"></i> Saved Videos (Watch Later)</div>
+                <div class="card-title"><i class="fa-solid fa-bookmark"></i> Watch Later</div>
                 <div id="savedVideosList"></div>
             </div>
         </div>
-
     </div>
 
     <!-- Video Player Modal -->
@@ -729,16 +571,33 @@
         <div class="video-screen">
             <video id="mainVideoPlayer" controls autoplay></video>
         </div>
+
+        <div class="player-info-box">
+            <h3 id="playerVideoTitle" style="font-size:15px; margin-bottom: 4px;">Video Title</h3>
+            <p id="playerVideoMeta" style="font-size:12px; color:#aaa; margin-bottom: 12px;">0 views • Just now</p>
+            
+            <!-- Channel Info & Free Subscribe Button -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #181818; padding: 8px 12px; border-radius: 12px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="channel-avatar" id="playerChannelAvatar">M</div>
+                    <div>
+                        <strong id="playerChannelName" style="font-size: 13px; display: block;">My Channel</strong>
+                        <span id="playerSubCount" style="font-size: 11px; color: #aaa;">1.25K subscribers</span>
+                    </div>
+                </div>
+                <button id="subBtn" class="subscribe-btn" onclick="toggleSubscribe()">Subscribe</button>
+            </div>
+        </div>
+
         <div class="player-controls-bar">
-            <button class="player-btn" onclick="toggleLikeVideo()"><i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">0</span></button>
+            <button id="likeBtn" class="player-btn" onclick="toggleLike()">
+                <i class="fa-solid fa-thumbs-up"></i> <span id="likeCount">0</span>
+            </button>
             <button class="player-btn" onclick="triggerSuperThanks()"><i class="fa-solid fa-heart-circle-bolt" style="color:#e53935;"></i> Super Thanks</button>
             <button class="player-btn" onclick="saveToWatchLater()"><i class="fa-solid fa-bookmark"></i> Save</button>
             <button class="player-btn" onclick="shareVideo()"><i class="fa-solid fa-share"></i> Share</button>
         </div>
-        <div class="player-info-box">
-            <h3 id="playerVideoTitle" style="font-size:15px;">Video Title</h3>
-            <p id="playerVideoMeta" style="font-size:12px; color:#aaa; margin-top:4px;">0 views • My Channel</p>
-        </div>
+
         <div class="comments-section">
             <h4 style="font-size:13px;">Comments</h4>
             <div style="display:flex; gap:8px; margin-top:8px;">
@@ -749,22 +608,14 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="openTab('home')">
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </button>
-        <button class="nav-item" onclick="openTab('shorts')">
-            <i class="fa-solid fa-bolt"></i>
-            <span>Shorts</span>
-        </button>
         <button class="nav-item" onclick="openTab('upload')">
             <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
-        </button>
-        <button class="nav-item" onclick="openTab('community')">
-            <i class="fa-solid fa-users"></i>
-            <span>Community</span>
         </button>
         <button class="nav-item" onclick="openTab('studio')">
             <i class="fa-solid fa-chart-pie"></i>
@@ -776,12 +627,11 @@
         </button>
     </div>
 
-    <!-- Application JavaScript Logic -->
     <script>
-        let categories = ["All", "Music", "Gaming", "Tech", "Podcasts", "Entertainment"];
+        let categories = ["All", "Music", "Gaming", "Tech", "Podcasts"];
         let videos = [
-            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", type: "Long Video", src: "https://www.w3schools.com/html/mov_bbb.mp4", isMonetized: true, likes: 0 },
-            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", type: "Long Video", src: "https://www.w3schools.com/html/mov_bbb.mp4", isMonetized: false, likes: 5 }
+            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 77, subscribers: 1250, isSubscribed: false, isLiked: false },
+            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 12, subscribers: 4500, isSubscribed: false, isLiked: false }
         ];
         let savedVideos = [];
         let currentPlayingVideo = null;
@@ -793,27 +643,20 @@
             populateCategoryDropdowns();
         };
 
-        // App-like Toast Function
         function showToast(message) {
             let toast = document.getElementById('toastNotification');
             toast.innerText = message;
             toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 2500);
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
         }
 
-        // Navigation Management
         function openTab(tabId) {
             document.querySelectorAll('.section-panel').forEach(panel => panel.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             
             let selectedPanel = document.getElementById(tabId);
             if (selectedPanel) selectedPanel.classList.add('active');
-
-            if (tabId === 'library') {
-                renderSavedVideos();
-            }
+            if (tabId === 'library') renderSavedVideos();
         }
 
         function toggleAmbientMode() {
@@ -830,11 +673,8 @@
         function filterCategory(cat, el) {
             document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active'));
             el.classList.add('active');
-            if (cat === "All") {
-                renderVideos(videos);
-            } else {
-                renderVideos(videos.filter(v => v.category === cat));
-            }
+            if (cat === "All") renderVideos(videos);
+            else renderVideos(videos.filter(v => v.category === cat));
         }
 
         function renderVideos(list) {
@@ -847,7 +687,6 @@
                 <div class="video-card" onclick="playVideo(${v.id})">
                     <div class="thumbnail-box">
                         <video src="${v.src}#t=0.5" preload="metadata"></video>
-                        ${v.isMonetized ? `<span class="ad-badge">Ad</span>` : ''}
                     </div>
                     <div class="video-details">
                         <div class="channel-avatar">${v.channel.charAt(0)}</div>
@@ -864,6 +703,9 @@
         function playVideo(id) {
             let v = videos.find(item => item.id === id);
             if (!v) return;
+            
+            // View count badhane ke liye
+            v.views += 1;
             currentPlayingVideo = v;
 
             let modal = document.getElementById('playerModal');
@@ -871,11 +713,93 @@
             
             player.src = v.src;
             document.getElementById('playerVideoTitle').innerText = v.title;
-            document.getElementById('playerVideoMeta').innerText = `${v.views} views • ${v.channel}`;
-            document.getElementById('likeCount').innerText = v.likes || 0;
+            document.getElementById('playerVideoMeta').innerText = `${v.views} views • Just now`;
+            document.getElementById('playerChannelName').innerText = v.channel;
+            document.getElementById('playerChannelAvatar').innerText = v.channel.charAt(0);
+            document.getElementById('playerSubCount').innerText = `${v.subscribers} subscribers`;
             
+            updateLikeUI();
+            updateSubscribeUI();
+
             modal.classList.add('active');
             player.play();
+            renderVideos(videos); // Home Page View Update karne ke liye
+        }
+
+        // Toggle Like Functionality
+        function toggleLike() {
+            if (!currentPlayingVideo) return;
+
+            let likeBtn = document.getElementById('likeBtn');
+            if (!currentPlayingVideo.isLiked) {
+                currentPlayingVideo.likes += 1;
+                currentPlayingVideo.isLiked = true;
+                showToast("Liked!");
+            } else {
+                currentPlayingVideo.likes -= 1;
+                currentPlayingVideo.isLiked = false;
+                showToast("Unliked!");
+            }
+            updateLikeUI();
+        }
+
+        function updateLikeUI() {
+            let likeBtn = document.getElementById('likeBtn');
+            document.getElementById('likeCount').innerText = currentPlayingVideo.likes;
+            if (currentPlayingVideo.isLiked) {
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.classList.remove('liked');
+            }
+        }
+
+        // Free Subscribe Functionality
+        function toggleSubscribe() {
+            if (!currentPlayingVideo) return;
+
+            if (!currentPlayingVideo.isSubscribed) {
+                currentPlayingVideo.subscribers += 1;
+                currentPlayingVideo.isSubscribed = true;
+                showToast("Subscribed for Free!");
+            } else {
+                currentPlayingVideo.subscribers -= 1;
+                currentPlayingVideo.isSubscribed = false;
+                showToast("Unsubscribed!");
+            }
+            updateSubscribeUI();
+        }
+
+        function updateSubscribeUI() {
+            let subBtn = document.getElementById('subBtn');
+            document.getElementById('playerSubCount').innerText = `${currentPlayingVideo.subscribers} subscribers`;
+            if (currentPlayingVideo.isSubscribed) {
+                subBtn.innerText = "Subscribed";
+                subBtn.classList.add('subscribed');
+            } else {
+                subBtn.innerText = "Subscribe";
+                subBtn.classList.remove('subscribed');
+            }
+        }
+
+        // Native Native Mobile Share (WhatsApp, Instagram, etc.)
+        async function shareVideo() {
+            if (!currentPlayingVideo) return;
+            const shareData = {
+                title: currentPlayingVideo.title,
+                text: `Watch ${currentPlayingVideo.title} on Mystreem!`,
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    console.log('Share canceled:', err);
+                }
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast("Link copied to clipboard!");
+            }
         }
 
         function closePlayer() {
@@ -885,7 +809,6 @@
             modal.classList.remove('active');
         }
 
-        // Super Thanks Trigger
         function triggerSuperThanks() {
             document.getElementById('thanksModal').style.display = 'flex';
         }
@@ -897,18 +820,17 @@
         function confirmSuperThanks() {
             let amount = document.getElementById('thanksAmountInput').value;
             closeThanksModal();
-            showToast(`Thank you! Super Thanks of ₹${amount} sent!`);
+            showToast(`Super Thanks of ₹${amount} sent!`);
         }
 
-        // Save To Watch Later
         function saveToWatchLater() {
             if (currentPlayingVideo) {
                 let exists = savedVideos.some(v => v.id === currentPlayingVideo.id);
                 if (!exists) {
                     savedVideos.push(currentPlayingVideo);
-                    showToast("Video Saved to Watch Later!");
+                    showToast("Saved to Watch Later!");
                 } else {
-                    showToast("Video already in Watch Later!");
+                    showToast("Already in Watch Later!");
                 }
             }
         }
@@ -916,34 +838,18 @@
         function renderSavedVideos() {
             let container = document.getElementById('savedVideosList');
             if (savedVideos.length === 0) {
-                container.innerHTML = `<p style="color:#aaa; font-size:12px;">Koi saved video nahi hai.</p>`;
+                container.innerHTML = `<p style="color:#aaa; font-size:12px;">No saved videos.</p>`;
                 return;
             }
             container.innerHTML = savedVideos.map(v => `
-                <div class="manage-item">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:10px; border-radius:8px; margin-bottom:8px;">
                     <div>
                         <strong style="font-size:13px; color:#fff;">${v.title}</strong>
-                        <p style="font-size:11px; color:#aaa;">${v.channel}</p>
+                        <p style="font-size:11px; color:#aaa;">${v.views} views</p>
                     </div>
-                    <button class="btn-action" style="width:auto; padding:6px 12px; font-size:11px;" onclick="playVideo(${v.id})">Play</button>
+                    <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="playVideo(${v.id})">Play</button>
                 </div>
             `).join('');
-        }
-
-        function toggleLikeVideo() {
-            if (currentPlayingVideo) {
-                currentPlayingVideo.likes = (currentPlayingVideo.likes || 0) + 1;
-                document.getElementById('likeCount').innerText = currentPlayingVideo.likes;
-                showToast("Liked video!");
-            }
-        }
-
-        function shareVideo() {
-            if (navigator.share && currentPlayingVideo) {
-                navigator.share({ title: currentPlayingVideo.title, url: window.location.href });
-            } else {
-                showToast("Link copied to clipboard!");
-            }
         }
 
         function addComment() {
@@ -954,10 +860,7 @@
             let list = document.getElementById('commentsList');
             let item = document.createElement('div');
             item.className = 'comment-item';
-            item.innerHTML = `
-                <div class="comment-avatar">U</div>
-                <div class="comment-text"><strong>User:</strong> ${text}</div>
-            `;
+            item.innerHTML = `<div class="comment-avatar">U</div><div class="comment-text"><strong>You:</strong> ${text}</div>`;
             list.appendChild(item);
             input.value = '';
             showToast("Comment added!");
@@ -965,7 +868,7 @@
 
         function filterVideos() {
             let q = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = videos.filter(v => v.title.toLowerCase().includes(q) || v.category.toLowerCase().includes(q));
+            let filtered = videos.filter(v => v.title.toLowerCase().includes(q));
             renderVideos(filtered);
         }
 
@@ -974,26 +877,12 @@
             sel.innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
         }
 
-        function addNewCategory() {
-            let input = document.getElementById('newCategoryInput');
-            let val = input.value.trim();
-            if (val && !categories.includes(val)) {
-                categories.push(val);
-                renderCategories();
-                populateCategoryDropdowns();
-                input.value = '';
-                showToast('Category added!');
-            }
-        }
-
         function publishVideo() {
             let title = document.getElementById('videoTitleInput').value.trim();
             let category = document.getElementById('videoCategoryInput').value;
-            let type = document.getElementById('uploadTypeSelect').value;
-            let isMonetized = document.getElementById('videoMonetizeInput').value === 'true';
 
             if (!title) {
-                showToast('Please enter a video title!');
+                showToast('Enter title!');
                 return;
             }
 
@@ -1003,27 +892,28 @@
                 channel: "My Channel",
                 views: 0,
                 category: category,
-                type: type,
                 src: "https://www.w3schools.com/html/mov_bbb.mp4",
-                isMonetized: isMonetized,
-                likes: 0
+                likes: 0,
+                subscribers: 1250,
+                isSubscribed: false,
+                isLiked: false
             };
 
             videos.unshift(newVid);
             renderVideos(videos);
             renderManageVideos();
             document.getElementById('videoTitleInput').value = '';
-            showToast('Video Published Successfully!');
+            showToast('Video Published!');
             openTab('home');
         }
 
         function renderManageVideos() {
             let list = document.getElementById('manageVideosList');
             list.innerHTML = videos.map(v => `
-                <div class="manage-item">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:10px; border-radius:8px; margin-bottom:8px;">
                     <div>
                         <strong style="font-size:13px; color:#fff;">${v.title}</strong>
-                        <p style="font-size:11px; color:#aaa;">${v.category} • ${v.views} views</p>
+                        <p style="font-size:11px; color:#aaa;">${v.views} views</p>
                     </div>
                     <button class="btn-danger" onclick="deleteVideo(${v.id})">Delete</button>
                 </div>
@@ -1036,23 +926,6 @@
             renderVideos(videos);
             renderManageVideos();
             showToast('Video deleted');
-        }
-
-        function publishPost() {
-            let input = document.getElementById('communityPostInput');
-            let val = input.value.trim();
-            if (!val) return;
-
-            let container = document.getElementById('communityPostsList');
-            let card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <strong style="font-size:13px; color:#00d2ff;">My Channel</strong>
-                <p style="font-size:12px; margin-top:6px; color:#ddd;">${val}</p>
-            `;
-            container.prepend(card);
-            input.value = '';
-            showToast('Community post created!');
         }
     </script>
 </body>
