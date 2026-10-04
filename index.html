@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MyStream - Watch, Share & Monetize</title>
     
-    <!-- App Manifest & Meta for APK / PWA -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#00e676">
+    <meta name="theme-color" content="#0f0f0f">
     <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Supabase JS CDN -->
@@ -17,189 +16,234 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: #0f0f0f; color: #ffffff; padding-bottom: 70px; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #0f0f0f; color: #ffffff; padding-bottom: 75px; -webkit-tap-highlight-color: transparent; }
         
-        /* Top Navigation & Search Header */
+        /* YouTube Style Top Header */
         header { 
             position: sticky; top: 0; z-index: 1000; background: #0f0f0f; 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 10px 16px; border-bottom: 1px solid #222; gap: 10px;
         }
-        .logo { color: #00e676; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .logo { color: #ff0000; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .logo span { color: #fff; font-size: 18px; }
         
+        .header-actions { display: flex; align-items: center; gap: 18px; color: #fff; font-size: 18px; }
+        .header-actions i { cursor: pointer; }
+
+        .search-container { 
+            display: none; padding: 8px 16px; background: #0f0f0f; border-bottom: 1px solid #222;
+        }
         .search-box { 
-            flex: 1; display: flex; align-items: center; background: #181818; 
-            border: 1px solid #333; border-radius: 20px; padding: 6px 12px; max-width: 500px;
+            display: flex; align-items: center; background: #121212; 
+            border: 1px solid #333; border-radius: 20px; padding: 6px 14px; width: 100%;
         }
         .search-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
-        .search-box i { color: #888; font-size: 14px; margin-left: 5px; cursor: pointer; }
 
-        .auth-btn { background: #00e676; color: #000; border: none; padding: 7px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; white-space: nowrap; }
+        /* YouTube Style Horizontal Category Pills */
+        .category-scroll {
+            display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px; background: #0f0f0f;
+            white-space: nowrap; scrollbar-width: none; border-bottom: 1px solid #1f1f1f;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .chip {
+            background: #272727; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none;
+        }
+        .chip.active { background: #ffffff; color: #000000; }
 
-        /* Navigation Tabs (YouTube vs Reels) */
-        .tabs { display: flex; background: #121212; border-bottom: 1px solid #222; position: sticky; top: 57px; z-index: 999; }
-        .tab-btn { flex: 1; padding: 12px; text-align: center; background: none; border: none; color: #888; font-size: 14px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
-        .tab-btn.active { color: #00e676; border-bottom: 2px solid #00e676; }
+        .container { max-width: 900px; margin: 0 auto; padding: 10px; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 12px; }
+        /* Native Sponsored Ad Section (Matching Screenshot) */
+        .sponsored-card {
+            background: #171717; border-radius: 12px; padding: 12px; margin: 12px 0 20px 0; border: 1px solid #282828;
+        }
+        .sponsored-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .sponsored-icon { width: 36px; height: 36px; border-radius: 8px; background: #ff3e6c; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+        .sponsored-info { flex: 1; }
+        .sponsored-title { font-size: 14px; font-weight: 600; line-height: 1.2; }
+        .sponsored-badge { font-size: 11px; color: #aaa; margin-top: 2px; }
+        .sponsored-desc { font-size: 12px; color: #ccc; margin-bottom: 12px; line-height: 1.4; }
+        .sponsored-actions { display: flex; gap: 10px; }
+        .sponsored-btn { flex: 1; padding: 8px; text-align: center; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-watch { background: #272727; color: #fff; }
+        .btn-shop { background: #f1f1f1; color: #000; }
 
-        /* AdSense Banners */
-        .ad-banner { background: #181818; border: 1px dashed #333; text-align: center; padding: 10px; margin: 12px 0; color: #777; border-radius: 8px; font-size: 11px; }
-
-        /* Upload Card */
-        .upload-card { background: #1c1c1c; padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #282828; }
+        /* Upload Card Modal/Section */
+        .upload-card { background: #1c1c1c; padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #282828; display: none; }
         .upload-card h3 { color: #00e676; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         .input-group { margin-bottom: 12px; }
         .input-group label { display: block; margin-bottom: 4px; font-size: 12px; color: #aaa; }
         .input-group input, .input-group textarea, .input-group select { 
             width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #121212; color: #fff; font-size: 13px; outline: none;
         }
-        button.btn-primary { background: #00e676; color: #000; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 14px; }
-        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        button.btn-primary { background: #ff0000; color: #fff; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 14px; }
         #status { margin-top: 8px; font-size: 12px; color: #ffeb3b; text-align: center; }
 
-        /* YouTube Video Feed (Horizontal 16:9) */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-        .video-card { background: #181818; border-radius: 12px; overflow: hidden; border: 1px solid #252525; display: flex; flex-direction: column; }
+        /* Feed Video Card */
+        .video-feed { display: flex; flex-direction: column; gap: 20px; }
+        .video-card { background: #0f0f0f; border-bottom: 1px solid #222; padding-bottom: 14px; }
         .video-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
         .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
-        .video-info { padding: 12px; display: flex; flex-direction: column; flex: 1; }
-        .video-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #fff; line-height: 1.3; }
-        .video-meta { font-size: 11px; color: #aaa; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .actions { display: flex; gap: 15px; border-top: 1px solid #282828; padding-top: 10px; margin-top: auto; }
-        .action-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
-        .action-btn.liked { color: #00e676; }
+        .video-details { padding: 10px 4px 0 4px; display: flex; gap: 12px; }
+        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
+        .video-meta-box { flex: 1; }
+        .video-title { font-weight: 600; font-size: 14px; color: #fff; line-height: 1.3; margin-bottom: 4px; }
+        .video-subtext { font-size: 12px; color: #aaa; display: flex; gap: 8px; align-items: center; }
+        .actions-bar { display: flex; justify-content: space-between; margin-top: 10px; padding: 0 4px; }
+        .action-item { background: #222; border: none; color: #fff; padding: 6px 14px; border-radius: 18px; font-size: 12px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .action-item.delete-btn { background: rgba(255, 0, 0, 0.2); color: #ff5252; }
 
-        /* Instagram Reels Feed (Vertical Full Screen) */
+        /* Shorts YouTube Section */
+        .shorts-section-header { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: bold; margin: 20px 0 12px 0; color: #fff; }
+        .shorts-section-header i { color: #ff0000; }
+        .shorts-horizontal { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .shorts-horizontal::-webkit-scrollbar { display: none; }
+        .short-item-card { min-width: 150px; width: 150px; height: 250px; background: #000; border-radius: 12px; position: relative; overflow: hidden; border: 1px solid #222; flex-shrink: 0; }
+        .short-item-card video { width: 100%; height: 100%; object-fit: cover; }
+        .short-title-overlay { position: absolute; bottom: 8px; left: 8px; right: 8px; font-size: 12px; font-weight: 600; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); line-height: 1.2; }
+
+        /* Full Reels Mode */
         .reels-container { display: flex; flex-direction: column; gap: 20px; max-width: 420px; margin: 0 auto; }
-        .reel-card { position: relative; width: 100%; height: 78vh; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
+        .reel-card { position: relative; width: 100%; height: 80vh; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
         .reel-card video { width: 100%; height: 100%; object-fit: cover; }
         .reel-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: #fff; }
-        .reel-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .reel-actions { position: absolute; right: 12px; bottom: 80px; display: flex; flex-direction: column; gap: 18px; align-items: center; }
-        .reel-action-btn { background: rgba(0,0,0,0.6); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; }
-        .reel-action-btn span { font-size: 10px; margin-top: 2px; }
+        .reel-action-btn { background: rgba(0,0,0,0.6); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; }
 
-        /* Comments Modal Drawer */
-        .comments-drawer { position: fixed; bottom: -100%; left: 0; right: 0; background: #1c1c1c; border-radius: 16px 16px 0 0; padding: 16px; z-index: 2000; transition: 0.3s ease; max-height: 60vh; display: flex; flex-direction: column; }
-        .comments-drawer.open { bottom: 0; }
-        .comments-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #333; }
-        .comments-list { overflow-y: auto; flex: 1; margin: 12px 0; max-height: 250px; }
-        .comment-item { padding: 8px 0; border-bottom: 1px solid #282828; font-size: 13px; color: #ddd; }
-        .comment-input-box { display: flex; gap: 8px; }
-        .comment-input-box input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #333; background: #101010; color: #fff; font-size: 12px; outline: none; }
+        /* Monetization Dashboard Card */
+        .monetize-card { background: #181818; border: 1px solid #282828; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+        .monetize-card h3 { color: #ffeb3b; font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .progress-bar-bg { background: #282828; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
+        .progress-bar-fill { background: #00e676; height: 100%; width: 15%; }
 
-        /* Bottom Navigation Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
-        .nav-item { color: #888; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
-        .nav-item.active { color: #00e676; }
+        /* YouTube Bottom Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; height: 60px; align-items: center; }
+        .nav-item { color: #aaa; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: #fff; }
         .nav-item i { font-size: 18px; }
+        .nav-item-plus { background: #222; width: 42px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #fff; border: 1px solid #444; }
     </style>
 </head>
 <body>
 
-    <!-- Top Bar -->
     <header>
-        <div class="logo"><i class="fa-solid fa-play-circle"></i> MyStream</div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search videos or reels..." onkeyup="handleSearch()">
-            <i class="fa-solid fa-magnifying-glass"></i>
+        <div class="logo"><i class="fa-brands fa-youtube"></i> MyStream</div>
+        <div class="header-actions">
+            <i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()"></i>
+            <i class="fa-regular fa-bell"></i>
+            <i class="fa-regular fa-user-circle" id="profileIcon" onclick="handleAuth()"></i>
         </div>
-        <button class="auth-btn" id="loginBtn" onclick="handleAuth()"><i class="fa-solid fa-user"></i> Login</button>
     </header>
 
-    <!-- Navigation Tabs -->
-    <div class="tabs">
-        <button class="tab-btn active" id="tabHome" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Home (YouTube)</button>
-        <button class="tab-btn" id="tabReels" onclick="switchTab('reels')"><i class="fa-solid fa-bolt"></i> Reels (Instagram)</button>
+    <div class="search-container" id="searchContainer">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search videos or shorts..." onkeyup="handleSearch()">
+        </div>
+    </div>
+
+    <!-- YouTube Category Filters -->
+    <div class="category-scroll">
+        <button class="chip active" onclick="filterCategory('all', this)">All</button>
+        <button class="chip" onclick="filterCategory('Indian soap operas', this)">Indian soap operas</button>
+        <button class="chip" onclick="filterCategory('Business ideas', this)">Business ideas</button>
+        <button class="chip" onclick="filterCategory('Comedy', this)">Comedy</button>
+        <button class="chip" onclick="filterCategory('Tech', this)">Tech</button>
     </div>
 
     <div class="container">
         
-        <!-- Ad Banner Top -->
-        <div class="ad-banner">📢 AdSpace - Google AdSense / Network Banner</div>
+        <!-- Monetization Criteria & Progress Banner -->
+        <div class="monetize-card" id="monetizeCard">
+            <h3><i class="fa-solid fa-coins"></i> Channel Monetization Status</h3>
+            <p style="font-size: 12px; color: #ccc;">Monetize karne ke liye criteria (500 Followers & 10,000 Views):</p>
+            
+            <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Total Views: <b id="viewsCount" style="color: #fff;">0 / 10,000</b></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="viewsProgress" style="width: 5%;"></div></div>
+            
+            <p id="monetizeStatus" style="font-size: 11px; color: #00e676; margin-top: 6px;">Status: In Progress (Ad revenue active once approved)</p>
+        </div>
 
-        <!-- Video Upload Form -->
-        <div class="upload-card">
-            <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Video / Reel</h3>
+        <!-- Upload Form Toggleable -->
+        <div class="upload-card" id="uploadForm">
+            <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Content</h3>
             <div class="input-group">
                 <label>Title</label>
-                <input type="text" id="videoTitle" placeholder="Apni video ka naam likhein...">
+                <input type="text" id="videoTitle" placeholder="Video ka title daalein...">
             </div>
             <div class="input-group">
-                <label>Description</label>
-                <textarea id="videoDesc" rows="2" placeholder="Video ke baare me bataiye..."></textarea>
+                <label>Category</label>
+                <select id="videoCategory">
+                    <option value="Business ideas">Business ideas</option>
+                    <option value="Indian soap operas">Indian soap operas</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Tech">Tech</option>
+                </select>
             </div>
             <div class="input-group">
-                <label>Platform Format</label>
+                <label>Type</label>
                 <select id="videoType">
-                    <option value="youtube">YouTube Style (Horizontal 16:9)</option>
-                    <option value="reel">Instagram Reel (Vertical 9:16)</option>
+                    <option value="youtube">Long Video (16:9)</option>
+                    <option value="reel">Shorts (9:16)</option>
                 </select>
             </div>
             <div class="input-group">
                 <label>Video File</label>
                 <input type="file" id="videoInput" accept="video/*">
             </div>
-            <button class="btn-primary" id="uploadBtn" onclick="uploadVideo()">Upload & Publish</button>
+            <button class="btn-primary" id="uploadBtn" onclick="uploadVideo()">Publish Video</button>
             <div id="status"></div>
         </div>
 
-        <!-- YouTube Feed -->
+        <!-- Home Video Section -->
         <div id="homeSection">
-            <h2><i class="fa-solid fa-fire"></i> Trending Feed</h2>
-            <br>
-            <div id="videoGrid" class="video-grid">
-                <p id="loadingText">Videos load ho rahi hain...</p>
+            <div id="videoGrid" class="video-feed">
+                <p>Videos loading...</p>
+            </div>
+
+            <!-- Native Sponsored Ad Banner (Exact match to screenshot) -->
+            <div class="sponsored-card">
+                <div class="sponsored-header">
+                    <div class="sponsored-icon">m</div>
+                    <div class="sponsored-info">
+                        <div class="sponsored-title">Lowest Price Shopping App | Meesho</div>
+                        <div class="sponsored-badge">Sponsored</div>
+                    </div>
+                    <i class="fa-solid fa-ellipsis-vertical" style="color: #888;"></i>
+                </div>
+                <div class="sponsored-desc">India's shopping destination for all your needs at the lowest prices. Download now.</div>
+                <div class="sponsored-actions">
+                    <button class="sponsored-btn btn-watch">Watch</button>
+                    <button class="sponsored-btn btn-shop">Shop</button>
+                </div>
+            </div>
+
+            <!-- Shorts Horizontal Scroll (YouTube UI) -->
+            <div class="shorts-section-header">
+                <i class="fa-solid fa-bolt"></i> Shorts
+            </div>
+            <div class="shorts-horizontal" id="shortsHorizontal">
+                <p style="font-size: 12px; color:#888;">Shorts loading...</p>
             </div>
         </div>
 
-        <!-- Instagram Reels Feed -->
+        <!-- Full Reel Section -->
         <div id="reelsSection" style="display: none;">
             <div id="reelsGrid" class="reels-container">
-                <p id="reelsLoadingText">Reels load ho rahi hain...</p>
+                <p>Reels loading...</p>
             </div>
         </div>
 
     </div>
 
-    <!-- Comments Drawer Popup -->
-    <div class="comments-drawer" id="commentsDrawer">
-        <div class="comments-header">
-            <h4><i class="fa-solid fa-comments"></i> Comments</h4>
-            <i class="fa-solid fa-xmark" onclick="closeComments()" style="cursor:pointer;"></i>
-        </div>
-        <div class="comments-list" id="commentsList">
-            <p style="font-size: 12px; color: #888;">No comments yet. Be the first to comment!</p>
-        </div>
-        <div class="comment-input-box">
-            <input type="text" id="commentInput" placeholder="Write a comment...">
-            <button class="auth-btn" onclick="submitComment()">Post</button>
-        </div>
-    </div>
-
-    <!-- Mobile Bottom Menu -->
+    <!-- YouTube Bottom Bar -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home')">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('reels')">
-            <i class="fa-solid fa-bolt"></i>
-            <span>Reels</span>
-        </div>
-        <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <i class="fa-solid fa-plus-circle"></i>
-            <span>Upload</span>
-        </div>
-        <div class="nav-item" onclick="handleAuth()">
-            <i class="fa-solid fa-circle-user"></i>
-            <span>Profile</span>
-        </div>
+        <div class="nav-item active" id="navHome" onclick="switchTab('home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+        <div class="nav-item" id="navShorts" onclick="switchTab('reels')"><i class="fa-solid fa-bolt"></i><span>Shorts</span></div>
+        <div class="nav-item" onclick="toggleUpload()"><div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div></div>
+        <div class="nav-item" onclick="switchTab('home')"><i class="fa-solid fa-layer-group"></i><span>Subscriptions</span></div>
+        <div class="nav-item" onclick="handleAuth()"><i class="fa-solid fa-circle-user"></i><span>You</span></div>
     </div>
 
     <script>
-        // Supabase Real Credentials
         const SUPABASE_URL = 'https://tkrrvseibcgsasqlfjbu.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_-3GqiSqvlunpjVtJN4aQOA_aQFV04QB';
         const BUCKET_NAME = 'videos';
@@ -210,46 +254,55 @@
         }
 
         let allVideos = [];
-        let activeVideoForComment = null;
+
+        function toggleSearch() {
+            const sc = document.getElementById('searchContainer');
+            sc.style.display = sc.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleUpload() {
+            const uf = document.getElementById('uploadForm');
+            uf.style.display = uf.style.display === 'block' ? 'none' : 'block';
+            if (uf.style.display === 'block') uf.scrollIntoView({ behavior: 'smooth' });
+        }
 
         function switchTab(tab) {
             const homeSec = document.getElementById('homeSection');
             const reelsSec = document.getElementById('reelsSection');
-            const tabHome = document.getElementById('tabHome');
-            const tabReels = document.getElementById('tabReels');
+            const navHome = document.getElementById('navHome');
+            const navShorts = document.getElementById('navShorts');
 
             if (tab === 'home') {
                 homeSec.style.display = 'block';
                 reelsSec.style.display = 'none';
-                tabHome.classList.add('active');
-                tabReels.classList.remove('active');
+                navHome.classList.add('active');
+                navShorts.classList.remove('active');
             } else {
                 homeSec.style.display = 'none';
                 reelsSec.style.display = 'block';
-                tabReels.classList.add('active');
-                tabHome.classList.remove('active');
+                navShorts.classList.add('active');
+                navHome.classList.remove('active');
             }
         }
 
         function handleAuth() {
-            const email = prompt("Login / Sign Up ke liye apna Email daalein:");
+            const email = prompt("Login/Sign up ke liye Email daalein:");
             if (email) {
                 localStorage.setItem('mystream_user', email);
-                document.getElementById('loginBtn').innerText = email.split('@')[0];
-                alert("Kamyabi se Login ho gaya: " + email);
+                alert("Login successful: " + email);
             }
         }
 
         async function uploadVideo() {
             const fileInput = document.getElementById('videoInput');
             const titleInput = document.getElementById('videoTitle');
-            const descInput = document.getElementById('videoDesc');
             const typeInput = document.getElementById('videoType').value;
+            const categoryInput = document.getElementById('videoCategory').value;
             const uploadBtn = document.getElementById('uploadBtn');
             const status = document.getElementById('status');
 
             if (!fileInput.files.length || !titleInput.value.trim()) {
-                alert("Kripya Video File aur Title dono bharein!");
+                alert("Kripya video file aur title bharein!");
                 return;
             }
 
@@ -258,10 +311,9 @@
             const fileName = `${Date.now()}_${cleanFileName}`;
 
             uploadBtn.disabled = true;
-            status.innerText = "Video upload ho rahi hai... Kripya rukiye.";
+            status.innerText = "Video upload ho rahi hai...";
 
             try {
-                // 1. Upload to Storage
                 const { data: storageData, error: storageError } = await supabaseClient.storage
                     .from(BUCKET_NAME)
                     .upload(fileName, file, { cacheControl: '3600', upsert: false });
@@ -272,12 +324,11 @@
                     .from(BUCKET_NAME)
                     .getPublicUrl(fileName);
 
-                // 2. Insert Record in Postgres Database Table
                 const { error: dbError } = await supabaseClient
                     .from('videos')
                     .insert([{
                         title: titleInput.value.trim(),
-                        description: descInput.value.trim(),
+                        description: categoryInput,
                         video_url: publicUrlData.publicUrl,
                         video_type: typeInput,
                         views: 0,
@@ -286,10 +337,10 @@
 
                 if (dbError) throw dbError;
 
-                status.innerText = "Kamyabi se Publish ho gayi!";
+                status.innerText = "Video Publish Ho Gayi!";
                 fileInput.value = '';
                 titleInput.value = '';
-                descInput.value = '';
+                toggleUpload();
                 fetchVideos();
 
             } catch (err) {
@@ -309,6 +360,7 @@
                 if (error) throw error;
 
                 allVideos = data || [];
+                updateMonetizationProgress(allVideos);
                 renderVideos(allVideos);
 
             } catch (err) {
@@ -316,151 +368,8 @@
             }
         }
 
-        function renderVideos(videos) {
-            const videoGrid = document.getElementById('videoGrid');
-            const reelsGrid = document.getElementById('reelsGrid');
-
-            videoGrid.innerHTML = '';
-            reelsGrid.innerHTML = '';
-
-            if (!videos.length) {
-                videoGrid.innerHTML = "<p>Koi video nahi mili.</p>";
-                reelsGrid.innerHTML = "<p>Koi reel nahi mili.</p>";
-                return;
-            }
-
-            videos.forEach(vid => {
-                if (vid.video_type === 'reel') {
-                    // Render Reel
-                    const reelCard = document.createElement('div');
-                    reelCard.className = 'reel-card';
-                    reelCard.innerHTML = `
-                        <video loop onplay="incrementViews('${vid.id}')" onclick="this.paused ? this.play() : this.pause()" src="${vid.video_url}"></video>
-                        <div class="reel-overlay">
-                            <div class="reel-title">${vid.title}</div>
-                            <p style="font-size:11px; color:#ccc;">${vid.description || ''}</p>
-                        </div>
-                        <div class="reel-actions">
-                            <button class="reel-action-btn" onclick="likeVideo('${vid.id}', this)"><i class="fa-solid fa-heart"></i><span>${vid.likes || 0}</span></button>
-                            <button class="reel-action-btn" onclick="openComments('${vid.id}')"><i class="fa-solid fa-comment"></i></button>
-                            <button class="reel-action-btn" onclick="shareVideo('${vid.video_url}')"><i class="fa-solid fa-share"></i></button>
-                        </div>
-                    `;
-                    reelsGrid.appendChild(reelCard);
-                } else {
-                    // Render YouTube Video
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card';
-                    videoCard.innerHTML = `
-                        <div class="video-wrapper">
-                            <video controls onplay="incrementViews('${vid.id}')" src="${vid.video_url}"></video>
-                        </div>
-                        <div class="video-info">
-                            <div class="video-title">${vid.title}</div>
-                            <div class="video-meta">
-                                <span><i class="fa-solid fa-eye"></i> ${vid.views || 0} views</span>
-                                <span>${new Date(vid.created_at).toLocaleDateString()}</span>
-                            </div>
-                            <div class="actions">
-                                <button class="action-btn" onclick="likeVideo('${vid.id}', this)"><i class="fa-solid fa-thumbs-up"></i> ${vid.likes || 0} Like</button>
-                                <button class="action-btn" onclick="openComments('${vid.id}')"><i class="fa-solid fa-comment"></i> Comment</button>
-                                <button class="action-btn" onclick="shareVideo('${vid.video_url}')"><i class="fa-solid fa-share"></i> Share</button>
-                            </div>
-                        </div>
-                    `;
-                    videoGrid.appendChild(videoCard);
-                }
-            });
-        }
-
-        async function incrementViews(id) {
-            try {
-                const vid = allVideos.find(v => v.id === id);
-                if (!vid) return;
-                await supabaseClient.from('videos').update({ views: (vid.views || 0) + 1 }).eq('id', id);
-            } catch (err) {}
-        }
-
-        async function likeVideo(id, btn) {
-            try {
-                const vid = allVideos.find(v => v.id === id);
-                if (!vid) return;
-                const newLikes = (vid.likes || 0) + 1;
-                vid.likes = newLikes;
-                
-                btn.classList.add('liked');
-                await supabaseClient.from('videos').update({ likes: newLikes }).eq('id', id);
-                fetchVideos();
-            } catch (err) {}
-        }
-
-        function shareVideo(url) {
-            navigator.clipboard.writeText(url);
-            alert("Video link copy ho gaya hai!");
-        }
-
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allVideos.filter(v => v.title.toLowerCase().includes(query) || (v.description && v.description.toLowerCase().includes(query)));
-            renderVideos(filtered);
-        }
-
-        async function openComments(videoId) {
-            activeVideoForComment = videoId;
-            document.getElementById('commentsDrawer').classList.add('open');
-            loadComments(videoId);
-        }
-
-        function closeComments() {
-            document.getElementById('commentsDrawer').classList.remove('open');
-        }
-
-        async function loadComments(videoId) {
-            const commentsList = document.getElementById('commentsList');
-            commentsList.innerHTML = 'Loading comments...';
-
-            const { data, error } = await supabaseClient
-                .from('comments')
-                .select('*')
-                .eq('video_id', videoId)
-                .order('created_at', { ascending: false });
-
-            if (error || !data || !data.length) {
-                commentsList.innerHTML = '<p style="font-size: 12px; color: #888;">No comments yet. Be the first to comment!</p>';
-                return;
-            }
-
-            commentsList.innerHTML = '';
-            data.forEach(c => {
-                const item = document.createElement('div');
-                item.className = 'comment-item';
-                item.innerText = c.comment_text;
-                commentsList.appendChild(item);
-            });
-        }
-
-        async function submitComment() {
-            const input = document.getElementById('commentInput');
-            const text = input.value.trim();
-
-            if (!text || !activeVideoForComment) return;
-
-            await supabaseClient.from('comments').insert([{
-                video_id: activeVideoForComment,
-                comment_text: text
-            }]);
-
-            input.value = '';
-            loadComments(activeVideoForComment);
-        }
-
-        window.onload = function() {
-            const savedUser = localStorage.getItem('mystream_user');
-            if (savedUser) {
-                document.getElementById('loginBtn').innerText = savedUser.split('@')[0];
-            }
-            fetchVideos();
-        };
-    </script>
-</body>
-</html>
+        function updateMonetizationProgress(videos) {
+            let totalViews = videos.reduce((acc, curr) => acc + (curr.views || 0), 0);
+            document.getElementById('viewsCount').innerText = `${totalViews} / 10,000`;
+            let percentage = Math.min((totalViews / 10000) * 100, 100);
+            documen
