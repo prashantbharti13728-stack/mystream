@@ -668,12 +668,22 @@
             </div>
         </div>
 
-        <!-- Community Section -->
+        <!-- Community Section with Image Upload Option -->
         <div id="community" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-users"></i> Community Posts</div>
                 <div class="form-group">
                     <textarea id="communityPostInput" rows="3" placeholder="Share an update, poll or photo..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: #00d2ff;">
+                        <i class="fa-solid fa-image"></i> Attach Picture / Photo
+                        <input type="file" id="communityImageInput" accept="image/*" style="display: none;" onchange="previewCommunityImage()">
+                    </label>
+                    <div id="imagePreviewContainer" style="margin-top: 8px; display: none; position: relative;">
+                        <img id="communityImagePreview" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px;">
+                        <button class="btn-danger" style="position: absolute; top: 6px; right: 6px;" onclick="removeCommunityImage()">Remove</button>
+                    </div>
                 </div>
                 <button class="btn-action" onclick="addCommunityPost()">Post</button>
             </div>
@@ -724,7 +734,6 @@
             <h3 id="playerVideoTitle" style="font-size:15px; margin-bottom: 4px;">Video Title</h3>
             <p id="playerVideoMeta" style="font-size:12px; color:#aaa; margin-bottom: 12px;">0 views • Just now</p>
             
-            <!-- Channel Info & Free Subscribe Button -->
             <div style="display: flex; justify-content: space-between; align-items: center; background: #181818; padding: 8px 12px; border-radius: 12px; margin-bottom: 12px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div class="channel-avatar" id="playerChannelAvatar">M</div>
@@ -792,12 +801,13 @@
         ];
 
         let communityPosts = [
-            { id: 1, author: "My Channel", text: "New music video coming out tomorrow! Stay tuned 🔥", likes: 12 }
+            { id: 1, author: "My Channel", text: "New music video coming out tomorrow! Stay tuned 🔥", image: "", likes: 12 }
         ];
 
         let savedVideos = [];
         let currentPlayingVideo = null;
         let selectedCategory = "All";
+        let tempCommunityImage = "";
 
         function initApp() {
             renderCategories();
@@ -918,18 +928,35 @@
             }
         }
 
+        function previewCommunityImage() {
+            const fileInput = document.getElementById('communityImageInput');
+            if (fileInput.files && fileInput.files[0]) {
+                tempCommunityImage = URL.createObjectURL(fileInput.files[0]);
+                document.getElementById('communityImagePreview').src = tempCommunityImage;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+            }
+        }
+
+        function removeCommunityImage() {
+            tempCommunityImage = "";
+            document.getElementById('communityImageInput').value = "";
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+        }
+
         function renderCommunity() {
             const container = document.getElementById('communityPostsList');
             container.innerHTML = '';
             communityPosts.forEach(post => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                let imgHtml = post.image ? `<img src="${post.image}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px; margin-bottom:10px; display:block;">` : '';
                 card.innerHTML = `
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
                         <div class="channel-avatar" style="width:28px; height:28px; font-size:11px;">${post.author.charAt(0)}</div>
                         <strong style="font-size:13px;">${post.author}</strong>
                     </div>
                     <p style="font-size:13px; color:#ddd; margin-bottom:10px;">${post.text}</p>
+                    ${imgHtml}
                     <div style="font-size:12px; color:#aaa; cursor:pointer;" onclick="likePost(${post.id})">
                         <i class="fa-solid fa-thumbs-up"></i> ${post.likes} Likes
                     </div>
@@ -940,16 +967,20 @@
 
         function addCommunityPost() {
             const txt = document.getElementById('communityPostInput').value.trim();
-            if(!txt) return showToast('Please enter post text!');
+            if(!txt && !tempCommunityImage) return showToast('Please enter text or attach an image!');
+            
             communityPosts.unshift({
                 id: Date.now(),
                 author: "My Channel",
                 text: txt,
+                image: tempCommunityImage,
                 likes: 0
             });
+            
             document.getElementById('communityPostInput').value = '';
+            removeCommunityImage();
             renderCommunity();
-            showToast('Post published!');
+            showToast('Community post published!');
         }
 
         function likePost(id) {
@@ -1127,7 +1158,6 @@
             showToast('Link copied to clipboard!');
         }
 
-        /* Native Browser System Share (Inbuilt app selector for WhatsApp, YouTube, Instagram, etc.) */
         function nativeSystemShare() {
             const url = document.getElementById('shareUrlInput').value;
             const title = currentPlayingVideo ? currentPlayingVideo.title : 'Mystreem Video';
