@@ -1,124 +1,130 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyStream - Live Video Platform</title>
-  <!-- Supabase JS CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
-    h1 { text-align: center; color: #00e676; }
-    .upload-section { background: #1e1e1e; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto 30px auto; text-align: center; }
-    input[type="file"] { margin: 10px 0; }
-    button { background: #00e676; color: #000; font-weight: bold; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-    button:disabled { background: #555; cursor: not-allowed; }
-    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-    .video-card { background: #1e1e1e; border-radius: 8px; overflow: hidden; padding: 10px; }
-    video { width: 100%; border-radius: 5px; }
-    #status { margin-top: 10px; font-size: 14px; color: #ffeb3b; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStream - Live Video Platform</title>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #00e676; }
+        .upload-section { background: #1e1e1e; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto 30px auto; text-align: center; }
+        input[type="file"] { margin: 10px 0; }
+        button { background: #00e676; color: #000; font-weight: bold; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .video-card { background: #1e1e1e; border-radius: 8px; overflow: hidden; padding: 10px; }
+        video { width: 100%; border-radius: 5px; }
+        #status { margin-top: 10px; font-size: 14px; color: #ffeb3b; }
+    </style>
 </head>
 <body>
 
-  <h1>MyStream</h1>
+    <h1>MyStream</h1>
 
-  <div class="upload-section">
-    <h3>Video Upload Karein</h3>
-    <input type="file" id="videoInput" accept="video/*">
-    <br>
-    <button id="uploadBtn" onclick="uploadVideo()">Upload Video</button>
-    <div id="status"></div>
-  </div>
+    <div class="upload-section">
+        <h3>Video Upload Karein</h3>
+        <input type="file" id="videoInput" accept="video/*">
+        <br>
+        <button id="uploadBtn" onclick="uploadVideo()">Upload Video</button>
+        <div id="status"></div>
+    </div>
 
-  <h2>Uploaded Videos</h2>
-  <div class="video-grid" id="videoGrid">
-    <p>Loading videos...</p>
-  </div>
+    <h2>Uploaded Videos</h2>
+    <div id="videoGrid" class="video-grid">
+        <p id="loadingText">Loading videos...</p>
+    </div>
 
-  <script>
-    // Supabase Configuration
-    const SUPABASE_URL = "https://tkrrvseibcgsasqlfjbu.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_-3GqiSqvlunpjVtJN4aQOA_aQFV04QB";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script>
+        // Supabase Client Config (Apni Details Yahan Check Karein)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const BUCKET_NAME = 'videos';
 
-    // Fetch and display videos on page load
-    async function fetchVideos() {
-      const videoGrid = document.getElementById('videoGrid');
-      videoGrid.innerHTML = '';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const { data, error } = await supabase.storage.from('videos').list('', {
-        limit: 100,
-        offset: 0,
-        sortBy: { column: 'created_at', order: 'desc' }
-      });
+        async function uploadVideo() {
+            const fileInput = document.getElementById('videoInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const status = document.getElementById('status');
 
-      if (error) {
-        videoGrid.innerHTML = '<p>Videos load nahi ho payi.</p>';
-        console.error(error);
-        return;
-      }
+            if (!fileInput.files.length) {
+                alert("Kripya pehle video select karein!");
+                return;
+            }
 
-      if (!data || data.length === 0) {
-        videoGrid.innerHTML = '<p>Abhi tak koi video upload nahi hui hai.</p>';
-        return;
-      }
+            const file = fileInput.files[0];
+            const cleanFileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+            const fileName = `${Date.now()}_${cleanFileName}`;
 
-      data.forEach(file => {
-        if (file.name === '.emptyFolderPlaceholder') return;
-        
-        const { data: publicUrlData } = supabase.storage.from('videos').getPublicUrl(file.name);
-        const videoUrl = publicUrlData.publicUrl;
+            uploadBtn.disabled = true;
+            status.innerText = "Video upload ho rahi hai... Kripya wait karein.";
 
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        card.innerHTML = `
-          <video controls preload="metadata">
-            <source src="${videoUrl}" type="video/mp4">
-            Aapka browser video tag support nahi karta.
-          </video>
-        `;
-        videoGrid.appendChild(card);
-      });
-    }
+            try {
+                const { data, error } = await supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
-    // Upload video function
-    async function uploadVideo() {
-      const fileInput = document.getElementById('videoInput');
-      const status = document.getElementById('status');
-      const uploadBtn = document.getElementById('uploadBtn');
+                if (error) {
+                    status.innerText = "Upload Error: " + error.message;
+                    console.error("Upload error:", error);
+                } else {
+                    status.innerText = "Video kamyabi se upload ho gayi!";
+                    fileInput.value = '';
+                    fetchVideos();
+                }
+            } catch (err) {
+                status.innerText = "Unexpected Error: " + err.message;
+                console.error(err);
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        }
 
-      if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Kripya pehle ek video select karein!');
-        return;
-      }
+        async function fetchVideos() {
+            const videoGrid = document.getElementById('videoGrid');
+            const loadingText = document.getElementById('loadingText');
 
-      const file = fileInput.files[0];
-      const fileName = `${Date.now()}_${file.name}`;
+            try {
+                const { data, error } = await supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
 
-      uploadBtn.disabled = true;
-      status.innerText = "Video upload ho rahi hai... Kripya wait karein.";
+                if (error) {
+                    if (loadingText) loadingText.innerText = "Error loading videos: " + error.message;
+                    return;
+                }
 
-      const { data, error } = await supabase.storage.from('videos').upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
+                if (!data || data.length === 0) {
+                    videoGrid.innerHTML = "<p>Koi video nahi mili.</p>";
+                    return;
+                }
 
-      if (error) {
-        status.innerText = "Upload failed: " + error.message;
-        console.error(error);
-      } else {
-        status.innerText = "Video kamyabi se upload ho gayi!";
-        fileInput.value = '';
+                videoGrid.innerHTML = '';
+
+                data.forEach(item => {
+                    if (item.name === '.emptyFolderPlaceholder') return;
+
+                    const { data: publicUrlData } = supabaseClient.storage
+                        .from(BUCKET_NAME)
+                        .getPublicUrl(item.name);
+
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.innerHTML = `
+                        <video controls src="${publicUrlData.publicUrl}"></video>
+                        <p style="font-size: 12px; color: #aaa; word-break: break-all;">${item.name}</p>
+                    `;
+                    videoGrid.appendChild(videoCard);
+                });
+            } catch (err) {
+                if (loadingText) loadingText.innerText = "Error: " + err.message;
+            }
+        }
+
+        // Load videos on startup
         fetchVideos();
-      }
-
-      uploadBtn.disabled = false;
-    }
-
-    // Initialize
-    fetchVideos();
-  </script>
-
+    </script>
 </body>
 </html>
