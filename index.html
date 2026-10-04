@@ -2,11 +2,13 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyStream - YouTube & Reels Platform</title>
-    <!-- App Manifest for PWABuilder APK -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MyStream - Watch, Share & Monetize</title>
+    
+    <!-- App Manifest & Meta for APK / PWA -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#00e676">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -14,128 +16,169 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: #0f0f0f; color: #fff; padding-bottom: 70px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #0f0f0f; color: #ffffff; padding-bottom: 70px; -webkit-tap-highlight-color: transparent; }
         
-        /* Top Navigation Bar */
+        /* Top Navigation & Search Header */
         header { 
-            position: sticky; top: 0; z-index: 100; background: #0f0f0f; 
+            position: sticky; top: 0; z-index: 1000; background: #0f0f0f; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px 16px; border-bottom: 1px solid #222; 
+            padding: 10px 16px; border-bottom: 1px solid #222; gap: 10px;
         }
-        .logo { color: #00e676; font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        .auth-btn { background: #00e676; color: #000; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .logo { color: #00e676; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        
+        .search-box { 
+            flex: 1; display: flex; align-items: center; background: #181818; 
+            border: 1px solid #333; border-radius: 20px; padding: 6px 12px; max-width: 500px;
+        }
+        .search-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
+        .search-box i { color: #888; font-size: 14px; margin-left: 5px; cursor: pointer; }
+
+        .auth-btn { background: #00e676; color: #000; border: none; padding: 7px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; white-space: nowrap; }
 
         /* Navigation Tabs (YouTube vs Reels) */
-        .tabs { display: flex; justify-content: center; background: #181818; border-bottom: 1px solid #272727; }
-        .tab-btn { flex: 1; padding: 12px; text-align: center; background: none; border: none; color: #888; font-size: 15px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tabs { display: flex; background: #121212; border-bottom: 1px solid #222; position: sticky; top: 57px; z-index: 999; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; background: none; border: none; color: #888; font-size: 14px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
         .tab-btn.active { color: #00e676; border-bottom: 2px solid #00e676; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 12px; }
 
-        /* Upload Section */
-        .upload-card { background: #1e1e1e; padding: 18px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #2c2c2c; }
-        .upload-card h3 { color: #00e676; margin-bottom: 12px; font-size: 18px; }
+        /* AdSense Banners */
+        .ad-banner { background: #181818; border: 1px dashed #333; text-align: center; padding: 10px; margin: 12px 0; color: #777; border-radius: 8px; font-size: 11px; }
+
+        /* Upload Card */
+        .upload-card { background: #1c1c1c; padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #282828; }
+        .upload-card h3 { color: #00e676; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         .input-group { margin-bottom: 12px; }
-        .input-group label { display: block; margin-bottom: 5px; font-size: 13px; color: #aaa; }
+        .input-group label { display: block; margin-bottom: 4px; font-size: 12px; color: #aaa; }
         .input-group input, .input-group textarea, .input-group select { 
-            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #121212; color: #fff; font-size: 14px; 
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #121212; color: #fff; font-size: 13px; outline: none;
         }
-        button.btn-primary { background: #00e676; color: #000; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 15px; }
+        button.btn-primary { background: #00e676; color: #000; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 14px; }
         button:disabled { background: #444; color: #888; cursor: not-allowed; }
-        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; text-align: center; }
+        #status { margin-top: 8px; font-size: 12px; color: #ffeb3b; text-align: center; }
 
-        /* YouTube-Style Feed (16:9 Aspect Ratio Videos) */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .video-card { background: #181818; border-radius: 12px; overflow: hidden; border: 1px solid #252525; }
-        .video-wrapper { position: relative; width: 100%; padding-top: 56.25%; /* 16:9 Ratio */ background: #000; }
+        /* YouTube Video Feed (Horizontal 16:9) */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .video-card { background: #181818; border-radius: 12px; overflow: hidden; border: 1px solid #252525; display: flex; flex-direction: column; }
+        .video-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
         .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
-        .video-info { padding: 12px; }
-        .video-title { font-weight: bold; font-size: 15px; margin-bottom: 6px; color: #fff; line-height: 1.3; }
-        .video-meta { font-size: 12px; color: #aaa; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .actions { display: flex; gap: 20px; border-top: 1px solid #2a2a2a; padding-top: 10px; }
-        .action-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; }
-        .action-btn:hover, .action-btn.active { color: #00e676; }
+        .video-info { padding: 12px; display: flex; flex-direction: column; flex: 1; }
+        .video-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #fff; line-height: 1.3; }
+        .video-meta { font-size: 11px; color: #aaa; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .actions { display: flex; gap: 15px; border-top: 1px solid #282828; padding-top: 10px; margin-top: auto; }
+        .action-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        .action-btn.liked { color: #00e676; }
 
         /* Instagram Reels Feed (Vertical Full Screen) */
         .reels-container { display: flex; flex-direction: column; gap: 20px; max-width: 420px; margin: 0 auto; }
-        .reel-card { position: relative; width: 100%; height: 80vh; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
+        .reel-card { position: relative; width: 100%; height: 78vh; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
         .reel-card video { width: 100%; height: 100%; object-fit: cover; }
-        .reel-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: #fff; }
-        .reel-actions { position: absolute; right: 15px; bottom: 80px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .reel-action-btn { background: rgba(0,0,0,0.5); border: none; color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-size: 18px; }
+        .reel-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: #fff; }
+        .reel-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .reel-actions { position: absolute; right: 12px; bottom: 80px; display: flex; flex-direction: column; gap: 18px; align-items: center; }
+        .reel-action-btn { background: rgba(0,0,0,0.6); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; }
+        .reel-action-btn span { font-size: 10px; margin-top: 2px; }
 
-        /* Ad Banners */
-        .ad-banner { background: #161616; border: 1px dashed #333; text-align: center; padding: 12px; margin: 15px 0; color: #777; border-radius: 8px; font-size: 12px; }
+        /* Comments Modal Drawer */
+        .comments-drawer { position: fixed; bottom: -100%; left: 0; right: 0; background: #1c1c1c; border-radius: 16px 16px 0 0; padding: 16px; z-index: 2000; transition: 0.3s ease; max-height: 60vh; display: flex; flex-direction: column; }
+        .comments-drawer.open { bottom: 0; }
+        .comments-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .comments-list { overflow-y: auto; flex: 1; margin: 12px 0; max-height: 250px; }
+        .comment-item { padding: 8px 0; border-bottom: 1px solid #282828; font-size: 13px; color: #ddd; }
+        .comment-input-box { display: flex; gap: 8px; }
+        .comment-input-box input { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #333; background: #101010; color: #fff; font-size: 12px; outline: none; }
 
-        /* Bottom Mobile Navigation */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
-        .nav-item { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        /* Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .nav-item { color: #888; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
         .nav-item.active { color: #00e676; }
         .nav-item i { font-size: 18px; }
     </style>
 </head>
 <body>
 
+    <!-- Top Bar -->
     <header>
         <div class="logo"><i class="fa-solid fa-play-circle"></i> MyStream</div>
-        <button class="auth-btn" onclick="handleAuth()"><i class="fa-solid fa-user"></i> Login</button>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search videos or reels..." onkeyup="handleSearch()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <button class="auth-btn" id="loginBtn" onclick="handleAuth()"><i class="fa-solid fa-user"></i> Login</button>
     </header>
-
-    <!-- Top Ads Banner -->
-    <div class="container">
-        <div class="ad-banner">📢 AdSpace - Adsense Banner Placeholder</div>
-    </div>
 
     <!-- Navigation Tabs -->
     <div class="tabs">
         <button class="tab-btn active" id="tabHome" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Home (YouTube)</button>
-        <button class="tab-btn" id="tabReels" onclick="switchTab('reels')"><i class="fa-solid fa-clapperboard"></i> Reels (Instagram)</button>
+        <button class="tab-btn" id="tabReels" onclick="switchTab('reels')"><i class="fa-solid fa-bolt"></i> Reels (Instagram)</button>
     </div>
 
     <div class="container">
+        
+        <!-- Ad Banner Top -->
+        <div class="ad-banner">📢 AdSpace - Google AdSense / Network Banner</div>
 
-        <!-- Upload Section -->
+        <!-- Video Upload Form -->
         <div class="upload-card">
-            <h3><i class="fa-solid fa-cloud-arrow-up"></i> Video / Reel Upload Karein</h3>
+            <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Video / Reel</h3>
             <div class="input-group">
-                <label>Video Title</label>
-                <input type="text" id="videoTitle" placeholder="Apni video ka title likhein...">
+                <label>Title</label>
+                <input type="text" id="videoTitle" placeholder="Apni video ka naam likhein...">
             </div>
             <div class="input-group">
-                <label>Video Type</label>
+                <label>Description</label>
+                <textarea id="videoDesc" rows="2" placeholder="Video ke baare me bataiye..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>Platform Format</label>
                 <select id="videoType">
-                    <option value="youtube">Horizontal Video (YouTube Style)</option>
-                    <option value="reel">Vertical Short/Reel (Instagram Style)</option>
+                    <option value="youtube">YouTube Style (Horizontal 16:9)</option>
+                    <option value="reel">Instagram Reel (Vertical 9:16)</option>
                 </select>
             </div>
             <div class="input-group">
-                <label>File Select Karein</label>
+                <label>Video File</label>
                 <input type="file" id="videoInput" accept="video/*">
             </div>
-            <button class="btn-primary" id="uploadBtn" onclick="uploadVideo()">Upload Video</button>
+            <button class="btn-primary" id="uploadBtn" onclick="uploadVideo()">Upload & Publish</button>
             <div id="status"></div>
         </div>
 
         <!-- YouTube Feed -->
         <div id="homeSection">
-            <h2><i class="fa-solid fa-fire"></i> Trending Videos</h2>
+            <h2><i class="fa-solid fa-fire"></i> Trending Feed</h2>
             <br>
             <div id="videoGrid" class="video-grid">
-                <p id="loadingText">Videos loading ho rahi hain...</p>
+                <p id="loadingText">Videos load ho rahi hain...</p>
             </div>
         </div>
 
         <!-- Instagram Reels Feed -->
         <div id="reelsSection" style="display: none;">
             <div id="reelsGrid" class="reels-container">
-                <p id="reelsLoadingText">Reels loading ho rahi hain...</p>
+                <p id="reelsLoadingText">Reels load ho rahi hain...</p>
             </div>
         </div>
 
     </div>
 
-    <!-- Bottom Mobile Menu -->
+    <!-- Comments Drawer Popup -->
+    <div class="comments-drawer" id="commentsDrawer">
+        <div class="comments-header">
+            <h4><i class="fa-solid fa-comments"></i> Comments</h4>
+            <i class="fa-solid fa-xmark" onclick="closeComments()" style="cursor:pointer;"></i>
+        </div>
+        <div class="comments-list" id="commentsList">
+            <p style="font-size: 12px; color: #888;">No comments yet. Be the first to comment!</p>
+        </div>
+        <div class="comment-input-box">
+            <input type="text" id="commentInput" placeholder="Write a comment...">
+            <button class="auth-btn" onclick="submitComment()">Post</button>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Menu -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home')">
             <i class="fa-solid fa-house"></i>
@@ -156,6 +199,7 @@
     </div>
 
     <script>
+        // Supabase Real Credentials
         const SUPABASE_URL = 'https://tkrrvseibcgsasqlfjbu.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_-3GqiSqvlunpjVtJN4aQOA_aQFV04QB';
         const BUCKET_NAME = 'videos';
@@ -164,6 +208,9 @@
         if (window.supabase) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
+
+        let allVideos = [];
+        let activeVideoForComment = null;
 
         function switchTab(tab) {
             const homeSec = document.getElementById('homeSection');
@@ -185,42 +232,66 @@
         }
 
         function handleAuth() {
-            const email = prompt("Apna Email daalein Login / Sign Up ke liye:");
-            if (email) alert("Login link aapke email par bhej diya gaya hai!");
+            const email = prompt("Login / Sign Up ke liye apna Email daalein:");
+            if (email) {
+                localStorage.setItem('mystream_user', email);
+                document.getElementById('loginBtn').innerText = email.split('@')[0];
+                alert("Kamyabi se Login ho gaya: " + email);
+            }
         }
 
         async function uploadVideo() {
             const fileInput = document.getElementById('videoInput');
             const titleInput = document.getElementById('videoTitle');
-            const videoType = document.getElementById('videoType').value;
+            const descInput = document.getElementById('videoDesc');
+            const typeInput = document.getElementById('videoType').value;
             const uploadBtn = document.getElementById('uploadBtn');
             const status = document.getElementById('status');
 
-            if (!fileInput.files.length) {
-                alert("Kripya pehle video select karein!");
+            if (!fileInput.files.length || !titleInput.value.trim()) {
+                alert("Kripya Video File aur Title dono bharein!");
                 return;
             }
 
             const file = fileInput.files[0];
             const cleanFileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-            const fileName = `${videoType}_${Date.now()}_${cleanFileName}`;
+            const fileName = `${Date.now()}_${cleanFileName}`;
 
             uploadBtn.disabled = true;
             status.innerText = "Video upload ho rahi hai... Kripya rukiye.";
 
             try {
-                const { data, error } = await supabaseClient.storage
+                // 1. Upload to Storage
+                const { data: storageData, error: storageError } = await supabaseClient.storage
                     .from(BUCKET_NAME)
                     .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
-                if (error) {
-                    status.innerText = "Upload Error: " + error.message;
-                } else {
-                    status.innerText = "Video kamyabi se upload ho gayi!";
-                    fileInput.value = '';
-                    titleInput.value = '';
-                    fetchVideos();
-                }
+                if (storageError) throw storageError;
+
+                const { data: publicUrlData } = supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .getPublicUrl(fileName);
+
+                // 2. Insert Record in Postgres Database Table
+                const { error: dbError } = await supabaseClient
+                    .from('videos')
+                    .insert([{
+                        title: titleInput.value.trim(),
+                        description: descInput.value.trim(),
+                        video_url: publicUrlData.publicUrl,
+                        video_type: typeInput,
+                        views: 0,
+                        likes: 0
+                    }]);
+
+                if (dbError) throw dbError;
+
+                status.innerText = "Kamyabi se Publish ho gayi!";
+                fileInput.value = '';
+                titleInput.value = '';
+                descInput.value = '';
+                fetchVideos();
+
             } catch (err) {
                 status.innerText = "Error: " + err.message;
             } finally {
@@ -229,79 +300,165 @@
         }
 
         async function fetchVideos() {
-            const videoGrid = document.getElementById('videoGrid');
-            const reelsGrid = document.getElementById('reelsGrid');
-
             try {
-                const { data, error } = await supabaseClient.storage
-                    .from(BUCKET_NAME)
-                    .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
+                const { data, error } = await supabaseClient
+                    .from('videos')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-                if (error) return;
+                if (error) throw error;
 
-                if (!data || data.length === 0) {
-                    videoGrid.innerHTML = "<p>Koi video nahi mili.</p>";
-                    reelsGrid.innerHTML = "<p>Koi reel nahi mili.</p>";
-                    return;
-                }
+                allVideos = data || [];
+                renderVideos(allVideos);
 
-                videoGrid.innerHTML = '';
-                reelsGrid.innerHTML = '';
-
-                data.forEach(item => {
-                    if (item.name === '.emptyFolderPlaceholder') return;
-
-                    const { data: publicUrlData } = supabaseClient.storage
-                        .from(BUCKET_NAME)
-                        .getPublicUrl(item.name);
-
-                    // Check if Reel or YouTube style
-                    if (item.name.startsWith('reel_')) {
-                        // Instagram Reel
-                        const reelCard = document.createElement('div');
-                        reelCard.className = 'reel-card';
-                        reelCard.innerHTML = `
-                            <video loop onclick="this.paused ? this.play() : this.pause()" src="${publicUrlData.publicUrl}"></video>
-                            <div class="reel-overlay">
-                                <h3>@mystream_user</h3>
-                                <p>Trending Reel on MyStream 🔥</p>
-                            </div>
-                            <div class="reel-actions">
-                                <button class="reel-action-btn" onclick="this.style.color='#00e676'"><i class="fa-solid fa-heart"></i></button>
-                                <button class="reel-action-btn" onclick="alert('Share link copied!')"><i class="fa-solid fa-share"></i></button>
-                            </div>
-                        `;
-                        reelsGrid.appendChild(reelCard);
-                    } else {
-                        // YouTube Video
-                        const videoCard = document.createElement('div');
-                        videoCard.className = 'video-card';
-                        videoCard.innerHTML = `
-                            <div class="video-wrapper">
-                                <video controls src="${publicUrlData.publicUrl}"></video>
-                            </div>
-                            <div class="video-info">
-                                <div class="video-title">MyStream Special Video</div>
-                                <div class="video-meta">
-                                    <span><i class="fa-solid fa-eye"></i> 1.2K views</span>
-                                    <span>2 hours ago</span>
-                                </div>
-                                <div class="actions">
-                                    <button class="action-btn" onclick="this.classList.toggle('active')"><i class="fa-solid fa-thumbs-up"></i> Like</button>
-                                    <button class="action-btn" onclick="alert('Comment box opening...')"><i class="fa-solid fa-comment"></i> Comment</button>
-                                    <button class="action-btn" onclick="alert('Video link copied!')"><i class="fa-solid fa-share"></i> Share</button>
-                                </div>
-                            </div>
-                        `;
-                        videoGrid.appendChild(videoCard);
-                    }
-                });
             } catch (err) {
-                console.error(err);
+                console.error("Fetch Error:", err);
             }
         }
 
+        function renderVideos(videos) {
+            const videoGrid = document.getElementById('videoGrid');
+            const reelsGrid = document.getElementById('reelsGrid');
+
+            videoGrid.innerHTML = '';
+            reelsGrid.innerHTML = '';
+
+            if (!videos.length) {
+                videoGrid.innerHTML = "<p>Koi video nahi mili.</p>";
+                reelsGrid.innerHTML = "<p>Koi reel nahi mili.</p>";
+                return;
+            }
+
+            videos.forEach(vid => {
+                if (vid.video_type === 'reel') {
+                    // Render Reel
+                    const reelCard = document.createElement('div');
+                    reelCard.className = 'reel-card';
+                    reelCard.innerHTML = `
+                        <video loop onplay="incrementViews('${vid.id}')" onclick="this.paused ? this.play() : this.pause()" src="${vid.video_url}"></video>
+                        <div class="reel-overlay">
+                            <div class="reel-title">${vid.title}</div>
+                            <p style="font-size:11px; color:#ccc;">${vid.description || ''}</p>
+                        </div>
+                        <div class="reel-actions">
+                            <button class="reel-action-btn" onclick="likeVideo('${vid.id}', this)"><i class="fa-solid fa-heart"></i><span>${vid.likes || 0}</span></button>
+                            <button class="reel-action-btn" onclick="openComments('${vid.id}')"><i class="fa-solid fa-comment"></i></button>
+                            <button class="reel-action-btn" onclick="shareVideo('${vid.video_url}')"><i class="fa-solid fa-share"></i></button>
+                        </div>
+                    `;
+                    reelsGrid.appendChild(reelCard);
+                } else {
+                    // Render YouTube Video
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.innerHTML = `
+                        <div class="video-wrapper">
+                            <video controls onplay="incrementViews('${vid.id}')" src="${vid.video_url}"></video>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${vid.title}</div>
+                            <div class="video-meta">
+                                <span><i class="fa-solid fa-eye"></i> ${vid.views || 0} views</span>
+                                <span>${new Date(vid.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <div class="actions">
+                                <button class="action-btn" onclick="likeVideo('${vid.id}', this)"><i class="fa-solid fa-thumbs-up"></i> ${vid.likes || 0} Like</button>
+                                <button class="action-btn" onclick="openComments('${vid.id}')"><i class="fa-solid fa-comment"></i> Comment</button>
+                                <button class="action-btn" onclick="shareVideo('${vid.video_url}')"><i class="fa-solid fa-share"></i> Share</button>
+                            </div>
+                        </div>
+                    `;
+                    videoGrid.appendChild(videoCard);
+                }
+            });
+        }
+
+        async function incrementViews(id) {
+            try {
+                const vid = allVideos.find(v => v.id === id);
+                if (!vid) return;
+                await supabaseClient.from('videos').update({ views: (vid.views || 0) + 1 }).eq('id', id);
+            } catch (err) {}
+        }
+
+        async function likeVideo(id, btn) {
+            try {
+                const vid = allVideos.find(v => v.id === id);
+                if (!vid) return;
+                const newLikes = (vid.likes || 0) + 1;
+                vid.likes = newLikes;
+                
+                btn.classList.add('liked');
+                await supabaseClient.from('videos').update({ likes: newLikes }).eq('id', id);
+                fetchVideos();
+            } catch (err) {}
+        }
+
+        function shareVideo(url) {
+            navigator.clipboard.writeText(url);
+            alert("Video link copy ho gaya hai!");
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allVideos.filter(v => v.title.toLowerCase().includes(query) || (v.description && v.description.toLowerCase().includes(query)));
+            renderVideos(filtered);
+        }
+
+        async function openComments(videoId) {
+            activeVideoForComment = videoId;
+            document.getElementById('commentsDrawer').classList.add('open');
+            loadComments(videoId);
+        }
+
+        function closeComments() {
+            document.getElementById('commentsDrawer').classList.remove('open');
+        }
+
+        async function loadComments(videoId) {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = 'Loading comments...';
+
+            const { data, error } = await supabaseClient
+                .from('comments')
+                .select('*')
+                .eq('video_id', videoId)
+                .order('created_at', { ascending: false });
+
+            if (error || !data || !data.length) {
+                commentsList.innerHTML = '<p style="font-size: 12px; color: #888;">No comments yet. Be the first to comment!</p>';
+                return;
+            }
+
+            commentsList.innerHTML = '';
+            data.forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'comment-item';
+                item.innerText = c.comment_text;
+                commentsList.appendChild(item);
+            });
+        }
+
+        async function submitComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+
+            if (!text || !activeVideoForComment) return;
+
+            await supabaseClient.from('comments').insert([{
+                video_id: activeVideoForComment,
+                comment_text: text
+            }]);
+
+            input.value = '';
+            loadComments(activeVideoForComment);
+        }
+
         window.onload = function() {
+            const savedUser = localStorage.getItem('mystream_user');
+            if (savedUser) {
+                document.getElementById('loginBtn').innerText = savedUser.split('@')[0];
+            }
             fetchVideos();
         };
     </script>
