@@ -30,23 +30,26 @@
             height: 100%; 
             background-color: #0f0f0f; 
             color: #ffffff; 
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        body { 
-            padding-bottom: 70px; 
+        /* Main App Wrapper (Flexbox Layout) */
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
         }
 
-        /* Fixed Header with High Z-Index */
+        /* Fixed Header */
         header { 
-            position: sticky; 
-            top: 0; 
-            z-index: 9999; 
+            flex-shrink: 0;
             background: #0f0f0f; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 12px 16px; 
+            padding: 10px 16px; 
             border-bottom: 1px solid #1f1f1f;
         }
 
@@ -80,9 +83,8 @@
         .header-actions { 
             display: flex; 
             align-items: center; 
-            gap: 18px; 
+            gap: 16px; 
             color: #fff; 
-            font-size: 18px; 
         }
 
         .header-btn { 
@@ -94,8 +96,9 @@
             padding: 4px;
         }
 
-        /* Top Navigation Tabs Bar */
+        /* Top Horizontal Scroll Tabs Bar */
         .studio-nav { 
+            flex-shrink: 0;
             display: flex; 
             gap: 8px; 
             overflow-x: auto; 
@@ -103,8 +106,6 @@
             background: #121212; 
             border-bottom: 1px solid #222; 
             scrollbar-width: none; 
-            position: relative;
-            z-index: 9998;
         }
 
         .studio-nav::-webkit-scrollbar { display: none; }
@@ -123,7 +124,6 @@
             align-items: center; 
             gap: 6px; 
             outline: none;
-            touch-action: manipulation;
         }
 
         .tab-btn.active { 
@@ -131,10 +131,17 @@
             color: #000; 
         }
 
+        /* Middle Main Scrollable Area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            padding-bottom: 20px;
+        }
+
         .container { 
             max-width: 900px; 
             margin: 0 auto; 
-            padding: 14px; 
         }
 
         .section-panel { 
@@ -179,7 +186,6 @@
             cursor: pointer; 
             width: 100%; 
             margin-top: 6px; 
-            touch-action: manipulation;
         }
 
         .btn-danger { 
@@ -190,7 +196,6 @@
             border-radius: 6px; 
             font-size: 12px; 
             cursor: pointer; 
-            touch-action: manipulation;
         }
 
         /* Stats Grid */
@@ -213,19 +218,16 @@
         .ad-banner-box { background: #141414; border: 1px dashed #333; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 16px; }
         .ad-tag { font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
 
-        /* Bottom Fixed Navigation Bar */
+        /* Permanent Visible Bottom Bar */
         .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            right: 0; 
+            flex-shrink: 0;
             background: #0f0f0f; 
             border-top: 1px solid #222; 
             display: flex; 
             justify-content: space-around; 
-            padding: 8px 0; 
-            z-index: 9999; 
-            height: 60px; 
+            align-items: center;
+            padding: 6px 0; 
+            height: 56px; 
         }
 
         .nav-item { 
@@ -235,233 +237,212 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
+            justify-content: center;
             gap: 3px; 
             cursor: pointer; 
             flex: 1; 
             border: none;
             background: none;
             outline: none;
-            touch-action: manipulation;
+            height: 100%;
         }
 
         .nav-item.active { color: #fff; }
         .nav-item i { font-size: 18px; }
-        .nav-item-plus { background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); width: 42px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 16px; color: #fff; }
+        .nav-item-plus { background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); width: 40px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 15px; color: #fff; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="logo-container" onclick="showTab('dashboard')">
-            <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
-            <div class="logo-text">Mystreem</div>
-        </div>
-        <div class="header-actions">
-            <button class="header-btn" onclick="alert('Search feature active')"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="header-btn" onclick="alert('No new notifications')"><i class="fa-regular fa-bell"></i></button>
-            <button class="header-btn" onclick="showTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
-        </div>
-    </header>
-
-    <!-- Top Feature Navigation Tabs -->
-    <div class="studio-nav">
-        <button class="tab-btn active" data-tab="dashboard" onclick="showTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-        <button class="tab-btn" data-tab="manage" onclick="showTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
-        <button class="tab-btn" data-tab="upload" onclick="showTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
-        <button class="tab-btn" data-tab="shorts" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
-        <button class="tab-btn" data-tab="live" onclick="showTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
-        <button class="tab-btn" data-tab="community" onclick="showTab('community')"><i class="fa-solid fa-comments"></i> Community</button>
-        <button class="tab-btn" data-tab="playlists" onclick="showTab('playlists')"><i class="fa-solid fa-layer-group"></i> Playlists</button>
-        <button class="tab-btn" data-tab="monetization" onclick="showTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
-        <button class="tab-btn" data-tab="policy" onclick="showTab('policy')"><i class="fa-solid fa-shield-halved"></i> Policy & Terms</button>
-        <button class="tab-btn" data-tab="profile" onclick="showTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
-    </div>
-
-    <div class="container">
-
-        <!-- GOOGLE ADS DISPLAY BANNER -->
-        <div class="ad-banner-box">
-            <div class="ad-tag">Sponsored Ad</div>
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <div style="font-size:12px; color:#aaa;">Google AdSense Banner Integration Active</div>
-        </div>
-
-        <!-- 1. DASHBOARD & REAL-TIME STATS -->
-        <div id="dashboard" class="section-panel active">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-time Channel Analytics</div>
-                <div class="stats-grid">
-                    <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="statViews">0</div></div>
-                    <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="statLikes">0</div></div>
-                    <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="statVideosCount">0</div></div>
-                    <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1</div></div>
-                </div>
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header>
+            <div class="logo-container" onclick="showTab('dashboard')">
+                <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
+                <div class="logo-text">Mystreem</div>
             </div>
-
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Progress</div>
-                <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Google Ads Revenue Approval</p>
-                <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViewsText" style="color: #fff;">0 / 10,000</b></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" id="monetizeProgressBar"></div></div>
-                <p id="monetizeStatusText" style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress</p>
+            <div class="header-actions">
+                <button class="header-btn" onclick="alert('Search feature active')"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="header-btn" onclick="alert('No new notifications')"><i class="fa-regular fa-bell"></i></button>
+                <button class="header-btn" onclick="showTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
             </div>
+        </header>
+
+        <!-- Top Feature Navigation Tabs -->
+        <div class="studio-nav">
+            <button class="tab-btn active" data-tab="dashboard" onclick="showTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+            <button class="tab-btn" data-tab="manage" onclick="showTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
+            <button class="tab-btn" data-tab="upload" onclick="showTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
+            <button class="tab-btn" data-tab="shorts" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
+            <button class="tab-btn" data-tab="live" onclick="showTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
+            <button class="tab-btn" data-tab="community" onclick="showTab('community')"><i class="fa-solid fa-comments"></i> Community</button>
+            <button class="tab-btn" data-tab="playlists" onclick="showTab('playlists')"><i class="fa-solid fa-layer-group"></i> Playlists</button>
+            <button class="tab-btn" data-tab="monetization" onclick="showTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
+            <button class="tab-btn" data-tab="policy" onclick="showTab('policy')"><i class="fa-solid fa-shield-halved"></i> Policy & Terms</button>
+            <button class="tab-btn" data-tab="profile" onclick="showTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
         </div>
 
-        <!-- 2. MANAGE & DELETE VIDEOS -->
-        <div id="manage" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage & Delete Videos</div>
-                <div id="videoManageList"></div>
-            </div>
-        </div>
+        <!-- Middle Scrollable Area -->
+        <div class="main-content">
+            <div class="container">
 
-        <!-- 3. UPLOAD LONG VIDEO -->
-        <div id="upload" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Long Video</div>
-                <div class="form-group">
-                    <label>Video Title</label>
-                    <input type="text" id="vTitle" placeholder="Enter video title...">
+                <!-- GOOGLE ADS DISPLAY BANNER -->
+                <div class="ad-banner-box">
+                    <div class="ad-tag">Sponsored Ad</div>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                         data-ad-slot="1234567890"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <div style="font-size:12px; color:#aaa;">Google AdSense Banner Integration Active</div>
                 </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="vCategory">
-                        <option value="Indian soap operas">Indian soap operas</option>
-                        <option value="Business ideas">Business ideas</option>
-                        <option value="Comedy">Comedy</option>
-                        <option value="Tech & Electronics">Tech & Electronics</option>
-                        <option value="Mobile Repairing">Mobile Repairing</option>
-                        <option value="Education">Education</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Custom Thumbnail File</label>
-                    <input type="file" accept="image/*">
-                </div>
-                <div class="form-group">
-                    <label>Subtitles (.srt file)</label>
-                    <input type="file" accept=".srt">
-                </div>
-                <div class="form-group">
-                    <label>Video File</label>
-                    <input type="file" id="vFile" accept="video/*">
-                </div>
-                <button class="btn-action" onclick="publishVideo('youtube')">Publish Video</button>
-            </div>
-        </div>
 
-        <!-- 4. SHORTS UPLOAD -->
-        <div id="shorts" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-bolt"></i> Upload YouTube Shorts</div>
-                <div class="form-group">
-                    <label>Short Title</label>
-                    <input type="text" id="sTitle" placeholder="#Shorts title...">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="sCategory">
-                        <option value="Comedy">Comedy</option>
-                        <option value="Tech">Tech</option>
-                        <option value="Business ideas">Business ideas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Short Video File (9:16)</label>
-                    <input type="file" id="sFile" accept="video/*">
-                </div>
-                <button class="btn-action" onclick="publishVideo('reel')">Publish Short</button>
-            </div>
-        </div>
+                <!-- 1. DASHBOARD & REAL-TIME STATS -->
+                <div id="dashboard" class="section-panel active">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-time Channel Analytics</div>
+                        <div class="stats-grid">
+                            <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="statViews">0</div></div>
+                            <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="statLikes">0</div></div>
+                            <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="statVideosCount">0</div></div>
+                            <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1</div></div>
+                        </div>
+                    </div>
 
-        <!-- 5. LIVE STREAMING -->
-        <div id="live" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> Live Streaming</div>
-                <div class="form-group">
-                    <label>Stream Title</label>
-                    <input type="text" placeholder="Enter live stream topic...">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Progress</div>
+                        <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Google Ads Revenue Approval</p>
+                        <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViewsText" style="color: #fff;">0 / 10,000</b></div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="monetizeProgressBar"></div></div>
+                        <p id="monetizeStatusText" style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress</p>
+                    </div>
                 </div>
-                <button class="btn-action" onclick="alert('Live broadcast server initialized!')">Go Live Now</button>
-            </div>
-        </div>
 
-        <!-- 6. COMMUNITY POSTS -->
-        <div id="community" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-bullhorn"></i> Community Post</div>
-                <div class="form-group">
-                    <label>Post Type</label>
-                    <select>
-                        <option>Text Update</option>
-                        <option>Photo Post</option>
-                        <option>Audience Poll</option>
-                    </select>
+                <!-- 2. MANAGE & DELETE VIDEOS -->
+                <div id="manage" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage & Delete Videos</div>
+                        <div id="videoManageList"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Post Content</label>
-                    <textarea rows="3" placeholder="Share something with your audience..."></textarea>
+
+                <!-- 3. UPLOAD LONG VIDEO -->
+                <div id="upload" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Long Video</div>
+                        <div class="form-group">
+                            <label>Video Title</label>
+                            <input type="text" id="vTitle" placeholder="Enter video title...">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="vCategory">
+                                <option value="Indian soap operas">Indian soap operas</option>
+                                <option value="Business ideas">Business ideas</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Tech & Electronics">Tech & Electronics</option>
+                                <option value="Mobile Repairing">Mobile Repairing</option>
+                                <option value="Education">Education</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Custom Thumbnail File</label>
+                            <input type="file" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label>Subtitles (.srt file)</label>
+                            <input type="file" accept=".srt">
+                        </div>
+                        <div class="form-group">
+                            <label>Video File</label>
+                            <input type="file" id="vFile" accept="video/*">
+                        </div>
+                        <button class="btn-action" onclick="publishVideo('youtube')">Publish Video</button>
+                    </div>
                 </div>
-                <button class="btn-action" onclick="alert('Community post published!')">Publish</button>
-            </div>
-        </div>
 
-        <!-- 7. PLAYLISTS -->
-        <div id="playlists" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-layer-group"></i> Create Playlist</div>
-                <div class="form-group">
-                    <label>Playlist Name</label>
-                    <input type="text" placeholder="e.g. Electrical & Mobile Servicing">
+                <!-- 4. SHORTS UPLOAD -->
+                <div id="shorts" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-bolt"></i> Upload YouTube Shorts</div>
+                        <div class="form-group">
+                            <label>Short Title</label>
+                            <input type="text" id="sTitle" placeholder="#Shorts title...">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="sCategory">
+                                <option value="Comedy">Comedy</option>
+                                <option value="Tech">Tech</option>
+                                <option value="Business ideas">Business ideas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Short Video File (9:16)</label>
+                            <input type="file" id="sFile" accept="video/*">
+                        </div>
+                        <button class="btn-action" onclick="publishVideo('reel')">Publish Short</button>
+                    </div>
                 </div>
-                <button class="btn-action" onclick="alert('Playlist created successfully!')">Create</button>
-            </div>
-        </div>
 
-        <!-- 8. MONETIZATION -->
-        <div id="monetization" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> Google AdSense & Monetization</div>
-                <p style="font-size: 12px; color: #aaa; margin-bottom: 10px;">AdSense Publisher ID setup for auto ad placement:</p>
-                <div class="form-group">
-                    <label>AdSense Publisher ID</label>
-                    <input type="text" value="pub-XXXXXXXXXXXXXXXX" placeholder="pub-xxxxxxxxxxxxxxxx">
+                <!-- 5. LIVE STREAMING -->
+                <div id="live" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> Live Streaming</div>
+                        <div class="form-group">
+                            <label>Stream Title</label>
+                            <input type="text" placeholder="Enter live stream topic...">
+                        </div>
+                        <button class="btn-action" onclick="alert('Live broadcast server initialized!')">Go Live Now</button>
+                    </div>
                 </div>
-                <button class="btn-action" onclick="alert('AdSense settings saved!')">Save AdSense Info</button>
-            </div>
-        </div>
 
-        <!-- 9. POLICY & TERMS -->
-        <div id="policy" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Community Guidelines & Policy</div>
-                <p style="font-size: 12px; color: #ccc; line-height: 1.5;">
-                    1. <b>Content Policy:</b> No copyright violations, hate speech, or dangerous activities allowed.<br>
-                    2. <b>Monetization Policy:</b> Ads will automatically activate once the channel completes 10,000 valid views.<br>
-                    3. <b>Copyright Claims:</b> Video deletion or strikes will apply on copying original creator content.
-                </p>
-            </div>
-        </div>
+                <!-- 6. COMMUNITY POSTS -->
+                <div id="community" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-bullhorn"></i> Community Post</div>
+                        <div class="form-group">
+                            <label>Post Type</label>
+                            <select>
+                                <option>Text Update</option>
+                                <option>Photo Post</option>
+                                <option>Audience Poll</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Post Content</label>
+                            <textarea rows="3" placeholder="Share something with your audience..."></textarea>
+                        </div>
+                        <button class="btn-action" onclick="alert('Community post published!')">Publish</button>
+                    </div>
+                </div>
 
-        <!-- 10. PROFILE -->
-        <div id="profile" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-user-gear"></i> Channel Profile</div>
-                <div class="form-group"><label>Channel Name</label><input type="text" value="Mystreem Official"></div>
-                <div class="form-group"><label>Handle</label><input type="text" value="@mystreem"></div>
-                <div class="form-group"><label>Bio / Description</label><textarea rows="3">Official Mystreem Creator Channel</textarea></div>
-                <button class="btn-action" onclick="alert('Profile Updated!')">Save Profile</button>
-            </div>
-        </div>
+                <!-- 7. PLAYLISTS -->
+                <div id="playlists" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-layer-group"></i> Create Playlist</div>
+                        <div class="form-group">
+                            <label>Playlist Name</label>
+                            <input type="text" placeholder="e.g. Electrical & Mobile Servicing">
+                        </div>
+                        <button class="btn-action" onclick="alert('Playlist created successfully!')">Create</button>
+                    </div>
+                </div>
 
-    </div>
+                <!-- 8. MONETIZATION -->
+                <div id="monetization" class="section-panel">
+                    <div class="card">
+                        <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> Google AdSense & Monetization</div>
+                        <p style="font-size: 12px; color: #aaa; margin-bottom: 10px;">AdSense Publisher ID setup for auto ad placement:</p>
+                        <div class="form-group">
+                            <label>AdSense Publisher ID</label>
+                            <input type="text" value="pub-XXXXXXXXXXXXXXXX" placeholder="pub-xxxxxxxxxxxxxxxx">
+                        </div>
+                        <button class="btn-action" onclick="alert('AdSense settings saved!')">Save AdSense Info</button>
+                    </div>
+                </div>
 
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <button class="nav-item active" 
+                <!-- 9. POLICY & TERMS -->
+                <div id="policy" class="section-panel">
+                    <div class="card">
