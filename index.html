@@ -3,35 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyStream - Live Video Platform</title>
+    <title>MyStream - Watch & Share Videos</title>
     <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
-        h1 { text-align: center; color: #00e676; }
-        .upload-section { background: #1e1e1e; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto 30px auto; text-align: center; }
-        input[type="file"] { margin: 10px 0; }
-        button { background: #00e676; color: #000; font-weight: bold; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-        button:disabled { background: #555; cursor: not-allowed; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .video-card { background: #1e1e1e; border-radius: 8px; overflow: hidden; padding: 10px; }
-        video { width: 100%; border-radius: 5px; }
-        #status { margin-top: 10px; font-size: 14px; color: #ffeb3b; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f0f; color: #fff; margin: 0; padding: 15px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #272727; margin-bottom: 20px; }
+        h1 { color: #00e676; margin: 0; font-size: 24px; }
+        .auth-btn { background: #00e676; color: #000; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        
+        .ad-banner { background: #1a1a1a; border: 1px dashed #333; text-align: center; padding: 15px; margin: 15px 0; color: #888; border-radius: 8px; font-size: 13px; }
+        
+        .upload-card { background: #212121; padding: 20px; border-radius: 12px; max-width: 500px; margin: 0 auto 30px auto; }
+        .upload-card h3 { margin-top: 0; color: #00e676; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #aaa; }
+        .input-group input, .input-group textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #121212; color: #fff; }
+        
+        button.btn-primary { background: #00e676; color: #000; font-weight: bold; border: none; padding: 12px 24px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 16px; }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .video-card { background: #1e1e1e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+        video { width: 100%; height: 200px; background: #000; object-fit: cover; }
+        .video-info { padding: 12px; }
+        .video-title { font-weight: bold; font-size: 16px; margin: 0 0 5px 0; color: #fff; }
+        .video-desc { font-size: 13px; color: #aaa; margin: 0 0 10px 0; }
+        .actions { display: flex; gap: 15px; border-top: 1px solid #2d2d2d; padding-top: 10px; }
+        .action-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+        .action-btn:hover { color: #00e676; }
+        
+        #status { margin-top: 10px; font-size: 14px; color: #ffeb3b; text-align: center; }
     </style>
 </head>
 <body>
 
-    <h1>MyStream</h1>
+    <header>
+        <h1>MyStream</h1>
+        <button class="auth-btn" onclick="handleAuth()">Login / Sign Up</button>
+    </header>
 
-    <div class="upload-section">
+    <!-- AdSense Top Banner Place -->
+    <div class="ad-banner">
+        📢 Advertisement / AdSense Banner Space
+    </div>
+
+    <div class="upload-card">
         <h3>Video Upload Karein</h3>
-        <input type="file" id="videoInput" accept="video/*">
-        <br>
-        <button id="uploadBtn" onclick="uploadVideo()">Upload Video</button>
+        <div class="input-group">
+            <label>Video Title</label>
+            <input type="text" id="videoTitle" placeholder="Apni video ka naam likhein...">
+        </div>
+        <div class="input-group">
+            <label>Description</label>
+            <textarea id="videoDesc" rows="2" placeholder="Video ke baare me kuch bataiye..."></textarea>
+        </div>
+        <div class="input-group">
+            <label>Video File Select Karein</label>
+            <input type="file" id="videoInput" accept="video/*">
+        </div>
+        <button class="btn-primary" id="uploadBtn" onclick="uploadVideo()">Upload Video</button>
         <div id="status"></div>
     </div>
 
-    <h2>Uploaded Videos</h2>
+    <!-- Middle Ad Banner Place -->
+    <div class="ad-banner">
+        💰 Ad Space (Isme AdSense Ads Aayenge)
+    </div>
+
+    <h2>Trending Videos</h2>
     <div id="videoGrid" class="video-grid">
         <p id="loadingText">Loading videos...</p>
     </div>
@@ -46,15 +87,17 @@
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
+        function handleAuth() {
+            const email = prompt("Apna Email daalein Login / Sign Up ke liye:");
+            if (email) alert("Login link aapke email par bhej diya gaya hai!");
+        }
+
         async function uploadVideo() {
             const fileInput = document.getElementById('videoInput');
+            const titleInput = document.getElementById('videoTitle');
+            const descInput = document.getElementById('videoDesc');
             const uploadBtn = document.getElementById('uploadBtn');
             const status = document.getElementById('status');
-
-            if (!supabaseClient) {
-                status.innerText = "Error: Supabase connection fail ho gaya.";
-                return;
-            }
 
             if (!fileInput.files.length) {
                 alert("Kripya pehle video select karein!");
@@ -66,7 +109,7 @@
             const fileName = `${Date.now()}_${cleanFileName}`;
 
             uploadBtn.disabled = true;
-            status.innerText = "Video upload ho rahi hai... Kripya wait karein.";
+            status.innerText = "Video upload ho rahi hai...";
 
             try {
                 const { data, error } = await supabaseClient.storage
@@ -78,10 +121,12 @@
                 } else {
                     status.innerText = "Video kamyabi se upload ho gayi!";
                     fileInput.value = '';
+                    titleInput.value = '';
+                    descInput.value = '';
                     fetchVideos();
                 }
             } catch (err) {
-                status.innerText = "Unexpected Error: " + err.message;
+                status.innerText = "Error: " + err.message;
             } finally {
                 uploadBtn.disabled = false;
             }
@@ -91,18 +136,13 @@
             const videoGrid = document.getElementById('videoGrid');
             const loadingText = document.getElementById('loadingText');
 
-            if (!supabaseClient) {
-                if (loadingText) loadingText.innerText = "Error: Supabase connection fail ho gaya.";
-                return;
-            }
-
             try {
                 const { data, error } = await supabaseClient.storage
                     .from(BUCKET_NAME)
                     .list('', { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
 
                 if (error) {
-                    if (loadingText) loadingText.innerText = "Error loading videos: " + error.message;
+                    if (loadingText) loadingText.innerText = "Error: " + error.message;
                     return;
                 }
 
@@ -124,7 +164,14 @@
                     videoCard.className = 'video-card';
                     videoCard.innerHTML = `
                         <video controls src="${publicUrlData.publicUrl}"></video>
-                        <p style="font-size: 12px; color: #aaa; word-break: break-all;">${item.name}</p>
+                        <div class="video-info">
+                            <h4 class="video-title">MyStream Special Video</h4>
+                            <p class="video-desc">Watch, like and enjoy this video on MyStream!</p>
+                            <div class="actions">
+                                <button class="action-btn" onclick="this.innerText='❤️ Liked'">👍 Like</button>
+                                <button class="action-btn" onclick="alert('Comment feature is opening...')">💬 Comment</button>
+                            </div>
+                        </div>
                     `;
                     videoGrid.appendChild(videoCard);
                 });
