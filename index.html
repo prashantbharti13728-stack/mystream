@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyStream - Free Video Platform</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #0f0f0f; color: #fff; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #202020; border-bottom: 1px solid #303030; }
+        .logo { font-size: 24px; font-weight: bold; color: #ff0000; }
+        .container { display: flex; flex-wrap: wrap; padding: 20px; gap: 20px; }
+        .main-content { flex: 3; min-width: 300px; }
+        .sidebar { flex: 1; min-width: 250px; }
+        video { width: 100%; max-height: 480px; background: #000; border-radius: 8px; }
+        .video-info { margin-top: 15px; }
+        .upload-section, .ad-box { background: #232323; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .ad-box { border: 1px dashed #555; text-align: center; color: #aaa; min-height: 100px; display: flex; align-items: center; justify-content: center; }
+        input, button { padding: 10px; margin-top: 10px; border-radius: 4px; border: none; }
+        input[type="text"] { width: 70%; background: #121212; color: #fff; border: 1px solid #444; }
+        button { background: #ff0000; color: #fff; font-weight: bold; cursor: pointer; }
+        button:hover { background: #cc0000; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">MyStream</div>
+        <div>Free Video Sharing Platform</div>
+    </header>
+
+    <div class="container">
+        <!-- Main Video Area -->
+        <div class="main-content">
+            <video id="videoPlayer" controls poster="https://via.placeholder.com/800x450?text=Select+or+Upload+a+Video">
+                <source id="videoSource" src="" type="video/mp4">
+                Aapka browser video tag support nahi karta.
+            </video>
+            <div class="video-info">
+                <h2 id="videoTitle">Apni Video Chuniye ya Upload Karein</h2>
+                <p style="color: #aaa; margin-top: 5px;">Views: 0 • Shared just now</p>
+            </div>
+        </div>
+
+        <!-- Sidebar / Ad & Upload Section -->
+        <div class="sidebar">
+            <!-- Upload Box -->
+            <div class="upload-section">
+                <h3>Video Upload / Stream</h3>
+                <p style="font-size: 12px; color: #ccc; margin-top: 5px;">File chuniye ya direct MP4 link daliye:</p>
+                <input type="file" id="fileInput" accept="video/*" style="display:block; width: 100%;">
+                <br>
+                <input type="text" id="urlInput" placeholder="https://example.com/video.mp4">
+                <button onclick="loadUrlVideo()">Play URL</button>
+            </div>
+
+            <!-- Ad Space Placeholder -->
+            <div class="ad-box">
+                <div>
+                    <p><strong>[ ADVERTISEMENT SPACE ]</strong></p>
+                    <p style="font-size: 11px;">Google AdSense / PopAds code yahan aayega</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local File Play Logic
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const videoPlayer = document.getElementById('videoPlayer');
+                const videoSource = document.getElementById('videoSource');
+                const videoTitle = document.getElementById('videoTitle');
+                
+                videoSource.src = URL.createObjectURL(file);
+                videoTitle.innerText = file.name;
+                videoPlayer.load();
+                videoPlayer.play();
+            }
+        });
+
+        // URL Play Logic
+        function loadUrlVideo() {
+            const url = document.getElementById('urlInput').value;
+            if (url) {
+                const videoPlayer = document.getElementById('videoPlayer');
+                const videoSource = document.getElementById('videoSource');
+                const videoTitle = document.getElementById('videoTitle');
+
+                videoSource.src = url;
+                videoTitle.innerText = "External Stream Video";
+                videoPlayer.load();
+                videoPlayer.play();
+            }
+        }
+    </script>
+</body>
+</html>
