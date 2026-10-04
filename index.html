@@ -120,20 +120,15 @@
             color: #000; 
         }
 
-        /* Middle Scrollable Content Area */
+        /* Middle Content Area */
         .content-container {
             flex: 1;
             overflow-y: auto;
             padding: 14px;
         }
 
-        .section-panel { 
-            display: none; 
-        }
-
-        .section-panel.active { 
-            display: block; 
-        }
+        .section-panel { display: none; }
+        .section-panel.active { display: block; }
 
         /* Cards */
         .card { 
@@ -155,8 +150,31 @@
         }
 
         .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+        .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; 
+            padding: 10px; 
+            background: #0f0f0f; 
+            border: 1px solid #333; 
+            border-radius: 8px; 
+            color: #fff; 
+            font-size: 13px; 
+            outline: none; 
+        }
+
+        /* Upload Area Styles */
+        .file-upload-box {
+            border: 2px dashed #00d2ff;
+            background: #111;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-box i { font-size: 28px; color: #00d2ff; margin-bottom: 8px; }
+        .file-upload-box p { font-size: 12px; color: #aaa; }
 
         .btn-action { 
             background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); 
@@ -171,18 +189,33 @@
             margin-top: 6px; 
         }
 
+        .btn-danger {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .stat-box { background: #111; border: 1px solid #252525; border-radius: 10px; padding: 12px; text-align: center; }
         .stat-num { font-size: 18px; font-weight: 700; color: #fff; margin-top: 4px; }
         .stat-lbl { font-size: 11px; color: #aaa; }
 
         .progress-bar-bg { background: #282828; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
-        .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 5%; }
+        .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+        .video-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #252525; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .video-info { display: flex; flex-direction: column; gap: 4px; }
+        .video-item-title { font-size: 13px; font-weight: 600; color: #fff; }
+        .video-item-meta { font-size: 11px; color: #888; display: flex; gap: 12px; }
 
         .ad-banner-box { background: #141414; border: 1px dashed #333; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 16px; }
         .ad-tag { font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
 
-        /* Bottom Navigation Bar */
+        /* Bottom Nav */
         .bottom-nav { 
             height: 60px;
             background: #0d0d0d; 
@@ -210,8 +243,7 @@
         }
 
         .nav-item.active { color: #fff; }
-        .nav-item i { font-size: 18px; pointer-events: none; }
-        .nav-item span { pointer-events: none; }
+        .nav-item i, .nav-item span { pointer-events: none; }
         
         .nav-item-plus { 
             background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); 
@@ -237,21 +269,21 @@
                 <div class="logo-text">Mystreem</div>
             </div>
             <div class="header-actions">
-                <button class="header-btn" onclick="alert('Search feature active')"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="header-btn" onclick="alert('No new notifications')"><i class="fa-regular fa-bell"></i></button>
+                <button class="header-btn" onclick="alert('Search Active')"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="header-btn" onclick="alert('No Notifications')"><i class="fa-regular fa-bell"></i></button>
                 <button class="header-btn" onclick="openTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
             </div>
         </header>
 
         <!-- Studio Nav -->
         <div class="studio-nav">
-            <button class="tab-btn active" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-            <button class="tab-btn" onclick="openTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
-            <button class="tab-btn" onclick="openTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
-            <button class="tab-btn" onclick="openTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
-            <button class="tab-btn" onclick="openTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
-            <button class="tab-btn" onclick="openTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
-            <button class="tab-btn" onclick="openTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
+            <button class="tab-btn active" id="stab-dashboard" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+            <button class="tab-btn" id="stab-manage" onclick="openTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
+            <button class="tab-btn" id="stab-upload" onclick="openTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
+            <button class="tab-btn" id="stab-shorts" onclick="openTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
+            <button class="tab-btn" id="stab-live" onclick="openTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
+            <button class="tab-btn" id="stab-monetization" onclick="openTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
+            <button class="tab-btn" id="stab-profile" onclick="openTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
         </div>
 
         <!-- Middle Content Area -->
@@ -266,18 +298,18 @@
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-time Channel Analytics</div>
                     <div class="stats-grid">
-                        <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="dashViews">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="dashLikes">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="dashVideos">0</div></div>
                         <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1</div></div>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Progress</div>
-                    <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Approval</p>
-                    <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b style="color: #fff;">0 / 10,000</b></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                    <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Google Ads Approval</p>
+                    <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViews" style="color: #fff;">0 / 10,000</b></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progBar"></div></div>
                     <p style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress</p>
                 </div>
             </div>
@@ -285,26 +317,64 @@
             <!-- MANAGE -->
             <div id="manage" class="section-panel">
                 <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage Videos</div>
-                    <p style="font-size: 12px; color: #888; text-align: center;">Koi video nahi mili.</p>
+                    <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage & Delete Videos</div>
+                    <div id="uploadedVideosList"></div>
                 </div>
             </div>
 
-            <!-- UPLOAD -->
+            <!-- UPLOAD VIDEO -->
             <div id="upload" class="section-panel">
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Video</div>
-                    <div class="form-group"><label>Title</label><input type="text" placeholder="Video Title..."></div>
-                    <button class="btn-action" onclick="alert('Video Uploaded Successfully!')">Publish Video</button>
+                    
+                    <!-- File Select Box -->
+                    <div class="file-upload-box" onclick="document.getElementById('videoFileInput').click()">
+                        <i class="fa-solid fa-file-video"></i>
+                        <p id="fileSelectedText">Tap to select Video File from Phone</p>
+                        <input type="file" id="videoFileInput" accept="video/*" style="display:none;" onchange="handleFileSelect(this)">
+                    </div>
+
+                    <!-- Video Preview Player -->
+                    <div id="videoPreviewBox" style="display:none; margin-bottom:12px;">
+                        <video id="videoPreview" controls style="width:100%; max-height:180px; border-radius:8px; background:#000;"></video>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Video Title</label>
+                        <input type="text" id="longVideoTitle" placeholder="Enter Video Title...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="longVideoCategory">
+                            <option value="Tech & Electronics">Tech & Electronics</option>
+                            <option value="Mobile Repairing">Mobile Repairing</option>
+                            <option value="Indian Soap Operas">Indian Soap Operas</option>
+                            <option value="Business Ideas">Business Ideas</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-action" onclick="uploadLongVideo()">Publish Video</button>
                 </div>
             </div>
 
             <!-- SHORTS -->
             <div id="shorts" class="section-panel">
                 <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-bolt"></i> YouTube Shorts</div>
-                    <div class="form-group"><label>Short Title</label><input type="text" placeholder="#Shorts Title..."></div>
-                    <button class="btn-action" onclick="alert('Short Published!')">Upload Short</button>
+                    <div class="card-title"><i class="fa-solid fa-bolt"></i> Upload YouTube Shorts</div>
+                    
+                    <div class="file-upload-box" onclick="document.getElementById('shortFileInput').click()">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <p id="shortSelectedText">Select Vertical Video (#Shorts)</p>
+                        <input type="file" id="shortFileInput" accept="video/*" style="display:none;" onchange="handleShortSelect(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Short Title</label>
+                        <input type="text" id="shortVideoTitle" placeholder="#Shorts Title...">
+                    </div>
+
+                    <button class="btn-action" onclick="uploadShortVideo()">Publish Short</button>
                 </div>
             </div>
 
@@ -312,7 +382,7 @@
             <div id="live" class="section-panel">
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> Live Streaming</div>
-                    <button class="btn-action" onclick="alert('Live Stream Starting...')">Go Live</button>
+                    <button class="btn-action" onclick="alert('Live Streaming Started!')">Go Live Now</button>
                 </div>
             </div>
 
@@ -320,8 +390,8 @@
             <div id="monetization" class="section-panel">
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> Google AdSense</div>
-                    <div class="form-group"><label>AdSense Publisher ID</label><input type="text" value="pub-1234567890"></div>
-                    <button class="btn-action" onclick="alert('Saved!')">Save AdSense</button>
+                    <div class="form-group"><label>AdSense Publisher ID</label><input type="text" value="pub-9876543210"></div>
+                    <button class="btn-action" onclick="alert('AdSense Saved!')">Save AdSense</button>
                 </div>
             </div>
 
@@ -329,8 +399,8 @@
             <div id="profile" class="section-panel">
                 <div class="card">
                     <div class="card-title"><i class="fa-solid fa-user-gear"></i> Channel Profile</div>
-                    <div class="form-group"><label>Channel Name</label><input type="text" value="Mystreem Official"></div>
-                    <button class="btn-action" onclick="alert('Profile Updated!')">Update Profile</button>
+                    <div class="form-group"><label>Channel Name</label><input type="text" value="Mystreem Channel"></div>
+                    <button class="btn-action" onclick="alert('Profile Saved!')">Save Profile</button>
                 </div>
             </div>
         </div>
@@ -354,35 +424,73 @@
             </button>
             <button class="nav-item" id="bnav-profile" onclick="openTab('profile')">
                 <i class="fa-solid fa-circle-user"></i>
-                <span>You</span></button>
+                <span>You</span>
+            </button>
         </div>
     </div>
 
     <script>
+        let videosData = [];
+        let selectedFileUrl = null;
+
         function openTab(tabId) {
-            // Hide all section panels
             var panels = document.querySelectorAll('.section-panel');
             for (var i = 0; i < panels.length; i++) {
                 panels[i].classList.remove('active');
             }
 
-            // Show selected panel
             var selectedPanel = document.getElementById(tabId);
-            if (selectedPanel) {
-                selectedPanel.classList.add('active');
-            }
+            if (selectedPanel) selectedPanel.classList.add('active');
 
-            // Update bottom navigation active status
             var navItems = document.querySelectorAll('.nav-item');
             for (var j = 0; j < navItems.length; j++) {
                 navItems[j].classList.remove('active');
             }
-
             var activeBnav = document.getElementById('bnav-' + tabId);
-            if (activeBnav) {
-                activeBnav.classList.add('active');
+            if (activeBnav) activeBnav.classList.add('active');
+
+            var tabBtns = document.querySelectorAll('.tab-btn');
+            for (var k = 0; k < tabBtns.length; k++) {
+                tabBtns[k].classList.remove('active');
+            }
+            var activeStab = document.getElementById('stab-' + tabId);
+            if (activeStab) activeStab.classList.add('active');
+
+            updateUI();
+        }
+
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('fileSelectedText').innerText = "Selected File: " + file.name;
+                selectedFileUrl = URL.createObjectURL(file);
+                
+                const preview = document.getElementById('videoPreview');
+                preview.src = selectedFileUrl;
+                document.getElementById('videoPreviewBox').style.display = 'block';
             }
         }
-    </script>
-</body>
-</html>
+
+        function handleShortSelect(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('shortSelectedText').innerText = "Selected Short: " + input.files[0].name;
+            }
+        }
+
+        function uploadLongVideo() {
+            const title = document.getElementById('longVideoTitle').value.trim();
+            if (!title) {
+                alert("Please enter Video Title!");
+                return;
+            }
+
+            videosData.unshift({
+                id: Date.now(),
+                title: title,
+                type: 'Long Video',
+                views: Math.floor(Math.random() * 1500) + 100,
+                likes: Math.floor(Math.random() * 200) + 10
+            });
+
+            document.getElementById('longVideoTitle').value = '';
+            document.getElementById('
