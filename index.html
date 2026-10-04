@@ -1,99 +1,124 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyStream - Free Video Platform</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: #0f0f0f; color: #fff; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #202020; border-bottom: 1px solid #303030; }
-        .logo { font-size: 24px; font-weight: bold; color: #ff0000; }
-        .container { display: flex; flex-wrap: wrap; padding: 20px; gap: 20px; }
-        .main-content { flex: 3; min-width: 300px; }
-        .sidebar { flex: 1; min-width: 250px; }
-        video { width: 100%; max-height: 480px; background: #000; border-radius: 8px; }
-        .video-info { margin-top: 15px; }
-        .upload-section, .ad-box { background: #232323; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .ad-box { border: 1px dashed #555; text-align: center; color: #aaa; min-height: 100px; display: flex; align-items: center; justify-content: center; }
-        input, button { padding: 10px; margin-top: 10px; border-radius: 4px; border: none; }
-        input[type="text"] { width: 70%; background: #121212; color: #fff; border: 1px solid #444; }
-        button { background: #ff0000; color: #fff; font-weight: bold; cursor: pointer; }
-        button:hover { background: #cc0000; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyStream - Live Video Platform</title>
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
+    h1 { text-align: center; color: #00e676; }
+    .upload-section { background: #1e1e1e; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto 30px auto; text-align: center; }
+    input[type="file"] { margin: 10px 0; }
+    button { background: #00e676; color: #000; font-weight: bold; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    button:disabled { background: #555; cursor: not-allowed; }
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .video-card { background: #1e1e1e; border-radius: 8px; overflow: hidden; padding: 10px; }
+    video { width: 100%; border-radius: 5px; }
+    #status { margin-top: 10px; font-size: 14px; color: #ffeb3b; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">MyStream</div>
-        <div>Free Video Sharing Platform</div>
-    </header>
+  <h1>MyStream</h1>
 
-    <div class="container">
-        <!-- Main Video Area -->
-        <div class="main-content">
-            <video id="videoPlayer" controls poster="https://via.placeholder.com/800x450?text=Select+or+Upload+a+Video">
-                <source id="videoSource" src="" type="video/mp4">
-                Aapka browser video tag support nahi karta.
-            </video>
-            <div class="video-info">
-                <h2 id="videoTitle">Apni Video Chuniye ya Upload Karein</h2>
-                <p style="color: #aaa; margin-top: 5px;">Views: 0 • Shared just now</p>
-            </div>
-        </div>
+  <div class="upload-section">
+    <h3>Video Upload Karein</h3>
+    <input type="file" id="videoInput" accept="video/*">
+    <br>
+    <button id="uploadBtn" onclick="uploadVideo()">Upload Video</button>
+    <div id="status"></div>
+  </div>
 
-        <!-- Sidebar / Ad & Upload Section -->
-        <div class="sidebar">
-            <!-- Upload Box -->
-            <div class="upload-section">
-                <h3>Video Upload / Stream</h3>
-                <p style="font-size: 12px; color: #ccc; margin-top: 5px;">File chuniye ya direct MP4 link daliye:</p>
-                <input type="file" id="fileInput" accept="video/*" style="display:block; width: 100%;">
-                <br>
-                <input type="text" id="urlInput" placeholder="https://example.com/video.mp4">
-                <button onclick="loadUrlVideo()">Play URL</button>
-            </div>
+  <h2>Uploaded Videos</h2>
+  <div class="video-grid" id="videoGrid">
+    <p>Loading videos...</p>
+  </div>
 
-            <!-- Ad Space Placeholder -->
-            <div class="ad-box">
-                <div>
-                    <p><strong>[ ADVERTISEMENT SPACE ]</strong></p>
-                    <p style="font-size: 11px;">Google AdSense / PopAds code yahan aayega</p>
-                </div>
-            </div>
-        </div>
-    </div>
+  <script>
+    // Supabase Configuration
+    const SUPABASE_URL = "https://tkrrvseibcgsasqlfjbu.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_-3GqiSqvlunpjVtJN4aQOA_aQFV04QB";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    <script>
-        // Local File Play Logic
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const videoPlayer = document.getElementById('videoPlayer');
-                const videoSource = document.getElementById('videoSource');
-                const videoTitle = document.getElementById('videoTitle');
-                
-                videoSource.src = URL.createObjectURL(file);
-                videoTitle.innerText = file.name;
-                videoPlayer.load();
-                videoPlayer.play();
-            }
-        });
+    // Fetch and display videos on page load
+    async function fetchVideos() {
+      const videoGrid = document.getElementById('videoGrid');
+      videoGrid.innerHTML = '';
 
-        // URL Play Logic
-        function loadUrlVideo() {
-            const url = document.getElementById('urlInput').value;
-            if (url) {
-                const videoPlayer = document.getElementById('videoPlayer');
-                const videoSource = document.getElementById('videoSource');
-                const videoTitle = document.getElementById('videoTitle');
+      const { data, error } = await supabase.storage.from('videos').list('', {
+        limit: 100,
+        offset: 0,
+        sortBy: { column: 'created_at', order: 'desc' }
+      });
 
-                videoSource.src = url;
-                videoTitle.innerText = "External Stream Video";
-                videoPlayer.load();
-                videoPlayer.play();
-            }
-        }
-    </script>
+      if (error) {
+        videoGrid.innerHTML = '<p>Videos load nahi ho payi.</p>';
+        console.error(error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        videoGrid.innerHTML = '<p>Abhi tak koi video upload nahi hui hai.</p>';
+        return;
+      }
+
+      data.forEach(file => {
+        if (file.name === '.emptyFolderPlaceholder') return;
+        
+        const { data: publicUrlData } = supabase.storage.from('videos').getPublicUrl(file.name);
+        const videoUrl = publicUrlData.publicUrl;
+
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+          <video controls preload="metadata">
+            <source src="${videoUrl}" type="video/mp4">
+            Aapka browser video tag support nahi karta.
+          </video>
+        `;
+        videoGrid.appendChild(card);
+      });
+    }
+
+    // Upload video function
+    async function uploadVideo() {
+      const fileInput = document.getElementById('videoInput');
+      const status = document.getElementById('status');
+      const uploadBtn = document.getElementById('uploadBtn');
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert('Kripya pehle ek video select karein!');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileName = `${Date.now()}_${file.name}`;
+
+      uploadBtn.disabled = true;
+      status.innerText = "Video upload ho rahi hai... Kripya wait karein.";
+
+      const { data, error } = await supabase.storage.from('videos').upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+      if (error) {
+        status.innerText = "Upload failed: " + error.message;
+        console.error(error);
+      } else {
+        status.innerText = "Video kamyabi se upload ho gayi!";
+        fileInput.value = '';
+        fetchVideos();
+      }
+
+      uploadBtn.disabled = false;
+    }
+
+    // Initialize
+    fetchVideos();
+  </script>
+
 </body>
 </html>
