@@ -223,6 +223,73 @@
             color: #aaa;
         }
 
+        /* Shorts Screen Styles */
+        .shorts-container {
+            height: calc(100vh - 126px);
+            overflow-y: snap;
+            scroll-snap-type: y mandatory;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .short-card {
+            scroll-snap-align: start;
+            height: 100%;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .short-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .short-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 12px;
+            right: 60px;
+            z-index: 10;
+        }
+
+        .short-actions {
+            position: absolute;
+            right: 12px;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .short-action-btn {
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .short-action-btn span {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
         .player-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -462,12 +529,74 @@
             width: 100%;
             max-width: 320px;
         }
+
+        /* Share Options Modal Grid */
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .share-icon-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .share-whatsapp { background: #25D366; }
+        .share-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+        .share-facebook { background: #1877F2; }
+        .share-copy { background: #444; }
     </style>
 </head>
 <body>
 
     <div id="toastNotification" class="toast-notification"></div>
 
+    <!-- Share Options Modal -->
+    <div id="shareModal" class="custom-dialog-bg">
+        <div class="custom-dialog">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-size:14px; color:#fff;">Share Video</h3>
+                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeShareModal()"></i>
+            </div>
+            <div class="share-grid">
+                <div class="share-option" onclick="shareToWhatsApp()">
+                    <div class="share-icon-btn share-whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
+                    <span style="font-size:10px;">WhatsApp</span>
+                </div>
+                <div class="share-option" onclick="shareToInstagram()">
+                    <div class="share-icon-btn share-instagram"><i class="fa-brands fa-instagram"></i></div>
+                    <span style="font-size:10px;">Instagram</span>
+                </div>
+                <div class="share-option" onclick="shareToFacebook()">
+                    <div class="share-icon-btn share-facebook"><i class="fa-brands fa-facebook-f"></i></div>
+                    <span style="font-size:10px;">Facebook</span>
+                </div>
+                <div class="share-option" onclick="copyVideoLink()">
+                    <div class="share-icon-btn share-copy"><i class="fa-solid fa-link"></i></div>
+                    <span style="font-size:10px;">Copy Link</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Super Thanks Modal -->
     <div id="thanksModal" class="custom-dialog-bg">
         <div class="custom-dialog">
             <h3 style="font-size:14px; margin-bottom:10px; color:#fff;">Support Creator (Super Thanks)</h3>
@@ -503,13 +632,27 @@
     <div class="category-nav" id="categoryNav"></div>
 
     <div class="content-container">
+        <!-- Home Videos -->
         <div id="home" class="section-panel active">
             <div class="video-grid" id="homeVideoGrid"></div>
         </div>
 
+        <!-- Shorts Section -->
+        <div id="shorts" class="section-panel">
+            <div class="shorts-container" id="shortsFeed"></div>
+        </div>
+
+        <!-- Upload Content -->
         <div id="upload" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Content</div>
+                <div class="form-group">
+                    <label>Content Type</label>
+                    <select id="contentTypeInput">
+                        <option value="long">Long Video</option>
+                        <option value="short">Short Video (Reels)</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Title</label>
                     <input type="text" id="videoTitleInput" placeholder="Enter title...">
@@ -522,6 +665,7 @@
             </div>
         </div>
 
+        <!-- Studio Section -->
         <div id="studio" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-chart-line"></i> Analytics Overview</div>
@@ -542,6 +686,7 @@
             </div>
         </div>
 
+        <!-- Library Section -->
         <div id="library" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-bookmark"></i> Watch Later</div>
@@ -564,7 +709,6 @@
             <h3 id="playerVideoTitle" style="font-size:15px; margin-bottom: 4px;">Video Title</h3>
             <p id="playerVideoMeta" style="font-size:12px; color:#aaa; margin-bottom: 12px;">0 views • Just now</p>
             
-            <!-- Channel Info & Free Subscribe Button -->
             <div style="display: flex; justify-content: space-between; align-items: center; background: #181818; padding: 8px 12px; border-radius: 12px; margin-bottom: 12px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div class="channel-avatar" id="playerChannelAvatar">M</div>
@@ -583,7 +727,7 @@
             </button>
             <button class="player-btn" onclick="triggerSuperThanks()"><i class="fa-solid fa-heart-circle-bolt" style="color:#e53935;"></i> Super Thanks</button>
             <button class="player-btn" onclick="saveToWatchLater()"><i class="fa-solid fa-bookmark"></i> Save</button>
-            <button class="player-btn" onclick="shareVideo()"><i class="fa-solid fa-share"></i> Share</button>
+            <button class="player-btn" onclick="openShareModal()"><i class="fa-solid fa-share"></i> Share</button>
         </div>
 
         <div class="comments-section">
@@ -602,6 +746,10 @@
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </button>
+        <button class="nav-item" onclick="openTab('shorts')">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Shorts</span>
+        </button>
         <button class="nav-item" onclick="openTab('upload')">
             <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
         </button>
@@ -618,15 +766,22 @@
     <script>
         let categories = ["All", "Music", "Gaming", "Tech", "Podcasts"];
         let videos = [
-            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 77, subscribers: 1250, isSubscribed: false, isLiked: false },
-            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 12, subscribers: 4500, isSubscribed: false, isLiked: false }
+            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 77, subscribers: 1250, isSubscribed: false, isLiked: false, type: 'long' },
+            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 12, subscribers: 4500, isSubscribed: false, isLiked: false, type: 'long' }
         ];
+
+        let shorts = [
+            { id: 101, title: "Cool Short Clip #1", channel: "Shorts Hub", views: "10K", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 520 },
+            { id: 102, title: "Viral Trending Moment", channel: "My Channel", views: "45K", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 1800 }
+        ];
+
         let savedVideos = [];
         let currentPlayingVideo = null;
 
         window.onload = function() {
             renderCategories();
             renderVideos(videos);
+            renderShorts();
             renderManageVideos();
             populateCategoryDropdowns();
         };
@@ -683,6 +838,23 @@
                             <div class="channel-name">${v.channel}</div>
                             <div class="video-stats">${v.views} views • Just now</div>
                         </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderShorts() {
+            let feed = document.getElementById('shortsFeed');
+            feed.innerHTML = shorts.map(s => `
+                <div class="short-card">
+                    <video src="${s.src}" loop onclick="this.paused ? this.play() : this.pause()"></video>
+                    <div class="short-overlay">
+                        <strong style="font-size:14px; display:block;">${s.channel}</strong>
+                        <p style="font-size:12px; color:#ddd;">${s.title}</p>
+                    </div>
+                    <div class="short-actions">
+                        <button class="short-action-btn" onclick="showToast('Liked!')"><i class="fa-solid fa-heart"></i><span>${s.likes}</span></button>
+                        <button class="short-action-btn" onclick="openShareModal()"><i class="fa-solid fa-share"></i><span>Share</span></button>
                     </div>
                 </div>
             `).join('');
@@ -765,24 +937,37 @@
             }
         }
 
-        async function shareVideo() {
-            if (!currentPlayingVideo) return;
-            const shareData = {
-                title: currentPlayingVideo.title,
-                text: `Watch ${currentPlayingVideo.title} on Mystreem!`,
-                url: window.location.href
-            };
+        /* Share Options Modal Handlers */
+        function openShareModal() {
+            document.getElementById('shareModal').style.display = 'flex';
+        }
 
-            if (navigator.share) {
-                try {
-                    await navigator.share(shareData);
-                } catch (err) {
-                    console.log('Share canceled:', err);
-                }
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                showToast("Link copied to clipboard!");
-            }
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function shareToWhatsApp() {
+            let url = encodeURIComponent(window.location.href);
+            window.open(`https://api.whatsapp.com/send?text=Watch%20this%20video%20on%20Mystreem:%20${url}`, '_blank');
+            closeShareModal();
+        }
+
+        function shareToInstagram() {
+            showToast("Instagram link copied! Share in DMs.");
+            navigator.clipboard.writeText(window.location.href);
+            closeShareModal();
+        }
+
+        function shareToFacebook() {
+            let url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            closeShareModal();
+        }
+
+        function copyVideoLink() {
+            navigator.clipboard.writeText(window.location.href);
+            showToast("Link copied to clipboard!");
+            closeShareModal();
         }
 
         function closePlayer() {
@@ -863,31 +1048,48 @@
         function publishVideo() {
             let title = document.getElementById('videoTitleInput').value.trim();
             let category = document.getElementById('videoCategoryInput').value;
+            let type = document.getElementById('contentTypeInput').value;
 
             if (!title) {
                 showToast('Enter title!');
                 return;
             }
 
-            let newVid = {
-                id: Date.now(),
-                title: title,
-                channel: "My Channel",
-                views: 0,
-                category: category,
-                src: "https://www.w3schools.com/html/mov_bbb.mp4",
-                likes: 0,
-                subscribers: 1250,
-                isSubscribed: false,
-                isLiked: false
-            };
+            if (type === 'short') {
+                let newShort = {
+                    id: Date.now(),
+                    title: title,
+                    channel: "My Channel",
+                    views: "1",
+                    src: "https://www.w3schools.com/html/mov_bbb.mp4",
+                    likes: 0
+                };
+                shorts.unshift(newShort);
+                renderShorts();
+                showToast('Short Published!');
+                openTab('shorts');
+            } else {
+                let newVid = {
+                    id: Date.now(),
+                    title: title,
+                    channel: "My Channel",
+                    views: 0,
+                    category: category,
+                    src: "https://www.w3schools.com/html/mov_bbb.mp4",
+                    likes: 0,
+                    subscribers: 1250,
+                    isSubscribed: false,
+                    isLiked: false,
+                    type: 'long'
+                };
+                videos.unshift(newVid);
+                renderVideos(videos);
+                renderManageVideos();
+                showToast('Video Published!');
+                openTab('home');
+            }
 
-            videos.unshift(newVid);
-            renderVideos(videos);
-            renderManageVideos();
             document.getElementById('videoTitleInput').value = '';
-            showToast('Video Published!');
-            openTab('home');
         }
 
         function renderManageVideos() {
