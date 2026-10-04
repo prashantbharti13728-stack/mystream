@@ -185,18 +185,6 @@
             object-fit: cover;
         }
 
-        .ad-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #fbc02d;
-            color: #000;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
         .video-details {
             padding: 10px;
             display: flex;
@@ -704,7 +692,6 @@
             let v = videos.find(item => item.id === id);
             if (!v) return;
             
-            // View count badhane ke liye
             v.views += 1;
             currentPlayingVideo = v;
 
@@ -723,14 +710,12 @@
 
             modal.classList.add('active');
             player.play();
-            renderVideos(videos); // Home Page View Update karne ke liye
+            renderVideos(videos);
         }
 
-        // Toggle Like Functionality
         function toggleLike() {
             if (!currentPlayingVideo) return;
 
-            let likeBtn = document.getElementById('likeBtn');
             if (!currentPlayingVideo.isLiked) {
                 currentPlayingVideo.likes += 1;
                 currentPlayingVideo.isLiked = true;
@@ -753,7 +738,6 @@
             }
         }
 
-        // Free Subscribe Functionality
         function toggleSubscribe() {
             if (!currentPlayingVideo) return;
 
@@ -781,7 +765,6 @@
             }
         }
 
-        // Native Native Mobile Share (WhatsApp, Instagram, etc.)
         async function shareVideo() {
             if (!currentPlayingVideo) return;
             const shareData = {
