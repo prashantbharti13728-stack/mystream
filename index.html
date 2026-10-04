@@ -13,49 +13,185 @@
     <!-- Google AdSense Script Placeholder -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
-    <!-- Supabase & FontAwesome CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        html, body { width: 100%; height: 100%; background-color: #0f0f0f; color: #ffffff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-        body { padding-bottom: 70px; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body { 
+            width: 100%; 
+            height: 100%; 
+            background-color: #0f0f0f; 
+            color: #ffffff; 
+            overflow-x: hidden;
+        }
 
+        body { 
+            padding-bottom: 70px; 
+        }
+
+        /* Fixed Header with High Z-Index */
         header { 
-            position: sticky; top: 0; z-index: 1000; background: #0f0f0f; 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 16px; border-bottom: 1px solid #1f1f1f;
+            position: sticky; 
+            top: 0; 
+            z-index: 9999; 
+            background: #0f0f0f; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 16px; 
+            border-bottom: 1px solid #1f1f1f;
         }
-        .logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+        .logo-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            cursor: pointer; 
+        }
+
         .mystreem-logo-icon {
-            width: 28px; height: 28px; background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px;
+            width: 28px; 
+            height: 28px; 
+            background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%);
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #fff; 
+            font-size: 13px;
         }
-        .logo-text { font-size: 20px; font-weight: 800; background: linear-gradient(90deg, #d946ef 0%, #00d2ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-actions { display: flex; align-items: center; gap: 18px; color: #fff; font-size: 18px; }
-        .header-actions i { cursor: pointer; }
+
+        .logo-text { 
+            font-size: 20px; 
+            font-weight: 800; 
+            background: linear-gradient(90deg, #d946ef 0%, #00d2ff 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 18px; 
+            color: #fff; 
+            font-size: 18px; 
+        }
+
+        .header-btn { 
+            background: none; 
+            border: none; 
+            color: #fff; 
+            font-size: 18px; 
+            cursor: pointer; 
+            padding: 4px;
+        }
 
         /* Top Navigation Tabs Bar */
-        .studio-nav { display: flex; gap: 6px; overflow-x: auto; padding: 10px 16px; background: #121212; border-bottom: 1px solid #222; scrollbar-width: none; }
-        .studio-nav::-webkit-scrollbar { display: none; }
-        .tab-btn { background: #222; color: #aaa; border: none; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-        .tab-btn.active { background: #fff; color: #000; }
+        .studio-nav { 
+            display: flex; 
+            gap: 8px; 
+            overflow-x: auto; 
+            padding: 10px 16px; 
+            background: #121212; 
+            border-bottom: 1px solid #222; 
+            scrollbar-width: none; 
+            position: relative;
+            z-index: 9998;
+        }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 14px; }
-        .section-panel { display: none; }
-        .section-panel.active { display: block; }
+        .studio-nav::-webkit-scrollbar { display: none; }
+
+        .tab-btn { 
+            background: #222; 
+            color: #aaa; 
+            border: none; 
+            padding: 8px 14px; 
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            outline: none;
+            touch-action: manipulation;
+        }
+
+        .tab-btn.active { 
+            background: #fff; 
+            color: #000; 
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 14px; 
+        }
+
+        .section-panel { 
+            display: none; 
+        }
+
+        .section-panel.active { 
+            display: block; 
+        }
 
         /* Card Designs */
-        .card { background: #181818; border: 1px solid #282828; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-        .card-title { font-size: 15px; font-weight: 700; color: #00d2ff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .card { 
+            background: #181818; 
+            border: 1px solid #282828; 
+            border-radius: 12px; 
+            padding: 16px; 
+            margin-bottom: 16px; 
+        }
+
+        .card-title { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #00d2ff; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
 
-        .btn-action { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); color: #fff; border: none; padding: 12px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; width: 100%; margin-top: 6px; }
-        .btn-danger { background: #e53935; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+        .btn-action { 
+            background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); 
+            color: #fff; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 13px; 
+            cursor: pointer; 
+            width: 100%; 
+            margin-top: 6px; 
+            touch-action: manipulation;
+        }
+
+        .btn-danger { 
+            background: #e53935; 
+            color: #fff; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            font-size: 12px; 
+            cursor: pointer; 
+            touch-action: manipulation;
+        }
 
         /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -78,8 +214,36 @@
         .ad-tag { font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
 
         /* Bottom Fixed Navigation Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; height: 60px; }
-        .nav-item { color: #aaa; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex: 1; }
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: #0f0f0f; 
+            border-top: 1px solid #222; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 8px 0; 
+            z-index: 9999; 
+            height: 60px; 
+        }
+
+        .nav-item { 
+            color: #aaa; 
+            text-decoration: none; 
+            font-size: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 3px; 
+            cursor: pointer; 
+            flex: 1; 
+            border: none;
+            background: none;
+            outline: none;
+            touch-action: manipulation;
+        }
+
         .nav-item.active { color: #fff; }
         .nav-item i { font-size: 18px; }
         .nav-item-plus { background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); width: 42px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 16px; color: #fff; }
@@ -94,24 +258,24 @@
             <div class="logo-text">Mystreem</div>
         </div>
         <div class="header-actions">
-            <i class="fa-solid fa-magnifying-glass" onclick="alert('Search feature active')"></i>
-            <i class="fa-regular fa-bell" onclick="alert('No new notifications')"></i>
-            <i class="fa-regular fa-circle-user" onclick="showTab('profile')"></i>
+            <button class="header-btn" onclick="alert('Search feature active')"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="header-btn" onclick="alert('No new notifications')"><i class="fa-regular fa-bell"></i></button>
+            <button class="header-btn" onclick="showTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
         </div>
     </header>
 
     <!-- Top Feature Navigation Tabs -->
     <div class="studio-nav">
-        <button class="tab-btn active" onclick="showTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-        <button class="tab-btn" onclick="showTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
-        <button class="tab-btn" onclick="showTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
-        <button class="tab-btn" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
-        <button class="tab-btn" onclick="showTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
-        <button class="tab-btn" onclick="showTab('community')"><i class="fa-solid fa-comments"></i> Community</button>
-        <button class="tab-btn" onclick="showTab('playlists')"><i class="fa-solid fa-layer-group"></i> Playlists</button>
-        <button class="tab-btn" onclick="showTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
-        <button class="tab-btn" onclick="showTab('policy')"><i class="fa-solid fa-shield-halved"></i> Policy & Terms</button>
-        <button class="tab-btn" onclick="showTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
+        <button class="tab-btn active" data-tab="dashboard" onclick="showTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+        <button class="tab-btn" data-tab="manage" onclick="showTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
+        <button class="tab-btn" data-tab="upload" onclick="showTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
+        <button class="tab-btn" data-tab="shorts" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
+        <button class="tab-btn" data-tab="live" onclick="showTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
+        <button class="tab-btn" data-tab="community" onclick="showTab('community')"><i class="fa-solid fa-comments"></i> Community</button>
+        <button class="tab-btn" data-tab="playlists" onclick="showTab('playlists')"><i class="fa-solid fa-layer-group"></i> Playlists</button>
+        <button class="tab-btn" data-tab="monetization" onclick="showTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
+        <button class="tab-btn" data-tab="policy" onclick="showTab('policy')"><i class="fa-solid fa-shield-halved"></i> Policy & Terms</button>
+        <button class="tab-btn" data-tab="profile" onclick="showTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
     </div>
 
     <div class="container">
@@ -153,13 +317,11 @@
         <div id="manage" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage & Delete Videos</div>
-                <div id="videoManageList">
-                    <!-- Dynamic videos list -->
-                </div>
+                <div id="videoManageList"></div>
             </div>
         </div>
 
-        <!-- 3. UPLOAD LONG VIDEO WITH CATEGORIES & THUMBNAILS -->
+        <!-- 3. UPLOAD LONG VIDEO -->
         <div id="upload" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Long Video</div>
@@ -262,7 +424,7 @@
             </div>
         </div>
 
-        <!-- 8. MONETIZATION & GOOGLE ADS SETTINGS -->
+        <!-- 8. MONETIZATION -->
         <div id="monetization" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> Google AdSense & Monetization</div>
@@ -278,7 +440,7 @@
         <!-- 9. POLICY & TERMS -->
         <div id="policy" class="section-panel">
             <div class="card">
-                <div class="card-title"><i class="fa-solid fa-file-contract"></i> Community Guidelines & Policy</div>
+                <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Community Guidelines & Policy</div>
                 <p style="font-size: 12px; color: #ccc; line-height: 1.5;">
                     1. <b>Content Policy:</b> No copyright violations, hate speech, or dangerous activities allowed.<br>
                     2. <b>Monetization Policy:</b> Ads will automatically activate once the channel completes 10,000 valid views.<br>
@@ -302,45 +464,4 @@
 
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="showTab('dashboard')"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="nav-item" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i><span>Shorts</span></div>
-        <div class="nav-item" onclick="showTab('upload')"><div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div></div>
-        <div class="nav-item" onclick="showTab('manage')"><i class="fa-solid fa-film"></i><span>Videos</span></div>
-        <div class="nav-item" onclick="showTab('profile')"><i class="fa-solid fa-circle-user"></i><span>You</span></div>
-    </div>
-
-    <script>
-        // Sample Video Data Engine
-        let localVideos = [
-            { id: 1, title: 'Electric Board & Fan Repairing Guide', type: 'youtube', category: 'Tech & Electronics', views: 120, likes: 15 },
-            { id: 2, title: 'Mobile Screen Folder Replacement #Shorts', type: 'reel', category: 'Mobile Repairing', views: 450, likes: 62 }
-        ];
-
-        function showTab(tabId) {
-            document.querySelectorAll('.section-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-            const targetPanel = document.getElementById(tabId);
-            if (targetPanel) targetPanel.classList.add('active');
-
-            document.querySelectorAll('.tab-btn').forEach(tab => {
-                if (tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(tabId)) {
-                    tab.classList.add('active');
-                }
-            });
-
-            refreshUI();
-        }
-
-        function refreshUI() {
-            // Stats Calculation
-            let totalViews = localVideos.reduce((acc, v) => acc + v.views, 0);
-            let totalLikes = localVideos.reduce((acc, v) => acc + v.likes, 0);
-
-            document.getElementById('statViews').innerText = totalViews;
-            document.getElementById('statLikes').innerText = totalLikes;
-            document.getElementById('statVideosCount').innerText = localVideos.length;
-
-            // Monetization Progress Calculation
-            document.getElementById('progViewsText').innerText = `${totalViews} / 10,000`;
-            let percentage = Math.min((totalViews / 10000) * 100, 100);
+        <button class="nav-item active" 
