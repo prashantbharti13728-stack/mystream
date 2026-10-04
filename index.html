@@ -223,26 +223,23 @@
             color: #aaa;
         }
 
-        /* Shorts Screen Styles */
+        /* Shorts Container */
         .shorts-container {
-            height: calc(100vh - 126px);
-            overflow-y: snap;
-            scroll-snap-type: y mandatory;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 20px;
+            align-items: center;
         }
 
         .short-card {
-            scroll-snap-align: start;
-            height: 100%;
             width: 100%;
-            max-width: 420px;
-            margin: 0 auto;
-            position: relative;
+            max-width: 360px;
+            height: 80vh;
             background: #000;
             border-radius: 16px;
+            position: relative;
             overflow: hidden;
+            scroll-snap-align: start;
         }
 
         .short-card video {
@@ -253,35 +250,35 @@
 
         .short-overlay {
             position: absolute;
-            bottom: 20px;
+            bottom: 12px;
             left: 12px;
-            right: 60px;
+            right: 50px;
             z-index: 10;
         }
 
-        .short-actions {
+        .short-overlay h4 { font-size: 14px; margin-bottom: 4px; }
+        .short-overlay p { font-size: 12px; color: #ccc; }
+
+        .short-side-actions {
             position: absolute;
             right: 12px;
-            bottom: 30px;
+            bottom: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             align-items: center;
             z-index: 10;
         }
 
         .short-action-btn {
-            background: rgba(0,0,0,0.5);
-            border: none;
-            color: #fff;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             font-size: 18px;
+            color: #fff;
+            background: rgba(0,0,0,0.4);
+            padding: 8px;
+            border-radius: 50%;
             cursor: pointer;
         }
 
@@ -290,6 +287,7 @@
             margin-top: 2px;
         }
 
+        /* Player Modal */
         .player-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -529,72 +527,11 @@
             width: 100%;
             max-width: 320px;
         }
-
-        /* Share Options Modal Grid */
-        .share-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 16px;
-            text-align: center;
-        }
-
-        .share-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        .share-icon-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #fff;
-        }
-
-        .share-whatsapp { background: #25D366; }
-        .share-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
-        .share-facebook { background: #1877F2; }
-        .share-copy { background: #444; }
     </style>
 </head>
 <body>
 
     <div id="toastNotification" class="toast-notification"></div>
-
-    <!-- Share Options Modal -->
-    <div id="shareModal" class="custom-dialog-bg">
-        <div class="custom-dialog">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-size:14px; color:#fff;">Share Video</h3>
-                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeShareModal()"></i>
-            </div>
-            <div class="share-grid">
-                <div class="share-option" onclick="shareToWhatsApp()">
-                    <div class="share-icon-btn share-whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
-                    <span style="font-size:10px;">WhatsApp</span>
-                </div>
-                <div class="share-option" onclick="shareToInstagram()">
-                    <div class="share-icon-btn share-instagram"><i class="fa-brands fa-instagram"></i></div>
-                    <span style="font-size:10px;">Instagram</span>
-                </div>
-                <div class="share-option" onclick="shareToFacebook()">
-                    <div class="share-icon-btn share-facebook"><i class="fa-brands fa-facebook-f"></i></div>
-                    <span style="font-size:10px;">Facebook</span>
-                </div>
-                <div class="share-option" onclick="copyVideoLink()">
-                    <div class="share-icon-btn share-copy"><i class="fa-solid fa-link"></i></div>
-                    <span style="font-size:10px;">Copy Link</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Super Thanks Modal -->
     <div id="thanksModal" class="custom-dialog-bg">
@@ -607,6 +544,20 @@
             <div style="display:flex; gap:8px; margin-top:12px;">
                 <button class="btn-action" style="background:#333;" onclick="closeThanksModal()">Cancel</button>
                 <button class="btn-action" onclick="confirmSuperThanks()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Dialog Modal -->
+    <div id="shareModal" class="custom-dialog-bg">
+        <div class="custom-dialog">
+            <h3 style="font-size:14px; margin-bottom:10px; color:#fff;">Share Video</h3>
+            <div class="form-group">
+                <input type="text" id="shareUrlInput" readonly style="color:#00d2ff;">
+            </div>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button class="btn-action" style="background:#333;" onclick="closeShareModal()">Close</button>
+                <button class="btn-action" onclick="copyShareLink()">Copy Link</button>
             </div>
         </div>
     </div>
@@ -632,26 +583,30 @@
     <div class="category-nav" id="categoryNav"></div>
 
     <div class="content-container">
-        <!-- Home Videos -->
+        <!-- Home Section -->
         <div id="home" class="section-panel active">
             <div class="video-grid" id="homeVideoGrid"></div>
         </div>
 
-        <!-- Shorts Section -->
+        <!-- Shorts Feed Section -->
         <div id="shorts" class="section-panel">
-            <div class="shorts-container" id="shortsFeed"></div>
+            <div class="shorts-container" id="shortsContainer"></div>
         </div>
 
-        <!-- Upload Content -->
+        <!-- Upload Section -->
         <div id="upload" class="section-panel">
             <div class="card">
                 <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Content</div>
                 <div class="form-group">
                     <label>Content Type</label>
-                    <select id="contentTypeInput">
-                        <option value="long">Long Video</option>
+                    <select id="videoTypeInput">
                         <option value="short">Short Video (Reels)</option>
+                        <option value="long">Long Video</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Video File (Gallery / Storage)</label>
+                    <input type="file" id="videoFileInput" accept="video/*">
                 </div>
                 <div class="form-group">
                     <label>Title</label>
@@ -665,6 +620,18 @@
             </div>
         </div>
 
+        <!-- Community Section -->
+        <div id="community" class="section-panel">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-users"></i> Community Posts</div>
+                <div class="form-group">
+                    <textarea id="communityPostInput" rows="3" placeholder="Share an update, poll or photo..."></textarea>
+                </div>
+                <button class="btn-action" onclick="addCommunityPost()">Post</button>
+            </div>
+            <div id="communityPostsList"></div>
+        </div>
+
         <!-- Studio Section -->
         <div id="studio" class="section-panel">
             <div class="card">
@@ -676,7 +643,7 @@
                     </div>
                     <div style="background:#111; padding:10px; border-radius:8px;">
                         <span style="color:#aaa;">Total Subscribers</span>
-                        <h3 id="dashSubs" style="color:#00d2ff;">1.2K</h3>
+                        <h3 id="dashSubs" style="color:#00d2ff;">1.25K</h3>
                     </div>
                 </div>
             </div>
@@ -709,6 +676,7 @@
             <h3 id="playerVideoTitle" style="font-size:15px; margin-bottom: 4px;">Video Title</h3>
             <p id="playerVideoMeta" style="font-size:12px; color:#aaa; margin-bottom: 12px;">0 views • Just now</p>
             
+            <!-- Channel Info & Free Subscribe Button -->
             <div style="display: flex; justify-content: space-between; align-items: center; background: #181818; padding: 8px 12px; border-radius: 12px; margin-bottom: 12px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div class="channel-avatar" id="playerChannelAvatar">M</div>
@@ -727,7 +695,7 @@
             </button>
             <button class="player-btn" onclick="triggerSuperThanks()"><i class="fa-solid fa-heart-circle-bolt" style="color:#e53935;"></i> Super Thanks</button>
             <button class="player-btn" onclick="saveToWatchLater()"><i class="fa-solid fa-bookmark"></i> Save</button>
-            <button class="player-btn" onclick="openShareModal()"><i class="fa-solid fa-share"></i> Share</button>
+            <button class="player-btn" onclick="shareVideo()"><i class="fa-solid fa-share"></i> Share</button>
         </div>
 
         <div class="comments-section">
@@ -740,24 +708,28 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation (Five Options) -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="openTab('home')">
+        <button class="nav-item active" id="nav-home" onclick="openTab('home')">
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </button>
-        <button class="nav-item" onclick="openTab('shorts')">
+        <button class="nav-item" id="nav-shorts" onclick="openTab('shorts')">
             <i class="fa-solid fa-bolt"></i>
             <span>Shorts</span>
         </button>
-        <button class="nav-item" onclick="openTab('upload')">
+        <button class="nav-item" id="nav-upload" onclick="openTab('upload')">
             <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
         </button>
-        <button class="nav-item" onclick="openTab('studio')">
+        <button class="nav-item" id="nav-community" onclick="openTab('community')">
+            <i class="fa-solid fa-users"></i>
+            <span>Community</span>
+        </button>
+        <button class="nav-item" id="nav-studio" onclick="openTab('studio')">
             <i class="fa-solid fa-chart-pie"></i>
             <span>Studio</span>
         </button>
-        <button class="nav-item" onclick="openTab('library')">
+        <button class="nav-item" id="nav-library" onclick="openTab('library')">
             <i class="fa-solid fa-folder"></i>
             <span>Library</span>
         </button>
@@ -766,68 +738,78 @@
     <script>
         let categories = ["All", "Music", "Gaming", "Tech", "Podcasts"];
         let videos = [
-            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 77, subscribers: 1250, isSubscribed: false, isLiked: false, type: 'long' },
-            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 12, subscribers: 4500, isSubscribed: false, isLiked: false, type: 'long' }
+            { id: 1, title: "Ninja Kalla Changa New Official Song Panjabi", channel: "My Channel", views: 4, category: "Music", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 77, subscribers: 1250, isSubscribed: false, isLiked: false, type: "long", comments: [] },
+            { id: 2, title: "Awesome Tech Review & Setup Guide", channel: "Tech Tips", views: 120, category: "Tech", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 12, subscribers: 4500, isSubscribed: false, isLiked: false, type: "long", comments: [] },
+            { id: 3, title: "Amazing Gaming Short Clip #Shorts", channel: "Pro Gamer", views: 890, category: "Gaming", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 340, subscribers: 8200, isSubscribed: false, isLiked: false, type: "short", comments: [] }
         ];
 
-        let shorts = [
-            { id: 101, title: "Cool Short Clip #1", channel: "Shorts Hub", views: "10K", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 520 },
-            { id: 102, title: "Viral Trending Moment", channel: "My Channel", views: "45K", src: "https://www.w3schools.com/html/mov_bbb.mp4", likes: 1800 }
+        let communityPosts = [
+            { id: 1, author: "My Channel", text: "New music video coming out tomorrow! Stay tuned 🔥", likes: 12 }
         ];
 
         let savedVideos = [];
         let currentPlayingVideo = null;
+        let selectedCategory = "All";
 
-        window.onload = function() {
+        function initApp() {
             renderCategories();
-            renderVideos(videos);
+            renderVideos();
             renderShorts();
+            renderCommunity();
             renderManageVideos();
-            populateCategoryDropdowns();
-        };
-
-        function showToast(message) {
-            let toast = document.getElementById('toastNotification');
-            toast.innerText = message;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 2500);
-        }
-
-        function openTab(tabId) {
-            document.querySelectorAll('.section-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            
-            let selectedPanel = document.getElementById(tabId);
-            if (selectedPanel) selectedPanel.classList.add('active');
-            if (tabId === 'library') renderSavedVideos();
-        }
-
-        function toggleAmbientMode() {
-            document.body.classList.toggle('ambient-mode');
+            renderSavedVideos();
+            updateStudioData();
         }
 
         function renderCategories() {
-            let nav = document.getElementById('categoryNav');
-            nav.innerHTML = categories.map((cat, idx) => 
-                `<button class="cat-pill ${idx === 0 ? 'active' : ''}" onclick="filterCategory('${cat}', this)">${cat}</button>`
-            ).join('');
+            const catNav = document.getElementById('categoryNav');
+            const catSelect = document.getElementById('videoCategoryInput');
+            catNav.innerHTML = '';
+            catSelect.innerHTML = '';
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `cat-pill ${cat === selectedCategory ? 'active' : ''}`;
+                btn.innerText = cat;
+                btn.onclick = () => {
+                    selectedCategory = cat;
+                    renderCategories();
+                    renderVideos();
+                };
+                catNav.appendChild(btn);
+
+                if(cat !== "All") {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.innerText = cat;
+                    catSelect.appendChild(opt);
+                }
+            });
         }
 
-        function filterCategory(cat, el) {
-            document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active');
-            if (cat === "All") renderVideos(videos);
-            else renderVideos(videos.filter(v => v.category === cat));
-        }
+        function renderVideos(filterText = '') {
+            const grid = document.getElementById('homeVideoGrid');
+            grid.innerHTML = '';
 
-        function renderVideos(list) {
-            let grid = document.getElementById('homeVideoGrid');
-            if (list.length === 0) {
-                grid.innerHTML = `<p style="color:#aaa; font-size:12px;">No videos available.</p>`;
+            const longVideos = videos.filter(v => v.type !== 'short');
+
+            const filtered = longVideos.filter(v => {
+                const matchCat = selectedCategory === "All" || v.category === selectedCategory;
+                const matchSearch = v.title.toLowerCase().includes(filterText.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="font-size:12px; color:#aaa;">No videos found.</p>';
                 return;
             }
-            grid.innerHTML = list.map(v => `
-                <div class="video-card" onclick="playVideo(${v.id})">
+
+            filtered.forEach(v => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => openPlayer(v.id);
+
+                card.innerHTML = `
                     <div class="thumbnail-box">
                         <video src="${v.src}#t=0.5" preload="metadata"></video>
                     </div>
@@ -839,142 +821,226 @@
                             <div class="video-stats">${v.views} views • Just now</div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+                grid.appendChild(card);
+            });
         }
 
         function renderShorts() {
-            let feed = document.getElementById('shortsFeed');
-            feed.innerHTML = shorts.map(s => `
-                <div class="short-card">
-                    <video src="${s.src}" loop onclick="this.paused ? this.play() : this.pause()"></video>
+            const container = document.getElementById('shortsContainer');
+            container.innerHTML = '';
+
+            const shortsList = videos.filter(v => v.type === 'short');
+
+            if (shortsList.length === 0) {
+                container.innerHTML = '<p style="font-size:12px; color:#aaa;">No shorts uploaded yet.</p>';
+                return;
+            }
+
+            shortsList.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'short-card';
+                card.innerHTML = `
+                    <video src="${s.src}" controls loop></video>
                     <div class="short-overlay">
-                        <strong style="font-size:14px; display:block;">${s.channel}</strong>
-                        <p style="font-size:12px; color:#ddd;">${s.title}</p>
+                        <h4>${s.title}</h4>
+                        <p>@${s.channel}</p>
                     </div>
-                    <div class="short-actions">
-                        <button class="short-action-btn" onclick="showToast('Liked!')"><i class="fa-solid fa-heart"></i><span>${s.likes}</span></button>
-                        <button class="short-action-btn" onclick="openShareModal()"><i class="fa-solid fa-share"></i><span>Share</span></button>
+                    <div class="short-side-actions">
+                        <div class="short-action-btn" onclick="toggleShortLike(${s.id})">
+                            <i class="fa-solid fa-thumbs-up" style="color:${s.isLiked ? '#00d2ff' : '#fff'}"></i>
+                            <span>${s.likes}</span>
+                        </div>
+                        <div class="short-action-btn" onclick="shareVideoUrl('${s.title}')">
+                            <i class="fa-solid fa-share"></i>
+                            <span>Share</span>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+                container.appendChild(card);
+            });
         }
 
-        function playVideo(id) {
-            let v = videos.find(item => item.id === id);
-            if (!v) return;
-            
-            v.views += 1;
-            currentPlayingVideo = v;
-
-            let modal = document.getElementById('playerModal');
-            let player = document.getElementById('mainVideoPlayer');
-            
-            player.src = v.src;
-            document.getElementById('playerVideoTitle').innerText = v.title;
-            document.getElementById('playerVideoMeta').innerText = `${v.views} views • Just now`;
-            document.getElementById('playerChannelName').innerText = v.channel;
-            document.getElementById('playerChannelAvatar').innerText = v.channel.charAt(0);
-            document.getElementById('playerSubCount').innerText = `${v.subscribers} subscribers`;
-            
-            updateLikeUI();
-            updateSubscribeUI();
-
-            modal.classList.add('active');
-            player.play();
-            renderVideos(videos);
+        function toggleShortLike(id) {
+            const item = videos.find(v => v.id === id);
+            if(item) {
+                item.isLiked = !item.isLiked;
+                item.likes += item.isLiked ? 1 : -1;
+                renderShorts();
+            }
         }
 
-        function toggleLike() {
+        function renderCommunity() {
+            const container = document.getElementById('communityPostsList');
+            container.innerHTML = '';
+            communityPosts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                        <div class="channel-avatar" style="width:28px; height:28px; font-size:11px;">${post.author.charAt(0)}</div>
+                        <strong style="font-size:13px;">${post.author}</strong>
+                    </div>
+                    <p style="font-size:13px; color:#ddd; margin-bottom:10px;">${post.text}</p>
+                    <div style="font-size:12px; color:#aaa; cursor:pointer;" onclick="likePost(${post.id})">
+                        <i class="fa-solid fa-thumbs-up"></i> ${post.likes} Likes
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addCommunityPost() {
+            const txt = document.getElementById('communityPostInput').value.trim();
+            if(!txt) return showToast('Please enter post text!');
+            communityPosts.unshift({
+                id: Date.now(),
+                author: "My Channel",
+                text: txt,
+                likes: 0
+            });
+            document.getElementById('communityPostInput').value = '';
+            renderCommunity();
+            showToast('Post published!');
+        }
+
+        function likePost(id) {
+            const p = communityPosts.find(x => x.id === id);
+            if(p) {
+                p.likes++;
+                renderCommunity();
+            }
+        }
+
+        function filterVideos() {
+            const query = document.getElementById('searchInput').value;
+            renderVideos(query);
+        }
+
+        function openTab(tabId) {
+            document.querySelectorAll('.section-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+            const activePanel = document.getElementById(tabId);
+            if(activePanel) activePanel.classList.add('active');
+
+            const navItem = document.getElementById(`nav-${tabId}`);
+            if(navItem) navItem.classList.add('active');
+        }
+
+        function publishVideo() {
+            const title = document.getElementById('videoTitleInput').value.trim();
+            const category = document.getElementById('videoCategoryInput').value;
+            const type = document.getElementById('videoTypeInput').value;
+            const fileInput = document.getElementById('videoFileInput');
+
+            if (!title) {
+                showToast("Please enter a title!");
+                return;
+            }
+
+            let videoSrc = "https://www.w3schools.com/html/mov_bbb.mp4";
+
+            if (fileInput.files && fileInput.files[0]) {
+                videoSrc = URL.createObjectURL(fileInput.files[0]);
+            }
+
+            const newVid = {
+                id: Date.now(),
+                title: title,
+                channel: "My Channel",
+                views: 0,
+                category: category || "Music",
+                src: videoSrc,
+                likes: 0,
+                subscribers: 1250,
+                isSubscribed: false,
+                isLiked: false,
+                type: type,
+                comments: []
+            };
+
+            videos.unshift(newVid);
+            document.getElementById('videoTitleInput').value = '';
+            fileInput.value = '';
+
+            renderVideos();
+            renderShorts();
+            renderManageVideos();
+            updateStudioData();
+
+            showToast("Video published successfully!");
+            openTab('home');
+        }
+
+        function openPlayer(id) {
+            currentPlayingVideo = videos.find(v => v.id === id);
             if (!currentPlayingVideo) return;
 
-            if (!currentPlayingVideo.isLiked) {
-                currentPlayingVideo.likes += 1;
-                currentPlayingVideo.isLiked = true;
-                showToast("Liked!");
-            } else {
-                currentPlayingVideo.likes -= 1;
-                currentPlayingVideo.isLiked = false;
-                showToast("Unliked!");
-            }
-            updateLikeUI();
+            currentPlayingVideo.views++;
+            updateStudioData();
+
+            document.getElementById('mainVideoPlayer').src = currentPlayingVideo.src;
+            document.getElementById('playerVideoTitle').innerText = currentPlayingVideo.title;
+            document.getElementById('playerVideoMeta').innerText = `${currentPlayingVideo.views} views • Just now`;
+            document.getElementById('playerChannelName').innerText = currentPlayingVideo.channel;
+            document.getElementById('playerChannelAvatar').innerText = currentPlayingVideo.channel.charAt(0);
+            document.getElementById('playerSubCount').innerText = `${currentPlayingVideo.subscribers} subscribers`;
+
+            updateSubscribeBtn();
+            updateLikeBtn();
+            renderComments();
+
+            document.getElementById('playerModal').classList.add('active');
         }
 
-        function updateLikeUI() {
-            let likeBtn = document.getElementById('likeBtn');
-            document.getElementById('likeCount').innerText = currentPlayingVideo.likes;
-            if (currentPlayingVideo.isLiked) {
-                likeBtn.classList.add('liked');
-            } else {
-                likeBtn.classList.remove('liked');
-            }
+        function closePlayer() {
+            const player = document.getElementById('mainVideoPlayer');
+            player.pause();
+            player.src = "";
+            document.getElementById('playerModal').classList.remove('active');
+            renderVideos();
         }
 
         function toggleSubscribe() {
             if (!currentPlayingVideo) return;
-
-            if (!currentPlayingVideo.isSubscribed) {
-                currentPlayingVideo.subscribers += 1;
-                currentPlayingVideo.isSubscribed = true;
-                showToast("Subscribed for Free!");
-            } else {
-                currentPlayingVideo.subscribers -= 1;
-                currentPlayingVideo.isSubscribed = false;
-                showToast("Unsubscribed!");
-            }
-            updateSubscribeUI();
-        }
-
-        function updateSubscribeUI() {
-            let subBtn = document.getElementById('subBtn');
+            currentPlayingVideo.isSubscribed = !currentPlayingVideo.isSubscribed;
+            currentPlayingVideo.subscribers += currentPlayingVideo.isSubscribed ? 1 : -1;
+            
             document.getElementById('playerSubCount').innerText = `${currentPlayingVideo.subscribers} subscribers`;
+            updateSubscribeBtn();
+            
+            showToast(currentPlayingVideo.isSubscribed ? "Subscribed!" : "Unsubscribed");
+        }
+
+        function updateSubscribeBtn() {
+            const btn = document.getElementById('subBtn');
             if (currentPlayingVideo.isSubscribed) {
-                subBtn.innerText = "Subscribed";
-                subBtn.classList.add('subscribed');
+                btn.innerText = "Subscribed";
+                btn.classList.add('subscribed');
             } else {
-                subBtn.innerText = "Subscribe";
-                subBtn.classList.remove('subscribed');
+                btn.innerText = "Subscribe";
+                btn.classList.remove('subscribed');
             }
         }
 
-        /* Share Options Modal Handlers */
-        function openShareModal() {
-            document.getElementById('shareModal').style.display = 'flex';
+        function toggleLike() {
+            if (!currentPlayingVideo) return;
+            currentPlayingVideo.isLiked = !currentPlayingVideo.isLiked;
+            currentPlayingVideo.likes += currentPlayingVideo.isLiked ? 1 : -1;
+            updateLikeBtn();
         }
 
-        function closeShareModal() {
-            document.getElementById('shareModal').style.display = 'none';
-        }
+        function updateLikeBtn() {
+            const btn = document.getElementById('likeBtn');
+            const count = document.getElementById('likeCount');
+            count.innerText = currentPlayingVideo.likes;
 
-        function shareToWhatsApp() {
-            let url = encodeURIComponent(window.location.href);
-            window.open(`https://api.whatsapp.com/send?text=Watch%20this%20video%20on%20Mystreem:%20${url}`, '_blank');
-            closeShareModal();
-        }
-
-        function shareToInstagram() {
-            showToast("Instagram link copied! Share in DMs.");
-            navigator.clipboard.writeText(window.location.href);
-            closeShareModal();
-        }
-
-        function shareToFacebook() {
-            let url = encodeURIComponent(window.location.href);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-            closeShareModal();
-        }
-
-        function copyVideoLink() {
-            navigator.clipboard.writeText(window.location.href);
-            showToast("Link copied to clipboard!");
-            closeShareModal();
-        }
-
-        function closePlayer() {
-            let modal = document.getElementById('playerModal');
-            let player = document.getElementById('mainVideoPlayer');
-            player.pause();
-            modal.classList.remove('active');
+            if (currentPlayingVideo.isLiked) {
+                btn.classList.add('liked');
+            } else {
+                btn.classList.remove('liked');
+            }
         }
 
         function triggerSuperThanks() {
@@ -986,132 +1052,161 @@
         }
 
         function confirmSuperThanks() {
-            let amount = document.getElementById('thanksAmountInput').value;
+            const amount = document.getElementById('thanksAmountInput').value;
             closeThanksModal();
-            showToast(`Super Thanks of ₹${amount} sent!`);
+            showToast(`Thank you for ₹${amount} Super Thanks!`);
+        }
+
+        function shareVideo() {
+            if(!currentPlayingVideo) return;
+            shareVideoUrl(currentPlayingVideo.title);
+        }
+
+        function shareVideoUrl(title) {
+            document.getElementById('shareUrlInput').value = `https://mystreem.app/watch?v=${encodeURIComponent(title)}`;
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function copyShareLink() {
+            const input = document.getElementById('shareUrlInput');
+            input.select();
+            document.execCommand('copy');
+            closeShareModal();
+            showToast('Link copied to clipboard!');
         }
 
         function saveToWatchLater() {
-            if (currentPlayingVideo) {
-                let exists = savedVideos.some(v => v.id === currentPlayingVideo.id);
-                if (!exists) {
-                    savedVideos.push(currentPlayingVideo);
-                    showToast("Saved to Watch Later!");
-                } else {
-                    showToast("Already in Watch Later!");
-                }
+            if (!currentPlayingVideo) return;
+            if (!savedVideos.some(v => v.id === currentPlayingVideo.id)) {
+                savedVideos.push(currentPlayingVideo);
+                renderSavedVideos();
+                showToast("Saved to Watch Later!");
+            } else {
+                showToast("Already in Watch Later!");
             }
         }
 
         function renderSavedVideos() {
-            let container = document.getElementById('savedVideosList');
+            const container = document.getElementById('savedVideosList');
+            container.innerHTML = '';
+
             if (savedVideos.length === 0) {
-                container.innerHTML = `<p style="color:#aaa; font-size:12px;">No saved videos.</p>`;
+                container.innerHTML = '<p style="font-size:12px; color:#aaa;">No saved videos.</p>';
                 return;
             }
-            container.innerHTML = savedVideos.map(v => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:10px; border-radius:8px; margin-bottom:8px;">
-                    <div>
-                        <strong style="font-size:13px; color:#fff;">${v.title}</strong>
-                        <p style="font-size:11px; color:#aaa;">${v.views} views</p>
-                    </div>
-                    <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="playVideo(${v.id})">Play</button>
-                </div>
-            `).join('');
+
+            savedVideos.forEach(v => {
+                const item = document.createElement('div');
+                item.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #222;";
+                item.innerHTML = `
+                    <div style="font-size:13px; color:#fff;">${v.title}</div>
+                    <button class="btn-danger" onclick="removeFromSaved(${v.id})">Remove</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function removeFromSaved(id) {
+            savedVideos = savedVideos.filter(v => v.id !== id);
+            renderSavedVideos();
+            showToast("Removed from Watch Later");
         }
 
         function addComment() {
-            let input = document.getElementById('commentInput');
-            let text = input.value.trim();
-            if (!text) return;
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            if (!text || !currentPlayingVideo) return;
 
-            let list = document.getElementById('commentsList');
-            let item = document.createElement('div');
-            item.className = 'comment-item';
-            item.innerHTML = `<div class="comment-avatar">U</div><div class="comment-text"><strong>You:</strong> ${text}</div>`;
-            list.appendChild(item);
+            if(!currentPlayingVideo.comments) currentPlayingVideo.comments = [];
+            currentPlayingVideo.comments.unshift({ user: "User", text: text });
             input.value = '';
-            showToast("Comment added!");
+            renderComments();
         }
 
-        function filterVideos() {
-            let q = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = videos.filter(v => v.title.toLowerCase().includes(q));
-            renderVideos(filtered);
-        }
+        function renderComments() {
+            const container = document.getElementById('commentsList');
+            container.innerHTML = '';
 
-        function populateCategoryDropdowns() {
-            let sel = document.getElementById('videoCategoryInput');
-            sel.innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
-        }
-
-        function publishVideo() {
-            let title = document.getElementById('videoTitleInput').value.trim();
-            let category = document.getElementById('videoCategoryInput').value;
-            let type = document.getElementById('contentTypeInput').value;
-
-            if (!title) {
-                showToast('Enter title!');
+            if (!currentPlayingVideo.comments || currentPlayingVideo.comments.length === 0) {
+                container.innerHTML = '<p style="font-size:11px; color:#888; margin-top:8px;">No comments yet.</p>';
                 return;
             }
 
-            if (type === 'short') {
-                let newShort = {
-                    id: Date.now(),
-                    title: title,
-                    channel: "My Channel",
-                    views: "1",
-                    src: "https://www.w3schools.com/html/mov_bbb.mp4",
-                    likes: 0
-                };
-                shorts.unshift(newShort);
-                renderShorts();
-                showToast('Short Published!');
-                openTab('shorts');
-            } else {
-                let newVid = {
-                    id: Date.now(),
-                    title: title,
-                    channel: "My Channel",
-                    views: 0,
-                    category: category,
-                    src: "https://www.w3schools.com/html/mov_bbb.mp4",
-                    likes: 0,
-                    subscribers: 1250,
-                    isSubscribed: false,
-                    isLiked: false,
-                    type: 'long'
-                };
-                videos.unshift(newVid);
-                renderVideos(videos);
-                renderManageVideos();
-                showToast('Video Published!');
-                openTab('home');
-            }
-
-            document.getElementById('videoTitleInput').value = '';
+            currentPlayingVideo.comments.forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'comment-item';
+                item.innerHTML = `
+                    <div class="comment-avatar">${c.user.charAt(0)}</div>
+                    <div>
+                        <strong style="font-size:11px; color:#aaa;">${c.user}</strong>
+                        <div class="comment-text">${c.text}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
         }
 
         function renderManageVideos() {
-            let list = document.getElementById('manageVideosList');
-            list.innerHTML = videos.map(v => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:10px; border-radius:8px; margin-bottom:8px;">
+            const container = document.getElementById('manageVideosList');
+            container.innerHTML = '';
+
+            const myVids = videos.filter(v => v.channel === "My Channel");
+
+            if (myVids.length === 0) {
+                container.innerHTML = '<p style="font-size:12px; color:#aaa;">No uploaded videos.</p>';
+                return;
+            }
+
+            myVids.forEach(v => {
+                const item = document.createElement('div');
+                item.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #222;";
+                item.innerHTML = `
                     <div>
-                        <strong style="font-size:13px; color:#fff;">${v.title}</strong>
-                        <p style="font-size:11px; color:#aaa;">${v.views} views</p>
+                        <div style="font-size:12px; color:#fff;">${v.title} <span style="font-size:10px; color:#00d2ff;">(${v.type})</span></div>
+                        <div style="font-size:10px; color:#aaa;">${v.views} views • ${v.likes} likes</div>
                     </div>
                     <button class="btn-danger" onclick="deleteVideo(${v.id})">Delete</button>
-                </div>
-            `).join('');
-            document.getElementById('dashViews').innerText = videos.reduce((acc, curr) => acc + curr.views, 0);
+                `;
+                container.appendChild(item);
+            });
         }
 
         function deleteVideo(id) {
             videos = videos.filter(v => v.id !== id);
-            renderVideos(videos);
+            renderVideos();
+            renderShorts();
             renderManageVideos();
-            showToast('Video deleted');
+            updateStudioData();
+            showToast("Video deleted");
         }
+
+        function updateStudioData() {
+            const totalViews = videos
+                .filter(v => v.channel === "My Channel")
+                .reduce((acc, curr) => acc + curr.views, 0);
+
+            document.getElementById('dashViews').innerText = totalViews;
+        }
+
+        function toggleAmbientMode() {
+            document.body.classList.toggle('ambient-mode');
+            showToast("Ambient mode toggled");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
+
+        window.onload = initApp;
     </script>
 </body>
-</html> 
+</html>
