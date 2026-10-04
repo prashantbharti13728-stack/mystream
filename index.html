@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mystreem Creator Studio</title>
-
+    
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -19,26 +19,29 @@
         
         html, body { 
             width: 100%; 
-            min-height: 100%; 
+            height: 100%; 
             background-color: #0f0f0f; 
             color: #ffffff; 
+            overflow: hidden;
         }
 
-        body {
-            padding-bottom: 75px; /* Bottom bar ke liye jagah */
+        .main-app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
         }
 
         /* Top Header */
         header { 
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            height: 55px;
             background: #0f0f0f; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 10px 16px; 
+            padding: 0 16px; 
             border-bottom: 1px solid #1f1f1f;
+            flex-shrink: 0;
         }
 
         .logo-container { 
@@ -83,27 +86,25 @@
             padding: 6px;
         }
 
-        /* Top Horizontal Scroll Tabs */
+        /* Horizontal Scroll Nav */
         .studio-nav { 
-            position: sticky;
-            top: 50px;
-            z-index: 99;
+            height: 48px;
             display: flex; 
             gap: 8px; 
             overflow-x: auto; 
-            padding: 10px 16px; 
+            padding: 8px 12px; 
             background: #121212; 
             border-bottom: 1px solid #222; 
+            flex-shrink: 0;
             scrollbar-width: none; 
         }
-
         .studio-nav::-webkit-scrollbar { display: none; }
 
         .tab-btn { 
             background: #222; 
             color: #aaa; 
             border: none; 
-            padding: 8px 14px; 
+            padding: 6px 14px; 
             border-radius: 20px; 
             font-size: 12px; 
             font-weight: 600; 
@@ -119,9 +120,10 @@
             color: #000; 
         }
 
-        .container { 
-            max-width: 900px; 
-            margin: 0 auto; 
+        /* Middle Scrollable Content Area */
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
             padding: 14px;
         }
 
@@ -154,7 +156,7 @@
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
 
         .btn-action { 
             background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); 
@@ -169,49 +171,31 @@
             margin-top: 6px; 
         }
 
-        .btn-danger { 
-            background: #e53935; 
-            color: #fff; 
-            border: none; 
-            padding: 6px 12px; 
-            border-radius: 6px; 
-            font-size: 12px; 
-            cursor: pointer; 
-        }
-
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         .stat-box { background: #111; border: 1px solid #252525; border-radius: 10px; padding: 12px; text-align: center; }
         .stat-num { font-size: 18px; font-weight: 700; color: #fff; margin-top: 4px; }
         .stat-lbl { font-size: 11px; color: #aaa; }
 
         .progress-bar-bg { background: #282828; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
-        .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 0%; transition: width 0.3s ease; }
-
-        .video-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #252525; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
-        .video-info { display: flex; flex-direction: column; gap: 4px; }
-        .video-item-title { font-size: 13px; font-weight: 600; color: #fff; }
-        .video-item-meta { font-size: 11px; color: #888; display: flex; gap: 12px; }
+        .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 5%; }
 
         .ad-banner-box { background: #141414; border: 1px dashed #333; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 16px; }
         .ad-tag { font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
 
-        /* FIXED ALWAYS VISIBLE BOTTOM BAR */
+        /* Bottom Navigation Bar */
         .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            right: 0; 
-            background: #0f0f0f; 
+            height: 60px;
+            background: #0d0d0d; 
             border-top: 1px solid #222; 
             display: flex; 
             justify-content: space-around; 
             align-items: center;
-            height: 60px; 
-            z-index: 99999;
+            flex-shrink: 0;
+            z-index: 1000;
         }
 
         .nav-item { 
-            color: #aaa; 
+            color: #888; 
             font-size: 10px; 
             display: flex; 
             flex-direction: column; 
@@ -221,237 +205,184 @@
             cursor: pointer; 
             flex: 1; 
             border: none;
-            background: none;
+            background: transparent;
             height: 100%;
         }
 
         .nav-item.active { color: #fff; }
-        .nav-item i { font-size: 18px; }
-        .nav-item-plus { background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); width: 40px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 15px; color: #fff; }
+        .nav-item i { font-size: 18px; pointer-events: none; }
+        .nav-item span { pointer-events: none; }
+        
+        .nav-item-plus { 
+            background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); 
+            width: 40px; 
+            height: 28px; 
+            border-radius: 14px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 15px; 
+            color: #fff; 
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="logo-container" onclick="showTab('dashboard')">
-            <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
-            <div class="logo-text">Mystreem</div>
-        </div>
-        <div class="header-actions">
-            <button class="header-btn" onclick="alert('Search Active')"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button class="header-btn" onclick="alert('No Notifications')"><i class="fa-regular fa-bell"></i></button>
-            <button class="header-btn" onclick="showTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
-        </div>
-    </header>
+    <div class="main-app">
+        <!-- Header -->
+        <header>
+            <div class="logo-container" onclick="openTab('dashboard')">
+                <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
+                <div class="logo-text">Mystreem</div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="alert('Search feature active')"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="header-btn" onclick="alert('No new notifications')"><i class="fa-regular fa-bell"></i></button>
+                <button class="header-btn" onclick="openTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
+            </div>
+        </header>
 
-    <!-- Studio Nav -->
-    <div class="studio-nav">
-        <button class="tab-btn active" data-tab="dashboard" onclick="showTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-        <button class="tab-btn" data-tab="manage" onclick="showTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
-        <button class="tab-btn" data-tab="upload" onclick="showTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
-        <button class="tab-btn" data-tab="shorts" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
-        <button class="tab-btn" data-tab="live" onclick="showTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
-        <button class="tab-btn" data-tab="community" onclick="showTab('community')"><i class="fa-solid fa-comments"></i> Community</button>
-        <button class="tab-btn" data-tab="playlists" onclick="showTab('playlists')"><i class="fa-solid fa-layer-group"></i> Playlists</button>
-        <button class="tab-btn" data-tab="monetization" onclick="showTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
-        <button class="tab-btn" data-tab="policy" onclick="showTab('policy')"><i class="fa-solid fa-shield-halved"></i> Policy & Terms</button>
-        <button class="tab-btn" data-tab="profile" onclick="showTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
-    </div>
-
-    <!-- Container Content -->
-    <div class="container">
-        <div class="ad-banner-box">
-            <div class="ad-tag">Sponsored Ad</div>
-            <div style="font-size:12px; color:#aaa;">Google AdSense Banner Integration Active</div>
+        <!-- Studio Nav -->
+        <div class="studio-nav">
+            <button class="tab-btn active" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+            <button class="tab-btn" onclick="openTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
+            <button class="tab-btn" onclick="openTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
+            <button class="tab-btn" onclick="openTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
+            <button class="tab-btn" onclick="openTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
+            <button class="tab-btn" onclick="openTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
+            <button class="tab-btn" onclick="openTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
         </div>
 
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="section-panel active">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-time Channel Analytics</div>
-                <div class="stats-grid">
-                    <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="statViews">0</div></div>
-                    <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="statLikes">0</div></div>
-                    <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="statVideosCount">0</div></div>
-                    <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1</div></div>
+        <!-- Middle Content Area -->
+        <div class="content-container">
+            <div class="ad-banner-box">
+                <div class="ad-tag">Sponsored Ad</div>
+                <div style="font-size:12px; color:#aaa;">Google AdSense Banner Integration Active</div>
+            </div>
+
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="section-panel active">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-time Channel Analytics</div>
+                    <div class="stats-grid">
+                        <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1</div></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Progress</div>
+                    <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Approval</p>
+                    <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b style="color: #fff;">0 / 10,000</b></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                    <p style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress</p>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Progress</div>
-                <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Approval</p>
-                <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViewsText" style="color: #fff;">0 / 10,000</b></div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" id="monetizeProgressBar"></div></div>
-                <p id="monetizeStatusText" style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress</p>
-            </div>
-        </div>
-
-        <!-- MANAGE -->
-        <div id="manage" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage & Delete Videos</div>
-                <div id="videoManageList"></div>
-            </div>
-        </div>
-
-        <!-- UPLOAD -->
-        <div id="upload" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Long Video</div>
-                <div class="form-group"><label>Video Title</label><input type="text" id="vTitle" placeholder="Enter title..."></div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="vCategory">
-                        <option value="Indian soap operas">Indian soap operas</option>
-                        <option value="Business ideas">Business ideas</option>
-                        <option value="Comedy">Comedy</option>
-                        <option value="Tech & Electronics">Tech & Electronics</option>
-                        <option value="Mobile Repairing">Mobile Repairing</option>
-                    </select>
+            <!-- MANAGE -->
+            <div id="manage" class="section-panel">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage Videos</div>
+                    <p style="font-size: 12px; color: #888; text-align: center;">Koi video nahi mili.</p>
                 </div>
-                <button class="btn-action" onclick="publishVideo('youtube')">Publish Video</button>
+            </div>
+
+            <!-- UPLOAD -->
+            <div id="upload" class="section-panel">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Video</div>
+                    <div class="form-group"><label>Title</label><input type="text" placeholder="Video Title..."></div>
+                    <button class="btn-action" onclick="alert('Video Uploaded Successfully!')">Publish Video</button>
+                </div>
+            </div>
+
+            <!-- SHORTS -->
+            <div id="shorts" class="section-panel">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-bolt"></i> YouTube Shorts</div>
+                    <div class="form-group"><label>Short Title</label><input type="text" placeholder="#Shorts Title..."></div>
+                    <button class="btn-action" onclick="alert('Short Published!')">Upload Short</button>
+                </div>
+            </div>
+
+            <!-- LIVE -->
+            <div id="live" class="section-panel">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> Live Streaming</div>
+                    <button class="btn-action" onclick="alert('Live Stream Starting...')">Go Live</button>
+                </div>
+            </div>
+
+            <!-- MONETIZATION -->
+            <div id="monetization" class="section-panel">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> Google AdSense</div>
+                    <div class="form-group"><label>AdSense Publisher ID</label><input type="text" value="pub-1234567890"></div>
+                    <button class="btn-action" onclick="alert('Saved!')">Save AdSense</button>
+                </div>
+            </div>
+
+            <!-- PROFILE -->
+            <div id="profile" class="section-panel">
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-user-gear"></i> Channel Profile</div>
+                    <div class="form-group"><label>Channel Name</label><input type="text" value="Mystreem Official"></div>
+                    <button class="btn-action" onclick="alert('Profile Updated!')">Update Profile</button>
+                </div>
             </div>
         </div>
 
-        <!-- SHORTS -->
-        <div id="shorts" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-bolt"></i> Upload YouTube Shorts</div>
-                <div class="form-group"><label>Short Title</label><input type="text" id="sTitle" placeholder="#Shorts title..."></div>
-                <button class="btn-action" onclick="publishVideo('reel')">Publish Short</button>
-            </div>
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <button class="nav-item active" id="bnav-dashboard" onclick="openTab('dashboard')">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" id="bnav-shorts" onclick="openTab('shorts')">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Shorts</span>
+            </button>
+            <button class="nav-item" id="bnav-upload" onclick="openTab('upload')">
+                <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
+            </button>
+            <button class="nav-item" id="bnav-manage" onclick="openTab('manage')">
+                <i class="fa-solid fa-film"></i>
+                <span>Videos</span>
+            </button>
+            <button class="nav-item" id="bnav-profile" onclick="openTab('profile')">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>You</span></button>
         </div>
-
-        <!-- LIVE -->
-        <div id="live" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> Live Streaming</div>
-                <button class="btn-action" onclick="alert('Live Stream Started!')">Go Live Now</button>
-            </div>
-        </div>
-
-        <!-- COMMUNITY -->
-        <div id="community" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-bullhorn"></i> Community Post</div>
-                <textarea rows="3" style="width:100%; padding:10px; background:#0f0f0f; border:1px solid #333; color:#fff; border-radius:8px;" placeholder="Write a post..."></textarea>
-                <button class="btn-action" onclick="alert('Post Published!')">Publish</button>
-            </div>
-        </div>
-
-        <!-- PLAYLISTS -->
-        <div id="playlists" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-layer-group"></i> Create Playlist</div>
-                <input type="text" placeholder="Playlist Name" style="width:100%; padding:10px; background:#0f0f0f; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:10px;">
-                <button class="btn-action" onclick="alert('Playlist Created!')">Create</button>
-            </div>
-        </div>
-
-        <!-- MONETIZATION -->
-        <div id="monetization" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> AdSense Settings</div>
-                <input type="text" value="pub-XXXXXXXXXXXXXXXX" style="width:100%; padding:10px; background:#0f0f0f; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:10px;">
-                <button class="btn-action" onclick="alert('AdSense Saved!')">Save</button>
-            </div>
-        </div>
-
-        <!-- POLICY -->
-        <div id="policy" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Policy & Terms</div>
-                <p style="font-size:12px; color:#aaa;">Guidelines & Monetization Terms Applied.</p>
-            </div>
-        </div>
-
-        <!-- PROFILE -->
-        <div id="profile" class="section-panel">
-            <div class="card">
-                <div class="card-title"><i class="fa-solid fa-user-gear"></i> Channel Profile</div>
-                <input type="text" value="Mystreem Official" style="width:100%; padding:10px; background:#0f0f0f; border:1px solid #333; color:#fff; border-radius:8px; margin-bottom:10px;">
-                <button class="btn-action" onclick="alert('Profile Saved!')">Save Profile</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Permanent Visible Bottom Nav -->
-    <div class="bottom-nav">
-        <button class="nav-item active" data-bnav="dashboard" onclick="showTab('dashboard')"><i class="fa-solid fa-house"></i><span>Home</span></button>
-        <button class="nav-item" data-bnav="shorts" onclick="showTab('shorts')"><i class="fa-solid fa-bolt"></i><span>Shorts</span></button>
-        <button class="nav-item" data-bnav="upload" onclick="showTab('upload')"><div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div></button>
-        <button class="nav-item" data-bnav="manage" onclick="showTab('manage')"><i class="fa-solid fa-film"></i><span>Videos</span></button>
-        <button class="nav-item" data-bnav="profile" onclick="showTab('profile')"><i class="fa-solid fa-circle-user"></i><span>You</span></button>
     </div>
 
     <script>
-        let localVideos = [
-            { id: 1, title: 'Electric Board & Fan Repairing Guide', type: 'youtube', category: 'Tech & Electronics', views: 120, likes: 15 },
-            { id: 2, title: 'Mobile Screen Folder Replacement #Shorts', type: 'reel', category: 'Mobile Repairing', views: 450, likes: 62 }
-        ];
-
-        function showTab(tabId) {
-            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-
-            const target = document.getElementById(tabId);
-            if (target) target.classList.add('active');
-
-            const topTab = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-            if (topTab) topTab.classList.add('active');
-
-            const bottomNav = document.querySelector(`.nav-item[data-bnav="${tabId}"]`);
-            if (bottomNav) bottomNav.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            refreshUI();
-        }
-
-        function refreshUI() {
-            let totalViews = localVideos.reduce((acc, v) => acc + v.views, 0);
-            let totalLikes = localVideos.reduce((acc, v) => acc + v.likes, 0);
-
-            document.getElementById('statViews').innerText = totalViews;
-            document.getElementById('statLikes').innerText = totalLikes;
-            document.getElementById('statVideosCount').innerText = localVideos.length;
-
-            document.getElementById('progViewsText').innerText = `${totalViews} / 10,000`;
-            let percentage = Math.min((totalViews / 10000) * 100, 100);
-            document.getElementById('monetizeProgressBar').style.width = `${percentage}%`;
-
-            const manageList = document.getElementById('videoManageList');
-            manageList.innerHTML = '';
-
-            if (localVideos.length === 0) {
-                manageList.innerHTML = `<div style="font-size:12px; color:#888; text-align:center; padding:10px;">Koi video nahi hai.</div>`;
-                return;
+        function openTab(tabId) {
+            // Hide all section panels
+            var panels = document.querySelectorAll('.section-panel');
+            for (var i = 0; i < panels.length; i++) {
+                panels[i].classList.remove('active');
             }
 
-            localVideos.forEach(vid => {
-                const item = document.createElement('div');
-                item.className = 'video-item';
-                item.innerHTML = `
-                    <div class="video-info">
-                        <div class="video-item-title">${vid.title}</div>
-                        <div class="video-item-meta">
-                            <span><i class="fa-solid fa-eye"></i> ${vid.views}</span>
-                            <span><i class="fa-solid fa-thumbs-up"></i> ${vid.likes}</span>
-                        </div>
-                    </div>
-                    <button class="btn-danger" onclick="deleteVideo(${vid.id})"><i class="fa-solid fa-trash"></i> Delete</button>
-                `;
-                manageList.appendChild(item);
-            });
-        }
+            // Show selected panel
+            var selectedPanel = document.getElementById(tabId);
+            if (selectedPanel) {
+                selectedPanel.classList.add('active');
+            }
 
-        function deleteVideo(id) {
-            if (confirm("Delete this video?")) {
-                localVideos = localVideos.filter(v => v.id !== id);
-                refreshUI();
+            // Update bottom navigation active status
+            var navItems = document.querySelectorAll('.nav-item');
+            for (var j = 0; j < navItems.length; j++) {
+                navItems[j].classList.remove('active');
+            }
+
+            var activeBnav = document.getElementById('bnav-' + tabId);
+            if (activeBnav) {
+                activeBnav.classList.add('active');
             }
         }
-
-        function publishVideo(type) {
-       
+    </script>
+</body>
+</html>
