@@ -548,14 +548,47 @@
         </div>
     </div>
 
-    <!-- Share Dialog Modal -->
+    <!-- Share Dialog Modal with Social Media Options -->
     <div id="shareModal" class="custom-dialog-bg">
-        <div class="custom-dialog">
-            <h3 style="font-size:14px; margin-bottom:10px; color:#fff;">Share Video</h3>
-            <div class="form-group">
-                <input type="text" id="shareUrlInput" readonly style="color:#00d2ff;">
+        <div class="custom-dialog" style="text-align: center;">
+            <h3 style="font-size:15px; margin-bottom:15px; color:#fff;">Share Video</h3>
+            
+            <!-- Social Media Icons -->
+            <div style="display: flex; justify-content: space-around; margin-bottom: 20px; gap: 8px;">
+                <div onclick="shareToSocial('whatsapp')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <div style="width: 42px; height: 42px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <span style="font-size: 10px; color: #ccc;">WhatsApp</span>
+                </div>
+
+                <div onclick="shareToSocial('telegram')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <div style="width: 42px; height: 42px; background: #0088cc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                        <i class="fa-brands fa-telegram"></i>
+                    </div>
+                    <span style="font-size: 10px; color: #ccc;">Telegram</span>
+                </div>
+
+                <div onclick="shareToSocial('facebook')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <div style="width: 42px; height: 42px; background: #1877F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </div>
+                    <span style="font-size: 10px; color: #ccc;">Facebook</span>
+                </div>
+
+                <div onclick="shareToSocial('twitter')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <div style="width: 42px; height: 42px; background: #1DA1F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                        <i class="fa-brands fa-twitter"></i>
+                    </div>
+                    <span style="font-size: 10px; color: #ccc;">Twitter</span>
+                </div>
             </div>
-            <div style="display:flex; gap:8px; margin-top:12px;">
+
+            <!-- Share Input & Copy Link -->
+            <div class="form-group" style="margin-bottom: 12px;">
+                <input type="text" id="shareUrlInput" readonly style="color:#00d2ff; text-align: center; background: #000;">
+            </div>
+            <div style="display:flex; gap:8px;">
                 <button class="btn-action" style="background:#333;" onclick="closeShareModal()">Close</button>
                 <button class="btn-action" onclick="copyShareLink()">Copy Link</button>
             </div>
@@ -708,7 +741,7 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation (Five Options) -->
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <button class="nav-item active" id="nav-home" onclick="openTab('home')">
             <i class="fa-solid fa-house"></i>
@@ -1077,6 +1110,27 @@
             document.execCommand('copy');
             closeShareModal();
             showToast('Link copied to clipboard!');
+        }
+
+        function shareToSocial(platform) {
+            const url = encodeURIComponent(document.getElementById('shareUrlInput').value);
+            const text = encodeURIComponent("Check out this video on Mystreem!");
+
+            let shareLink = "";
+
+            if (platform === 'whatsapp') {
+                shareLink = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            } else if (platform === 'telegram') {
+                shareLink = `https://t.me/share/url?url=${url}&text=${text}`;
+            } else if (platform === 'facebook') {
+                shareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            } else if (platform === 'twitter') {
+                shareLink = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            }
+
+            if (shareLink) {
+                window.open(shareLink, '_blank');
+            }
         }
 
         function saveToWatchLater() {
