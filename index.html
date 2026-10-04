@@ -377,6 +377,8 @@
             display: flex;
             gap: 10px;
             margin-top: 12px;
+            align-items: flex-start;
+            justify-content: space-between;
         }
 
         .comment-avatar {
@@ -388,11 +390,19 @@
             align-items: center;
             justify-content: center;
             font-size: 11px;
+            flex-shrink: 0;
         }
 
         .comment-text {
             font-size: 12px;
             color: #ddd;
+        }
+
+        .comment-delete-btn {
+            color: #e53935;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 2px 6px;
         }
 
         .card { 
@@ -525,7 +535,7 @@
             border-radius: 12px;
             padding: 16px;
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
         }
     </style>
 </head>
@@ -548,39 +558,44 @@
         </div>
     </div>
 
-    <!-- Share Dialog Modal with Social Media Options -->
+    <!-- Share Dialog Modal with All App Auto-Detect Native Share & Social Media Options -->
     <div id="shareModal" class="custom-dialog-bg">
         <div class="custom-dialog" style="text-align: center;">
             <h3 style="font-size:15px; margin-bottom:15px; color:#fff;">Share Video</h3>
             
-            <!-- Social Media Icons -->
-            <div style="display: flex; justify-content: space-around; margin-bottom: 20px; gap: 8px;">
+            <!-- Universal Native Share Button (Auto detect all apps installed like YouTube, Instagram, WhatsApp, etc.) -->
+            <button class="btn-action" onclick="nativeSystemShare()" style="background: linear-gradient(90deg, #ff007f, #7928ca); margin-bottom: 15px;">
+                <i class="fa-solid fa-share-nodes"></i> System Share (All Apps)
+            </button>
+
+            <!-- Quick Social Media Icons -->
+            <div style="display: flex; justify-content: space-around; margin-bottom: 15px; gap: 8px;">
                 <div onclick="shareToSocial('whatsapp')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                    <div style="width: 42px; height: 42px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                    <div style="width: 40px; height: 40px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </div>
                     <span style="font-size: 10px; color: #ccc;">WhatsApp</span>
                 </div>
 
+                <div onclick="shareToSocial('instagram')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <div style="width: 40px; height: 40px; background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <span style="font-size: 10px; color: #ccc;">Instagram</span>
+                </div>
+
                 <div onclick="shareToSocial('telegram')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                    <div style="width: 42px; height: 42px; background: #0088cc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                    <div style="width: 40px; height: 40px; background: #0088cc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
                         <i class="fa-brands fa-telegram"></i>
                     </div>
                     <span style="font-size: 10px; color: #ccc;">Telegram</span>
                 </div>
 
                 <div onclick="shareToSocial('facebook')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                    <div style="width: 42px; height: 42px; background: #1877F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
+                    <div style="width: 40px; height: 40px; background: #1877F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
                         <i class="fa-brands fa-facebook-f"></i>
                     </div>
                     <span style="font-size: 10px; color: #ccc;">Facebook</span>
-                </div>
-
-                <div onclick="shareToSocial('twitter')" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                    <div style="width: 42px; height: 42px; background: #1DA1F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff;">
-                        <i class="fa-brands fa-twitter"></i>
-                    </div>
-                    <span style="font-size: 10px; color: #ccc;">Twitter</span>
                 </div>
             </div>
 
@@ -1112,6 +1127,24 @@
             showToast('Link copied to clipboard!');
         }
 
+        /* Native Browser System Share (Inbuilt app selector for WhatsApp, YouTube, Instagram, etc.) */
+        function nativeSystemShare() {
+            const url = document.getElementById('shareUrlInput').value;
+            const title = currentPlayingVideo ? currentPlayingVideo.title : 'Mystreem Video';
+
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: 'Watch this amazing video on Mystreem!',
+                    url: url
+                }).then(() => {
+                    closeShareModal();
+                }).catch(() => {});
+            } else {
+                copyShareLink();
+            }
+        }
+
         function shareToSocial(platform) {
             const url = encodeURIComponent(document.getElementById('shareUrlInput').value);
             const text = encodeURIComponent("Check out this video on Mystreem!");
@@ -1120,12 +1153,14 @@
 
             if (platform === 'whatsapp') {
                 shareLink = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            } else if (platform === 'instagram') {
+                copyShareLink();
+                showToast("Link copied! Open Instagram to share.");
+                return;
             } else if (platform === 'telegram') {
                 shareLink = `https://t.me/share/url?url=${url}&text=${text}`;
             } else if (platform === 'facebook') {
                 shareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-            } else if (platform === 'twitter') {
-                shareLink = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
             }
 
             if (shareLink) {
@@ -1176,9 +1211,21 @@
             if (!text || !currentPlayingVideo) return;
 
             if(!currentPlayingVideo.comments) currentPlayingVideo.comments = [];
-            currentPlayingVideo.comments.unshift({ user: "User", text: text });
+            
+            currentPlayingVideo.comments.unshift({ 
+                id: Date.now(),
+                user: "User", 
+                text: text 
+            });
             input.value = '';
             renderComments();
+        }
+
+        function deleteComment(commentId) {
+            if(!currentPlayingVideo || !currentPlayingVideo.comments) return;
+            currentPlayingVideo.comments = currentPlayingVideo.comments.filter(c => c.id !== commentId);
+            renderComments();
+            showToast("Comment deleted");
         }
 
         function renderComments() {
@@ -1194,11 +1241,14 @@
                 const item = document.createElement('div');
                 item.className = 'comment-item';
                 item.innerHTML = `
-                    <div class="comment-avatar">${c.user.charAt(0)}</div>
-                    <div>
-                        <strong style="font-size:11px; color:#aaa;">${c.user}</strong>
-                        <div class="comment-text">${c.text}</div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="comment-avatar">${c.user.charAt(0)}</div>
+                        <div>
+                            <strong style="font-size:11px; color:#aaa;">${c.user}</strong>
+                            <div class="comment-text">${c.text}</div>
+                        </div>
                     </div>
+                    <i class="fa-solid fa-trash-can comment-delete-btn" title="Delete Comment" onclick="deleteComment(${c.id})"></i>
                 `;
                 container.appendChild(item);
             });
