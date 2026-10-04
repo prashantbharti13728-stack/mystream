@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MyStream - Watch, Share & Monetize</title>
+    <title>Mystreem - Upload • Watch • Grow</title>
     
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0f0f0f">
@@ -18,14 +18,41 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         body { background-color: #0f0f0f; color: #ffffff; padding-bottom: 75px; -webkit-tap-highlight-color: transparent; }
         
-        /* YouTube Style Top Header */
+        /* Mystreem Top Header with Purple-Cyan Gradient Branding */
         header { 
             position: sticky; top: 0; z-index: 1000; background: #0f0f0f; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 16px; border-bottom: 1px solid #222; gap: 10px;
+            padding: 12px 16px; border-bottom: 1px solid #1f1f1f; gap: 10px;
         }
-        .logo { color: #ff0000; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .logo span { color: #fff; font-size: 18px; }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .mystreem-logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(0, 210, 255, 0.3);
+        }
+
+        .logo-text {
+            font-size: 21px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #d946ef 0%, #00d2ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
         
         .header-actions { display: flex; align-items: center; gap: 18px; color: #fff; font-size: 18px; }
         .header-actions i { cursor: pointer; }
@@ -39,7 +66,7 @@
         }
         .search-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
 
-        /* YouTube Style Horizontal Category Pills */
+        /* Category Scroll Pills */
         .category-scroll {
             display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px; background: #0f0f0f;
             white-space: nowrap; scrollbar-width: none; border-bottom: 1px solid #1f1f1f;
@@ -52,7 +79,7 @@
 
         .container { max-width: 900px; margin: 0 auto; padding: 10px; }
 
-        /* Native Sponsored Ad Section (Matching Screenshot) */
+        /* Sponsored Native Ad Card */
         .sponsored-card {
             background: #171717; border-radius: 12px; padding: 12px; margin: 12px 0 20px 0; border: 1px solid #282828;
         }
@@ -67,15 +94,18 @@
         .btn-watch { background: #272727; color: #fff; }
         .btn-shop { background: #f1f1f1; color: #000; }
 
-        /* Upload Card Modal/Section */
+        /* Upload Section */
         .upload-card { background: #1c1c1c; padding: 16px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #282828; display: none; }
-        .upload-card h3 { color: #00e676; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .upload-card h3 { color: #00d2ff; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         .input-group { margin-bottom: 12px; }
         .input-group label { display: block; margin-bottom: 4px; font-size: 12px; color: #aaa; }
         .input-group input, .input-group textarea, .input-group select { 
             width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #121212; color: #fff; font-size: 13px; outline: none;
         }
-        button.btn-primary { background: #ff0000; color: #fff; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 14px; }
+        button.btn-primary { 
+            background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); 
+            color: #fff; font-weight: bold; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; font-size: 14px; 
+        }
         #status { margin-top: 8px; font-size: 12px; color: #ffeb3b; text-align: center; }
 
         /* Feed Video Card */
@@ -84,7 +114,11 @@
         .video-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
         .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
         .video-details { padding: 10px 4px 0 4px; display: flex; gap: 12px; }
-        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
+        .channel-avatar { 
+            width: 36px; height: 36px; border-radius: 50%; 
+            background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); 
+            display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #fff;
+        }
         .video-meta-box { flex: 1; }
         .video-title { font-weight: 600; font-size: 14px; color: #fff; line-height: 1.3; margin-bottom: 4px; }
         .video-subtext { font-size: 12px; color: #aaa; display: flex; gap: 8px; align-items: center; }
@@ -92,9 +126,13 @@
         .action-item { background: #222; border: none; color: #fff; padding: 6px 14px; border-radius: 18px; font-size: 12px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
         .action-item.delete-btn { background: rgba(255, 0, 0, 0.2); color: #ff5252; }
 
-        /* Shorts YouTube Section */
+        /* Shorts Section */
         .shorts-section-header { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: bold; margin: 20px 0 12px 0; color: #fff; }
-        .shorts-section-header i { color: #ff0000; }
+        .shorts-section-header i { 
+            background: linear-gradient(135deg, #d946ef 0%, #00d2ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .shorts-horizontal { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .shorts-horizontal::-webkit-scrollbar { display: none; }
         .short-item-card { min-width: 150px; width: 150px; height: 250px; background: #000; border-radius: 12px; position: relative; overflow: hidden; border: 1px solid #222; flex-shrink: 0; }
@@ -109,24 +147,30 @@
         .reel-actions { position: absolute; right: 12px; bottom: 80px; display: flex; flex-direction: column; gap: 18px; align-items: center; }
         .reel-action-btn { background: rgba(0,0,0,0.6); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; }
 
-        /* Monetization Dashboard Card */
+        /* Monetization Progress Card */
         .monetize-card { background: #181818; border: 1px solid #282828; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
         .monetize-card h3 { color: #ffeb3b; font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         .progress-bar-bg { background: #282828; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
-        .progress-bar-fill { background: #00e676; height: 100%; width: 15%; }
+        .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 5%; }
 
-        /* YouTube Bottom Bar */
+        /* Bottom Nav Bar */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f0f0f; border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; height: 60px; align-items: center; }
         .nav-item { color: #aaa; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex: 1; }
         .nav-item.active { color: #fff; }
         .nav-item i { font-size: 18px; }
-        .nav-item-plus { background: #222; width: 42px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #fff; border: 1px solid #444; }
+        .nav-item-plus { 
+            background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%); 
+            width: 42px; height: 28px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 16px; color: #fff; 
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo"><i class="fa-brands fa-youtube"></i> MyStream</div>
+        <div class="logo-container" onclick="switchTab('home')">
+            <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
+            <div class="logo-text">Mystreem</div>
+        </div>
         <div class="header-actions">
             <i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()"></i>
             <i class="fa-regular fa-bell"></i>
@@ -140,7 +184,7 @@
         </div>
     </div>
 
-    <!-- YouTube Category Filters -->
+    <!-- Category Filters -->
     <div class="category-scroll">
         <button class="chip active" onclick="filterCategory('all', this)">All</button>
         <button class="chip" onclick="filterCategory('Indian soap operas', this)">Indian soap operas</button>
@@ -151,7 +195,7 @@
 
     <div class="container">
         
-        <!-- Monetization Criteria & Progress Banner -->
+        <!-- Monetization Progress Panel -->
         <div class="monetize-card" id="monetizeCard">
             <h3><i class="fa-solid fa-coins"></i> Channel Monetization Status</h3>
             <p style="font-size: 12px; color: #ccc;">Monetize karne ke liye criteria (500 Followers & 10,000 Views):</p>
@@ -159,10 +203,10 @@
             <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Total Views: <b id="viewsCount" style="color: #fff;">0 / 10,000</b></div>
             <div class="progress-bar-bg"><div class="progress-bar-fill" id="viewsProgress" style="width: 5%;"></div></div>
             
-            <p id="monetizeStatus" style="font-size: 11px; color: #00e676; margin-top: 6px;">Status: In Progress (Ad revenue active once approved)</p>
+            <p id="monetizeStatus" style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress (Ad revenue active once approved)</p>
         </div>
 
-        <!-- Upload Form Toggleable -->
+        <!-- Upload Form -->
         <div class="upload-card" id="uploadForm">
             <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Content</h3>
             <div class="input-group">
@@ -193,13 +237,13 @@
             <div id="status"></div>
         </div>
 
-        <!-- Home Video Section -->
+        <!-- Home Section -->
         <div id="homeSection">
             <div id="videoGrid" class="video-feed">
                 <p>Videos loading...</p>
             </div>
 
-            <!-- Native Sponsored Ad Banner (Exact match to screenshot) -->
+            <!-- Native Sponsored Ad Banner -->
             <div class="sponsored-card">
                 <div class="sponsored-header">
                     <div class="sponsored-icon">m</div>
@@ -216,7 +260,7 @@
                 </div>
             </div>
 
-            <!-- Shorts Horizontal Scroll (YouTube UI) -->
+            <!-- Shorts Carousel -->
             <div class="shorts-section-header">
                 <i class="fa-solid fa-bolt"></i> Shorts
             </div>
@@ -225,7 +269,7 @@
             </div>
         </div>
 
-        <!-- Full Reel Section -->
+        <!-- Reels Section -->
         <div id="reelsSection" style="display: none;">
             <div id="reelsGrid" class="reels-container">
                 <p>Reels loading...</p>
@@ -234,7 +278,7 @@
 
     </div>
 
-    <!-- YouTube Bottom Bar -->
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <div class="nav-item active" id="navHome" onclick="switchTab('home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
         <div class="nav-item" id="navShorts" onclick="switchTab('reels')"><i class="fa-solid fa-bolt"></i><span>Shorts</span></div>
@@ -339,37 +383,4 @@
 
                 status.innerText = "Video Publish Ho Gayi!";
                 fileInput.value = '';
-                titleInput.value = '';
-                toggleUpload();
-                fetchVideos();
-
-            } catch (err) {
-                status.innerText = "Error: " + err.message;
-            } finally {
-                uploadBtn.disabled = false;
-            }
-        }
-
-        async function fetchVideos() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('videos')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-
-                allVideos = data || [];
-                updateMonetizationProgress(allVideos);
-                renderVideos(allVideos);
-
-            } catch (err) {
-                console.error("Fetch Error:", err);
-            }
-        }
-
-        function updateMonetizationProgress(videos) {
-            let totalViews = videos.reduce((acc, curr) => acc + (curr.views || 0), 0);
-            document.getElementById('viewsCount').innerText = `${totalViews} / 10,000`;
-            let percentage = Math.min((totalViews / 10000) * 100, 100);
-            documen
+                ti
