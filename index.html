@@ -493,4 +493,80 @@
             });
 
             document.getElementById('longVideoTitle').value = '';
-            document.getElementById('
+            document.getElementById('videoFileInput').value = '';
+            document.getElementById('fileSelectedText').innerText = "Tap to select Video File from Phone";
+            document.getElementById('videoPreviewBox').style.display = 'none';
+
+            alert("Video Published Successfully!");
+            openTab('manage');
+        }
+
+        function uploadShortVideo() {
+            const title = document.getElementById('shortVideoTitle').value.trim();
+            if (!title) {
+                alert("Please enter Short Title!");
+                return;
+            }
+
+            videosData.unshift({
+                id: Date.now(),
+                title: title,
+                type: 'Shorts',
+                views: Math.floor(Math.random() * 3000) + 500,
+                likes: Math.floor(Math.random() * 500) + 50
+            });
+
+            document.getElementById('shortVideoTitle').value = '';
+            document.getElementById('shortFileInput').value = '';
+            document.getElementById('shortSelectedText').innerText = "Select Vertical Video (#Shorts)";
+
+            alert("Short Published Successfully!");
+            openTab('manage');
+        }
+
+        function deleteVideo(id) {
+            if (confirm("Delete this video?")) {
+                videosData = videosData.filter(v => v.id !== id);
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            let totalViews = videosData.reduce((sum, v) => sum + v.views, 0);
+            let totalLikes = videosData.reduce((sum, v) => sum + v.likes, 0);
+
+            document.getElementById('dashViews').innerText = totalViews;
+            document.getElementById('dashLikes').innerText = totalLikes;
+            document.getElementById('dashVideos').innerText = videosData.length;
+
+            document.getElementById('progViews').innerText = totalViews + " / 10,000";
+            let pct = Math.min((totalViews / 10000) * 100, 100);
+            document.getElementById('progBar').style.width = pct + "%";
+
+            const list = document.getElementById('uploadedVideosList');
+            list.innerHTML = '';
+
+            if (videosData.length === 0) {
+                list.innerHTML = `<p style="font-size:12px; color:#888; text-align:center; padding:10px;">Koi video upload nahi hui hai.</p>`;
+                return;
+            }
+
+            videosData.forEach(v => {
+                const item = document.createElement('div');
+                item.className = 'video-item';
+                item.innerHTML = `
+                    <div class="video-info">
+                        <div class="video-item-title">${v.title} <span style="font-size:10px; color:#00d2ff;">(${v.type})</span></div>
+                        <div class="video-item-meta">
+                            <span><i class="fa-solid fa-eye"></i> ${v.views}</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> ${v.likes}</span>
+                        </div>
+                    </div>
+                    <button class="btn-danger" onclick="deleteVideo(${v.id})"><i class="fa-solid fa-trash"></i> Delete</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
