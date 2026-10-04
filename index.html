@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mystreem Creator Studio</title>
+    <title>Mystreem - Watch & Stream</title>
     
-    <!-- FontAwesome CDN -->
+    <!-- FontAwesome CDN for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -13,7 +13,7 @@
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             -webkit-tap-highlight-color: transparent;
         }
         
@@ -34,14 +34,15 @@
 
         /* Top Header */
         header { 
-            height: 55px;
+            height: 56px;
             background: #0f0f0f; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 0 16px; 
-            border-bottom: 1px solid #1f1f1f;
+            padding: 0 12px; 
+            border-bottom: 1px solid #222;
             flex-shrink: 0;
+            gap: 10px;
         }
 
         .logo-container { 
@@ -49,32 +50,61 @@
             align-items: center; 
             gap: 8px; 
             cursor: pointer; 
+            flex-shrink: 0;
         }
 
         .mystreem-logo-icon {
-            width: 28px; 
-            height: 28px; 
+            width: 32px; 
+            height: 32px; 
             background: linear-gradient(135deg, #a100ff 0%, #00d2ff 100%);
             border-radius: 8px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             color: #fff; 
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .logo-text { 
-            font-size: 20px; 
+            font-size: 18px; 
             font-weight: 800; 
             background: linear-gradient(90deg, #d946ef 0%, #00d2ff 100%); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
         }
 
+        /* Search Bar Header */
+        .search-box-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 4px 12px;
+            max-width: 400px;
+        }
+
+        .search-box-container input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            font-size: 13px;
+            padding: 4px 6px;
+        }
+
+        .search-box-container i {
+            color: #888;
+            font-size: 14px;
+        }
+
         .header-actions { 
             display: flex; 
             align-items: center; 
-            gap: 16px; 
+            gap: 12px; 
+            flex-shrink: 0;
         }
 
         .header-btn { 
@@ -83,54 +113,272 @@
             color: #fff; 
             font-size: 18px; 
             cursor: pointer; 
-            padding: 6px;
         }
 
-        /* Horizontal Scroll Nav */
-        .studio-nav { 
-            height: 48px;
+        /* Filter Pills Scroll Bar */
+        .category-nav { 
+            height: 44px;
             display: flex; 
             gap: 8px; 
             overflow-x: auto; 
             padding: 8px 12px; 
-            background: #121212; 
-            border-bottom: 1px solid #222; 
+            background: #0f0f0f; 
+            border-bottom: 1px solid #1a1a1a; 
             flex-shrink: 0;
             scrollbar-width: none; 
         }
-        .studio-nav::-webkit-scrollbar { display: none; }
+        .category-nav::-webkit-scrollbar { display: none; }
 
-        .tab-btn { 
-            background: #222; 
-            color: #aaa; 
+        .cat-pill { 
+            background: #272727; 
+            color: #f1f1f1; 
             border: none; 
             padding: 6px 14px; 
-            border-radius: 20px; 
+            border-radius: 8px; 
             font-size: 12px; 
-            font-weight: 600; 
+            font-weight: 500; 
             cursor: pointer; 
             white-space: nowrap; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
         }
 
-        .tab-btn.active { 
+        .cat-pill.active { 
             background: #fff; 
-            color: #000; 
+            color: #0f0f0f; 
         }
 
-        /* Middle Content Area */
+        /* Main Scrollable Body Area */
         .content-container {
             flex: 1;
             overflow-y: auto;
-            padding: 14px;
+            padding: 12px;
+            background: #0f0f0f;
         }
 
         .section-panel { display: none; }
         .section-panel.active { display: block; }
 
-        /* Cards */
+        /* Video Feed Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 600px) {
+            .video-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .video-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* Video Card Component */
+        .video-card {
+            background: #121212;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #1f1f1f;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .thumbnail-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thumbnail-box video, .thumbnail-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .video-details {
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .channel-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a100ff, #00d2ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .video-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f1f1f1;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .channel-name, .video-stats {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        /* Single Video Player View */
+        .player-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #0f0f0f;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .player-modal.active { display: flex; }
+
+        .player-header {
+            height: 48px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #121212;
+            border-bottom: 1px solid #222;
+        }
+
+        .video-screen {
+            width: 100%;
+            max-height: 250px;
+            background: #000;
+        }
+
+        .video-screen video {
+            width: 100%;
+            height: 100%;
+        }
+
+        .player-info-box {
+            padding: 12px;
+        }
+
+        .player-actions {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .action-chip {
+            background: #272727;
+            border: none;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .subscribe-btn {
+            background: #fff;
+            color: #000;
+            font-weight: 700;
+            border-radius: 18px;
+            padding: 6px 16px;
+            border: none;
+            font-size: 12px;
+        }
+
+        /* Shorts Container */
+        .shorts-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .short-card {
+            width: 100%;
+            max-width: 360px;
+            height: 520px;
+            background: #181818;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #282828;
+        }
+
+        .short-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .short-overlay {
+            position: absolute;
+            bottom: 16px;
+            left: 12px;
+            right: 60px;
+            z-index: 10;
+        }
+
+        .short-sidebar {
+            position: absolute;
+            right: 12px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .short-side-btn {
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        /* Studio & Form Styles */
         .card { 
             background: #181818; 
             border: 1px solid #282828; 
@@ -162,7 +410,6 @@
             outline: none; 
         }
 
-        /* Upload Area Styles */
         .file-upload-box {
             border: 2px dashed #00d2ff;
             background: #111;
@@ -186,7 +433,6 @@
             font-size: 13px; 
             cursor: pointer; 
             width: 100%; 
-            margin-top: 6px; 
         }
 
         .btn-danger {
@@ -207,17 +453,11 @@
         .progress-bar-bg { background: #282828; height: 10px; border-radius: 5px; overflow: hidden; margin: 8px 0; }
         .progress-bar-fill { background: linear-gradient(90deg, #a100ff 0%, #00d2ff 100%); height: 100%; width: 0%; transition: width 0.3s ease; }
 
-        .video-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #252525; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
-        .video-info { display: flex; flex-direction: column; gap: 4px; }
-        .video-item-title { font-size: 13px; font-weight: 600; color: #fff; }
-        .video-item-meta { font-size: 11px; color: #888; display: flex; gap: 12px; }
-
-        .ad-banner-box { background: #141414; border: 1px dashed #333; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 16px; }
-        .ad-tag { font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .manage-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #252525; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
 
         /* Bottom Nav */
         .bottom-nav { 
-            height: 60px;
+            height: 56px;
             background: #0d0d0d; 
             border-top: 1px solid #222; 
             display: flex; 
@@ -262,91 +502,83 @@
 <body>
 
     <div class="main-app">
-        <!-- Header -->
+        <!-- Top Header Bar -->
         <header>
-            <div class="logo-container" onclick="openTab('dashboard')">
+            <div class="logo-container" onclick="openTab('home')">
                 <div class="mystreem-logo-icon"><i class="fa-solid fa-play"></i></div>
                 <div class="logo-text">Mystreem</div>
             </div>
+
+            <!-- Live Functional Search Box -->
+            <div class="search-box-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Search videos, tutorials..." oninput="filterVideos()">
+            </div>
+
             <div class="header-actions">
-                <button class="header-btn" onclick="alert('Search Active')"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button class="header-btn" onclick="alert('No Notifications')"><i class="fa-regular fa-bell"></i></button>
-                <button class="header-btn" onclick="openTab('profile')"><i class="fa-regular fa-circle-user"></i></button>
+                <button class="header-btn" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-line"></i></button>
             </div>
         </header>
 
-        <!-- Studio Nav -->
-        <div class="studio-nav">
-            <button class="tab-btn active" id="stab-dashboard" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-            <button class="tab-btn" id="stab-manage" onclick="openTab('manage')"><i class="fa-solid fa-list-check"></i> Manage Videos</button>
-            <button class="tab-btn" id="stab-upload" onclick="openTab('upload')"><i class="fa-solid fa-video"></i> Upload</button>
-            <button class="tab-btn" id="stab-shorts" onclick="openTab('shorts')"><i class="fa-solid fa-bolt"></i> Shorts</button>
-            <button class="tab-btn" id="stab-live" onclick="openTab('live')"><i class="fa-solid fa-headset"></i> Live Streaming</button>
-            <button class="tab-btn" id="stab-monetization" onclick="openTab('monetization')"><i class="fa-solid fa-coins"></i> Monetization</button>
-            <button class="tab-btn" id="stab-profile" onclick="openTab('profile')"><i class="fa-solid fa-id-card"></i> Profile</button>
+        <!-- Category Pills Bar -->
+        <div class="category-nav">
+            <button class="cat-pill active" onclick="filterCategory('All', this)">All</button>
+            <button class="cat-pill" onclick="filterCategory('Tech & Electronics', this)">Tech & Electronics</button>
+            <button class="cat-pill" onclick="filterCategory('Mobile Repairing', this)">Mobile Repairing</button>
+            <button class="cat-pill" onclick="filterCategory('Indian Soap Operas', this)">Indian Soap Operas</button>
+            <button class="cat-pill" onclick="filterCategory('Business Ideas', this)">Business Ideas</button>
         </div>
 
-        <!-- Middle Content Area -->
+        <!-- Scrollable Content Area -->
         <div class="content-container">
-            <div class="ad-banner-box">
-                <div class="ad-tag">Sponsored Ad</div>
-                <div style="font-size:12px; color:#aaa;">Google AdSense Banner Integration Active</div>
-            </div>
 
-            <!-- DASHBOARD -->
-            <div id="dashboard" class="section-panel active">
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Real-time Channel Analytics</div>
-                    <div class="stats-grid">
-                        <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="dashViews">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="dashLikes">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="dashVideos">0</div></div>
-                        <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1</div></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Progress</div>
-                    <p style="font-size: 12px; color: #ccc;">Criteria: 10,000 Views for Google Ads Approval</p>
-                    <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViews" style="color: #fff;">0 / 10,000</b></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progBar"></div></div>
-                    <p style="font-size: 11px; color: #00d2ff; margin-top: 6px;">Status: In Progress</p>
+            <!-- 1. HOME FEED (View Videos) -->
+            <div id="home" class="section-panel active">
+                <div class="video-grid" id="homeVideoGrid">
+                    <!-- Dynamic Videos Render Here -->
                 </div>
             </div>
 
-            <!-- MANAGE -->
-            <div id="manage" class="section-panel">
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-photo-film"></i> Manage & Delete Videos</div>
-                    <div id="uploadedVideosList"></div>
+            <!-- 2. SHORTS FEED -->
+            <div id="shorts" class="section-panel">
+                <div class="shorts-container" id="shortsFeedGrid">
+                    <!-- Dynamic Shorts Render Here -->
                 </div>
             </div>
 
-            <!-- UPLOAD VIDEO -->
+            <!-- 3. UPLOAD VIDEO (Creator Section) -->
             <div id="upload" class="section-panel">
                 <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Video</div>
+                    <div class="card-title"><i class="fa-solid fa-upload"></i> Upload Video or Short</div>
                     
-                    <!-- File Select Box -->
+                    <div class="form-group">
+                        <label>Video Format Type</label>
+                        <select id="uploadTypeSelect">
+                            <option value="Long Video">Long Video (Horizontal)</option>
+                            <option value="Shorts">YouTube Short (Vertical)</option>
+                        </select>
+                    </div>
+
+                    <!-- File Picker -->
                     <div class="file-upload-box" onclick="document.getElementById('videoFileInput').click()">
                         <i class="fa-solid fa-file-video"></i>
                         <p id="fileSelectedText">Tap to select Video File from Phone</p>
                         <input type="file" id="videoFileInput" accept="video/*" style="display:none;" onchange="handleFileSelect(this)">
                     </div>
 
-                    <!-- Video Preview Player -->
+                    <!-- Preview -->
                     <div id="videoPreviewBox" style="display:none; margin-bottom:12px;">
                         <video id="videoPreview" controls style="width:100%; max-height:180px; border-radius:8px; background:#000;"></video>
                     </div>
 
                     <div class="form-group">
                         <label>Video Title</label>
-                        <input type="text" id="longVideoTitle" placeholder="Enter Video Title...">
+                        <input type="text" id="videoTitleInput" placeholder="Enter video title...">
                     </div>
 
                     <div class="form-group">
                         <label>Category</label>
-                        <select id="longVideoCategory">
+                        <select id="videoCategoryInput">
                             <option value="Tech & Electronics">Tech & Electronics</option>
                             <option value="Mobile Repairing">Mobile Repairing</option>
                             <option value="Indian Soap Operas">Indian Soap Operas</option>
@@ -354,219 +586,41 @@
                         </select>
                     </div>
 
-                    <button class="btn-action" onclick="uploadLongVideo()">Publish Video</button>
+                    <button class="btn-action" onclick="publishVideo()">Publish Now</button>
                 </div>
             </div>
 
-            <!-- SHORTS -->
-            <div id="shorts" class="section-panel">
+            <!-- 4. DASHBOARD (Analytics) -->
+            <div id="dashboard" class="section-panel">
                 <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-bolt"></i> Upload YouTube Shorts</div>
-                    
-                    <div class="file-upload-box" onclick="document.getElementById('shortFileInput').click()">
-                        <i class="fa-solid fa-mobile-screen-button"></i>
-                        <p id="shortSelectedText">Select Vertical Video (#Shorts)</p>
-                        <input type="file" id="shortFileInput" accept="video/*" style="display:none;" onchange="handleShortSelect(this)">
+                    <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Creator Studio Analytics</div>
+                    <div class="stats-grid">
+                        <div class="stat-box"><div class="stat-lbl">Total Views</div><div class="stat-num" id="dashViews">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Likes</div><div class="stat-num" id="dashLikes">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Total Videos</div><div class="stat-num" id="dashVideos">0</div></div>
+                        <div class="stat-box"><div class="stat-lbl">Subscribers</div><div class="stat-num">1,240</div></div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Short Title</label>
-                        <input type="text" id="shortVideoTitle" placeholder="#Shorts Title...">
-                    </div>
-
-                    <button class="btn-action" onclick="uploadShortVideo()">Publish Short</button>
                 </div>
-            </div>
 
-            <!-- LIVE -->
-            <div id="live" class="section-panel">
                 <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-tower-broadcast"></i> Live Streaming</div>
-                    <button class="btn-action" onclick="alert('Live Streaming Started!')">Go Live Now</button>
+                    <div class="card-title"><i class="fa-solid fa-sack-dollar"></i> Monetization Goal</div>
+                    <p style="font-size: 12px; color: #ccc;">Target: 10,000 Views for Google AdSense Approval</p>
+                    <div style="margin-top: 10px; font-size: 12px; color: #aaa;">Progress Views: <b id="progViews" style="color: #fff;">0 / 10,000</b></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progBar"></div></div>
                 </div>
             </div>
 
-            <!-- MONETIZATION -->
-            <div id="monetization" class="section-panel">
+            <!-- 5. MANAGE VIDEOS -->
+            <div id="manage" class="section-panel">
                 <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-rectangle-ad"></i> Google AdSense</div>
-                    <div class="form-group"><label>AdSense Publisher ID</label><input type="text" value="pub-9876543210"></div>
-                    <button class="btn-action" onclick="alert('AdSense Saved!')">Save AdSense</button>
+                    <div class="card-title"><i class="fa-solid fa-list-check"></i> Manage Uploaded Content</div>
+                    <div id="manageVideosList"></div>
                 </div>
             </div>
 
-            <!-- PROFILE -->
-            <div id="profile" class="section-panel">
-                <div class="card">
-                    <div class="card-title"><i class="fa-solid fa-user-gear"></i> Channel Profile</div>
-                    <div class="form-group"><label>Channel Name</label><input type="text" value="Mystreem Channel"></div>
-                    <button class="btn-action" onclick="alert('Profile Saved!')">Save Profile</button>
-                </div>
-            </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
-        <div class="bottom-nav">
-            <button class="nav-item active" id="bnav-dashboard" onclick="openTab('dashboard')">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-item" id="bnav-shorts" onclick="openTab('shorts')">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Shorts</span>
-            </button>
-            <button class="nav-item" id="bnav-upload" onclick="openTab('upload')">
-                <div class="nav-item-plus"><i class="fa-solid fa-plus"></i></div>
-            </button>
-            <button class="nav-item" id="bnav-manage" onclick="openTab('manage')">
-                <i class="fa-solid fa-film"></i>
-                <span>Videos</span>
-            </button>
-            <button class="nav-item" id="bnav-profile" onclick="openTab('profile')">
-                <i class="fa-solid fa-circle-user"></i>
-                <span>You</span>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        let videosData = [];
-        let selectedFileUrl = null;
-
-        function openTab(tabId) {
-            var panels = document.querySelectorAll('.section-panel');
-            for (var i = 0; i < panels.length; i++) {
-                panels[i].classList.remove('active');
-            }
-
-            var selectedPanel = document.getElementById(tabId);
-            if (selectedPanel) selectedPanel.classList.add('active');
-
-            var navItems = document.querySelectorAll('.nav-item');
-            for (var j = 0; j < navItems.length; j++) {
-                navItems[j].classList.remove('active');
-            }
-            var activeBnav = document.getElementById('bnav-' + tabId);
-            if (activeBnav) activeBnav.classList.add('active');
-
-            var tabBtns = document.querySelectorAll('.tab-btn');
-            for (var k = 0; k < tabBtns.length; k++) {
-                tabBtns[k].classList.remove('active');
-            }
-            var activeStab = document.getElementById('stab-' + tabId);
-            if (activeStab) activeStab.classList.add('active');
-
-            updateUI();
-        }
-
-        function handleFileSelect(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                document.getElementById('fileSelectedText').innerText = "Selected File: " + file.name;
-                selectedFileUrl = URL.createObjectURL(file);
-                
-                const preview = document.getElementById('videoPreview');
-                preview.src = selectedFileUrl;
-                document.getElementById('videoPreviewBox').style.display = 'block';
-            }
-        }
-
-        function handleShortSelect(input) {
-            if (input.files && input.files[0]) {
-                document.getElementById('shortSelectedText').innerText = "Selected Short: " + input.files[0].name;
-            }
-        }
-
-        function uploadLongVideo() {
-            const title = document.getElementById('longVideoTitle').value.trim();
-            if (!title) {
-                alert("Please enter Video Title!");
-                return;
-            }
-
-            videosData.unshift({
-                id: Date.now(),
-                title: title,
-                type: 'Long Video',
-                views: Math.floor(Math.random() * 1500) + 100,
-                likes: Math.floor(Math.random() * 200) + 10
-            });
-
-            document.getElementById('longVideoTitle').value = '';
-            document.getElementById('videoFileInput').value = '';
-            document.getElementById('fileSelectedText').innerText = "Tap to select Video File from Phone";
-            document.getElementById('videoPreviewBox').style.display = 'none';
-
-            alert("Video Published Successfully!");
-            openTab('manage');
-        }
-
-        function uploadShortVideo() {
-            const title = document.getElementById('shortVideoTitle').value.trim();
-            if (!title) {
-                alert("Please enter Short Title!");
-                return;
-            }
-
-            videosData.unshift({
-                id: Date.now(),
-                title: title,
-                type: 'Shorts',
-                views: Math.floor(Math.random() * 3000) + 500,
-                likes: Math.floor(Math.random() * 500) + 50
-            });
-
-            document.getElementById('shortVideoTitle').value = '';
-            document.getElementById('shortFileInput').value = '';
-            document.getElementById('shortSelectedText').innerText = "Select Vertical Video (#Shorts)";
-
-            alert("Short Published Successfully!");
-            openTab('manage');
-        }
-
-        function deleteVideo(id) {
-            if (confirm("Delete this video?")) {
-                videosData = videosData.filter(v => v.id !== id);
-                updateUI();
-            }
-        }
-
-        function updateUI() {
-            let totalViews = videosData.reduce((sum, v) => sum + v.views, 0);
-            let totalLikes = videosData.reduce((sum, v) => sum + v.likes, 0);
-
-            document.getElementById('dashViews').innerText = totalViews;
-            document.getElementById('dashLikes').innerText = totalLikes;
-            document.getElementById('dashVideos').innerText = videosData.length;
-
-            document.getElementById('progViews').innerText = totalViews + " / 10,000";
-            let pct = Math.min((totalViews / 10000) * 100, 100);
-            document.getElementById('progBar').style.width = pct + "%";
-
-            const list = document.getElementById('uploadedVideosList');
-            list.innerHTML = '';
-
-            if (videosData.length === 0) {
-                list.innerHTML = `<p style="font-size:12px; color:#888; text-align:center; padding:10px;">Koi video upload nahi hui hai.</p>`;
-                return;
-            }
-
-            videosData.forEach(v => {
-                const item = document.createElement('div');
-                item.className = 'video-item';
-                item.innerHTML = `
-                    <div class="video-info">
-                        <div class="video-item-title">${v.title} <span style="font-size:10px; color:#00d2ff;">(${v.type})</span></div>
-                        <div class="video-item-meta">
-                            <span><i class="fa-solid fa-eye"></i> ${v.views}</span>
-                            <span><i class="fa-solid fa-thumbs-up"></i> ${v.likes}</span>
-                        </div>
-                    </div>
-                    <button class="btn-danger" onclick="deleteVideo(${v.id})"><i class="fa-solid fa-trash"></i> Delete</button>
-                `;
-                list.appendChild(item);
-            });
-        }
-    </script>
-</body>
-</html>
+        <!-- Single Video Watch Overlay Player -->
+        <div id="playerModal" class="player-modal">
+            <div class="player-header">
+                <span s
