@@ -195,14 +195,6 @@
             line-height: 1.4;
         }
 
-        .community-img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            object-fit: cover;
-            max-height: 300px;
-        }
-
         .community-actions {
             display: flex;
             gap: 16px;
@@ -325,9 +317,26 @@
     </header>
 
     <div class="content-container">
+        <!-- Home Section -->
+        <div id="home" class="section-panel">
+            <h2>Home Feed</h2>
+            <p style="color: #aaa; margin-top: 10px;">Videos and recommendations will appear here.</p>
+        </div>
+
+        <!-- Shorts Section -->
+        <div id="shorts" class="section-panel">
+            <h2>Shorts Feed</h2>
+            <p style="color: #aaa; margin-top: 10px;">Short videos will appear here.</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="upload" class="section-panel">
+            <h2>Upload Video</h2>
+            <p style="color: #aaa; margin-top: 10px;">Upload form will appear here.</p>
+        </div>
+
         <!-- Community Section -->
         <div id="community" class="section-panel active">
-            
             <!-- Post Creation Box -->
             <div class="community-input-box">
                 <textarea id="postContentInput" placeholder="Share an update, poll or photo..."></textarea>
@@ -338,6 +347,12 @@
             <div class="community-feed" id="communityFeed">
                 <!-- Posts will be injected here dynamically via JS -->
             </div>
+        </div>
+
+        <!-- Library Section -->
+        <div id="library" class="section-panel">
+            <h2>Your Library</h2>
+            <p style="color: #aaa; margin-top: 10px;">Saved videos and history will appear here.</p>
         </div>
     </div>
 
@@ -365,7 +380,6 @@
     </nav>
 
     <script>
-        // Sample Community Posts Data with unique IDs and isLiked state
         let communityPosts = [
             {
                 id: 1,
@@ -407,7 +421,6 @@
             });
         }
 
-        // Like toggle logic to prevent infinite unwanted increase
         function toggleLike(postId) {
             const post = communityPosts.find(p => p.id === postId);
             if (post) {
@@ -422,7 +435,6 @@
             }
         }
 
-        // Add new post function
         function addNewPost() {
             const input = document.getElementById('postContentInput');
             const text = input.value.trim();
@@ -441,12 +453,28 @@
             renderCommunityPosts();
         }
 
+        // Tab Switching Logic
+        function openTab(tabName) {
+            // Hide all sections
+            const panels = document.querySelectorAll('.section-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected section
+            const targetPanel = document.getElementById(tabName);
+            if(targetPanel) {
+                targetPanel.classList.add('active');
+            }
+
+            // Highlight clicked nav button
+            event.currentTarget.classList.add('active');
+        }
+
         // Initial render
         renderCommunityPosts();
-
-        function openTab(tabName) {
-            // Tab switching logic can be added here
-        }
-    </style>
+    </script>
 </body>
 </html>
