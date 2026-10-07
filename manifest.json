@@ -1,41 +1,15 @@
-1 {
-
-2 "name": "MyStream",
-
-3 "short_name": "MyStream",
-
-4 "start_url": "/",
-
-5 "display": "standalone",
-
-6 "background_color": "#0f0f0f",
-
-7 "theme_color": "#00e676",
-
-8 "icons": [
-
-9
-
 {
-
-10
-
-"src": "https://cdn-icons-png
-
-.flaticon.com/512/1384/1384060.png"
-
-11
-
-"sizes": "512x512",
-
-12
-
-"type": "image/png"
-
-13
-
+  "name": "My GF",
+  "short_name": "My GF",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#efeae2",
+  "theme_color": "#005e54",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
-
-14 ]
-
-15 
