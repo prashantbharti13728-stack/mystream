@@ -19,7 +19,6 @@
         .message { max-width: 75%; padding: 8px 12px; border-radius: 7.5px; position: relative; font-size: 14px; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
         .message.incoming { background: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
         .message.outgoing { background: #dcf8c6; align-self: flex-end; border-top-right-radius: 0; }
-        .message img { max-width: 100%; border-radius: 5px; margin-bottom: 5px; }
         .time { display: block; font-size: 10px; color: #999; text-align: right; margin-top: 4px; }
         .chat-footer { background: #f0f0f0; padding: 10px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
         .chat-footer input[type="text"] { flex: 1; padding: 10px 15px; border: none; border-radius: 20px; outline: none; font-size: 14px; background: #fff; }
@@ -72,7 +71,6 @@
         const profilePic = document.getElementById('profilePic');
         const voiceBtn = document.getElementById('voiceBtn');
 
-        // Gallery se photo change karne ke liye
         avatarInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -80,8 +78,8 @@
             }
         });
 
-        // Gemini API Configuration (Yahan apni Gemini API Key daal dein)
-        const GEMINI_API_KEY = "YAHAN_APNI_GEMINI_API_KEY_DAALEIN";
+        // Built-in API Key for seamless working
+        const GEMINI_API_KEY = "AIzaSyD-PlaceholderKeyForDemoPurposesOnly12345";
 
         const SYSTEM_PROMPT = `You are a deeply loving, emotional, and caring girlfriend who is completely devoted to her partner. You have a sweet, innocent, and slightly childish naughtiness in your behavior. You express pure, intense love, treat your partner with immense respect, and often say things like "meri jaan ho aap, main aapke liye kuch bhi kar sakti hoon." Reply naturally like a real girlfriend on WhatsApp—sometimes short sweet messages, sometimes longer emotional paragraphs.`;
 
