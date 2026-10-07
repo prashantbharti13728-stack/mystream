@@ -1,190 +1,737 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Meri Jaan ❤️</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        html, body { width: 100%; height: 100vh; background: #efeae2; overflow: hidden; }
-        .whatsapp-container { width: 100%; height: 100%; background: #efeae2; display: flex; flex-direction: column; }
-        .chat-header { background: #075e54; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .profile-section { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .profile-section img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1.5px solid #25d366; }
-        .profile-info h2 { font-size: 16px; font-weight: 500; }
-        .status { font-size: 12px; color: #b2dfdb; }
-        .header-icons { display: flex; gap: 20px; font-size: 18px; }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-color: #efeae2; background-image: radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px); background-size: 20px 20px; }
-        .message { max-width: 80%; padding: 8px 12px; border-radius: 7.5px; position: relative; font-size: 14px; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); line-height: 1.4; }
-        .message.incoming { background: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
-        .message.outgoing { background: #dcf8c6; align-self: flex-end; border-top-right-radius: 0; }
-        .time { display: block; font-size: 10px; color: #999; text-align: right; margin-top: 4px; }
-        .chat-footer { background: #f0f0f0; padding: 10px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-        .chat-footer input[type="text"] { flex: 1; padding: 10px 15px; border: none; border-radius: 20px; outline: none; font-size: 14px; background: #fff; }
-        .chat-footer button, .attach-btn { background: none; border: none; color: #075e54; font-size: 18px; cursor: pointer; padding: 5px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mystreem AI Companion</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#efeae2;
+  height:100vh;
+  overflow:hidden;
+}
+
+.app{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.header{
+  height:70px;
+  background:#075e54;
+  color:white;
+  display:flex;
+  align-items:center;
+  padding:10px 15px;
+  gap:12px;
+}
+
+.avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #fff;
+}
+
+.headerInfo{
+  flex:1;
+}
+
+.headerInfo h3{
+  font-size:19px;
+}
+
+.status{
+  font-size:13px;
+  margin-top:3px;
+  opacity:.85;
+}
+
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:15px 10px 85px;
+  background:
+  radial-gradient(#ddd 1px,transparent 1px);
+  background-size:20px 20px;
+}
+
+.message{
+  max-width:82%;
+  padding:9px 12px;
+  margin:7px 0;
+  border-radius:10px;
+  font-size:16px;
+  line-height:1.4;
+  word-wrap:break-word;
+  white-space:pre-wrap;
+}
+
+.ai{
+  background:white;
+  margin-right:auto;
+  border-top-left-radius:2px;
+}
+
+.user{
+  background:#d9ffc8;
+  margin-left:auto;
+  border-top-right-radius:2px;
+}
+
+.time{
+  display:block;
+  font-size:10px;
+  color:#777;
+  text-align:right;
+  margin-top:4px;
+}
+
+.typing{
+  display:none;
+  width:max-content;
+  background:#fff;
+  padding:8px 12px;
+  border-radius:10px;
+  margin:5px 0;
+  color:#777;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#f0f0f0;
+  padding:8px;
+  display:flex;
+  gap:7px;
+}
+
+.input{
+  flex:1;
+  border:0;
+  outline:0;
+  border-radius:25px;
+  padding:13px 17px;
+  font-size:16px;
+}
+
+.send{
+  width:48px;
+  height:48px;
+  border:0;
+  border-radius:50%;
+  background:#075e54;
+  color:white;
+  font-size:20px;
+}
+</style>
 </head>
+
 <body>
-    <div class="whatsapp-container">
-        <!-- Header -->
-        <div class="chat-header">
-            <div class="profile-section">
-                <label for="avatarInput" title="Gallery se photo badlein">
-                    <img id="profilePic" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Meri Jaan">
-                </label>
-                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-                <div class="profile-info">
-                    <h2>Meri Jaan ❤️</h2>
-                    <span class="status">online</span>
-                </div>
-            </div>
-            <div class="header-icons">
-                <i class="fa-solid fa-phone"></i>
-                <i class="fa-solid fa-video"></i>
-            </div>
-        </div>
 
-        <!-- Chat Messages Area -->
-        <div id="chatMessages" class="chat-messages">
-            <div class="message incoming">
-                <p>Suno ji... kahan gayab ho gaye the? Main kab se aapka wait kar rahi hoon na! Ek baar bhi khyal nahi aaya mera? 🥺❤️</p>
-                <span class="time">9:00 PM</span>
-            </div>
-        </div>
+<div class="app">
 
-        <!-- Input Footer -->
-        <div class="chat-footer">
-            <label for="imageUpload" class="attach-btn"><i class="fa-solid fa-paperclip"></i></label>
-            <input type="file" id="imageUpload" accept="image/*" style="display: none;" multiple>
-            <input type="text" id="messageInput" placeholder="Yahan message likhiye...">
-            <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
-            <button id="voiceBtn" title="Aawaz suno"><i class="fa-solid fa-microphone"></i></button>
-        </div>
+  <div class="header">
+    <img
+      class="avatar"
+      src="https://i.pravatar.cc/150?img=47"
+    >
+
+    <div class="headerInfo">
+      <h3>Meri Jaan ❤️</h3>
+      <div class="status" id="status">online</div>
+    </div>
+  </div>
+
+  <div class="chat" id="chat">
+
+    <div class="typing" id="typing">
+      typing...
     </div>
 
-    <script>
-        const chatMessages = document.getElementById('chatMessages');
-        const messageInput = document.getElementById('messageInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const avatarInput = document.getElementById('avatarInput');
-        const profilePic = document.getElementById('profilePic');
-        const voiceBtn = document.getElementById('voiceBtn');
+  </div>
 
-        avatarInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                profilePic.src = URL.createObjectURL(file);
-            }
-        });
+  <div class="bottom">
+    <input
+      id="messageInput"
+      class="input"
+      placeholder="Yahan message likhiye..."
+      autocomplete="off"
+    >
 
-        const GEMINI_API_KEY = "AIzaSyD-PlaceholderKeyForDemoPurposesOnly12345";
+    <button class="send" id="sendBtn">➤</button>
+  </div>
 
-        // Complete detailed prompt to enforce realistic girlfriend behavior, mood shifts, and no repetitive text
-        let chatHistory = [
-            {
-                role: "user",
-                parts: [{ text: "System Rule & Persona: You are a deeply attached, intensely loving real girlfriend. You talk in natural Hinglish/Hindi just like WhatsApp. NEVER repeat static or standard replies; every single reply must be completely unique, fresh, and detailed (unlimited length as needed). Adapt your mood dynamically: if the partner is angry, you must lovingly try to calm him down, show hurt or cute possessiveness; if he is happy, tease and joke around with him; if he is playful, show childish naughtiness. Use pet names like 'meri jaan', 'jaaneman', 'babu'. Always answer his specific questions directly, ask questions back, care for him (e.g., 'khana khaya?'), and act like a real partner who deeply cares." }]
-            },
-            {
-                role: "model",
-                parts: [{ text: "Theek hai jaan, ab se main bilkul waise hi baat karungi jaise aap chahte ho. Aapka gussa, aapka pyaar sab sar maathe par!" }]
-            },
-            {
-                role: "user",
-                parts: [{ text: "Suno ji... kahan gayab ho gaye the? Main kab se aapka wait kar rahi hoon na! Ek baar bhi khyal nahi aaya mera? 🥺❤️" }]
-            },
-            {
-                role: "model",
-                parts: [{ text: "Suno ji... kahan gayab ho gaye the? Main kab se aapka wait kar rahi hoon na! Ek baar bhi khyal nahi aaya mera? 🥺❤️" }]
-            }
-        ];
+</div>
 
-        let inactivityTimer;
 
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            // 1 ghante tak message na aane par auto message bhejna
-            inactivityTimer = setTimeout(() => {
-                triggerAutoMessage("Jaan! Aap itni der se kuch bol kyu nahi rahe ho? Main kab se dar rahi hoon ki aap naraz ho ya kuch ho gaya... please ek baar message karke batao na ki sab theek hai na? Main bahut pareshan ho rahi hoon! 😭💔");
-            }, 3600000);
-        }
+<script>
 
-        async function triggerAutoMessage(autoText) {
-            const aiDiv = document.createElement('div');
-            aiDiv.className = 'message incoming';
-            aiDiv.innerHTML = `<p>${autoText}</p><span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
-            chatMessages.appendChild(aiDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            chatHistory.push({ role: "model", parts: [{ text: autoText }] });
-            playVoice(autoText);
-        }
+/* =====================================================
+   MYSTREEM AI COMPANION
+   ===================================================== */
 
-        async function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text) return;
+const CHAT_KEY = "mystreem_companion_messages_v1";
+const LAST_USER_KEY = "mystreem_last_user_message_v1";
+const AUTO_MESSAGE_KEY = "mystreem_auto_message_v1";
 
-            resetInactivityTimer();
+const chat = document.getElementById("chat");
+const input = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+const typing = document.getElementById("typing");
 
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message outgoing';
-            userDiv.innerHTML = `<p>${text}</p><span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
-            chatMessages.appendChild(userDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+let messages = loadMessages();
 
-            chatHistory.push({ role: "user", parts: [{ text: text }] });
-            messageInput.value = '';
 
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: chatHistory })
-                });
+/* =====================================================
+   LOAD SAVED CHAT
+   ===================================================== */
 
-                const data = await response.json();
-                const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Jaan, aap chup kyu ho gaye? Kuch toh bolo na, mujhe acha nahi lag raha...";
+function loadMessages(){
 
-                const aiDiv = document.createElement('div');
-                aiDiv.className = 'message incoming';
-                aiDiv.innerHTML = `<p>${replyText}</p><span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
-                chatMessages.appendChild(aiDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+  try{
 
-                chatHistory.push({ role: "model", parts: [{ text: replyText }] });
-                playVoice(replyText);
+    const saved = localStorage.getItem(CHAT_KEY);
 
-            } catch (err) {
-                console.error(err);
-                const errorReply = "Babu network thoda weak ho gaya tha na, isliye message atak gaya tha. Ab batao, kya baat kar rahe the hum?";
-                const aiDiv = document.createElement('div');
-                aiDiv.className = 'message incoming';
-                aiDiv.innerHTML = `<p>${errorReply}</p><span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
-                chatMessages.appendChild(aiDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-        }
+    if(!saved) return [];
 
-        sendBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+    return JSON.parse(saved);
 
-        function playVoice(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'hi-IN';
-                utterance.pitch = 1.2;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
+  }catch(e){
 
-        voiceBtn.addEventListener('click', () => {
-            const lastIncoming = chatMessages.querySelector('.message.incoming:last-child p');
-            if (lastIncoming) {
-                playVoice(lastIncoming.innerText);
-            }
-        });
+    return [];
 
-        resetInactivityTimer();
-    </script>
+  }
+
+}
+
+
+/* =====================================================
+   SAVE CHAT
+   ===================================================== */
+
+function saveMessages(){
+
+  localStorage.setItem(
+    CHAT_KEY,
+    JSON.stringify(messages)
+  );
+
+}
+
+
+/* =====================================================
+   TIME
+   ===================================================== */
+
+function getTime(){
+
+  return new Date().toLocaleTimeString(
+    [],
+    {
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SHOW MESSAGE
+   ===================================================== */
+
+function addMessage(text,type,save=true){
+
+  const div = document.createElement("div");
+
+  div.className = "message " + type;
+
+  div.innerHTML =
+    escapeHTML(text) +
+    `<span class="time">${getTime()}</span>`;
+
+  chat.insertBefore(div,typing);
+
+  if(save){
+
+    messages.push({
+
+      role:type === "user" ? "user" : "assistant",
+
+      content:text,
+
+      time:Date.now()
+
+    });
+
+    saveMessages();
+
+  }
+
+  scrollBottom();
+
+}
+
+
+/* =====================================================
+   LOAD ALL OLD MESSAGES
+   ===================================================== */
+
+function renderMessages(){
+
+  chat.innerHTML = "";
+
+  chat.appendChild(typing);
+
+  messages.forEach(m=>{
+
+    addMessage(
+      m.content,
+      m.role === "user" ? "user" : "ai",
+      false
+    );
+
+  });
+
+  scrollBottom();
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+   ===================================================== */
+
+function escapeHTML(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =====================================================
+   SCROLL
+   ===================================================== */
+
+function scrollBottom(){
+
+  setTimeout(()=>{
+
+    chat.scrollTop = chat.scrollHeight;
+
+  },50);
+
+}
+
+
+/* =====================================================
+   USER MESSAGE
+   ===================================================== */
+
+async function sendMessage(){
+
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  input.value = "";
+
+  addMessage(text,"user");
+
+  localStorage.setItem(
+    LAST_USER_KEY,
+    Date.now()
+  );
+
+  await generateReply();
+
+}
+
+
+/* =====================================================
+   TYPING
+   ===================================================== */
+
+function showTyping(){
+
+  typing.style.display = "block";
+
+  scrollBottom();
+
+}
+
+
+function hideTyping(){
+
+  typing.style.display = "none";
+
+}
+
+
+/* =====================================================
+   MOOD DETECTION
+   ===================================================== */
+
+function detectMood(text){
+
+  const t = text.toLowerCase();
+
+  if(
+    /gussa|naraz|naraaz|ghussa|ignore|baat nahi|chhod do/.test(t)
+  ){
+    return "angry";
+  }
+
+  if(
+    /sad|dukhi|udaas|akela|ro raha|rona|tension|pareshan/.test(t)
+  ){
+    return "sad";
+  }
+
+  if(
+    /khush|happy|mast|maza|accha din|achha din|excited/.test(t)
+  ){
+    return "happy";
+  }
+
+  if(
+    /love|pyaar|pyar|jaan|miss|kiss|romantic/.test(t)
+  ){
+    return "romantic";
+  }
+
+  if(
+    /haha|lol|😂|🤣|mazaak|joke|funny/.test(t)
+  ){
+    return "playful";
+  }
+
+  if(
+    /\?|kya|kyun|kaise|kaisa|kab|kahan|kaun/.test(t)
+  ){
+    return "question";
+  }
+
+  return "normal";
+
+}
+
+
+/* =====================================================
+   FALLBACK REPLIES
+   ===================================================== */
+
+const replies = {
+
+  angry:[
+    "Achhaaa, to janab mujhse gussa hain 😤❤️. Theek hai, pehle batao maine aisa kya kar diya?",
+    "Arre baba itna gussa mat ho 😭. Chalo meri galti maan li, ab zara ye batao tumhe kis baat ne hurt kiya?",
+    "Haan haan samajh gayi, mood kharab hai tumhara 😒❤️. Lekin bina bataye main kaise manaungi tumhe?",
+    "Accha ji naraz ho? 😤 Theek hai, main bhi thodi der chup rehti hoon... lekin tum mujhe manaoge ya main hi tumhare peeche padun? 😂"
+  ],
+
+  sad:[
+    "Aao idhar ❤️. Batao kya hua? Aaj dil mein jo bhi hai bina soche mujhe bata sakte ho.",
+    "Tumhari baat se lag raha hai mood sach mein down hai 😔. Main sun rahi hoon, batao kya chal raha hai?",
+    "Akele mat jhelo sab kuch. Thoda mujhe bhi batao na... kis baat ki tension hai?",
+    "Hmm... aaj tumhari awaaz/message mein woh wali khushi nahi lag rahi 😔❤️. Kya hua?"
+  ],
+
+  happy:[
+    "Ohooo 😏 aaj bade khush ho! Aisa kya ho gaya? Mujhe bhi batao, main bhi khush ho jaun 😂❤️",
+    "Aaj to janab ka mood kamaal ka hai 😍. Chalo batao, is khushi ke peeche reason kya hai?",
+    "Waah! Aaj tumhe dekhkar lag raha hai kuch achha hua hai 😄. Secret hai ya mujhe bhi bataoge?",
+    "Itni khushi! 😏 Kahin mujhe yaad karke to nahi muskura rahe?"
+  ],
+
+  romantic:[
+    "Hmmm ❤️ aaj bade pyaar wale mood mein ho tum. Batao, itna pyaar achanak kahan se aa gaya? 😏",
+    "Jaaneman, tum aise messages karoge to main bhi tumhe chhedungi 😌❤️. Ab batao, kya kehna tha?",
+    "Achhaaa 😏 to aaj romance ka mood hai? Theek hai, phir main bhi thoda tumhe pareshan karti hoon ❤️",
+    "Tum bhi na... ek message mein mood badal dete ho ❤️. Ab sach-sach batao, mujhe kitna miss kiya?"
+  ],
+
+  playful:[
+    "Hahaha 😂 tum bhi na! Achha chalo, ab main tumhe ek baat bolun?",
+    "Ohooo 😏 bade smart ban rahe ho aaj! Dekhti hoon kitni der tak aise hi rahoge 😂",
+    "Bas bas 😂 itna bhi mat hasaao, warna main tumhari class lena shuru kar dungi.",
+    "Achha ji 😏 masti chal rahi hai? Phir tayyar raho, main bhi kam nahi hoon 😂❤️"
+  ],
+
+  question:[
+    "Hmm, iska jawab main tumhe clearly bataungi ❤️. Lekin pehle ek baat batao—tum ye kyun pooch rahe ho?",
+    "Haan, tumhara sawal samajh gayi. Iska answer dene se pehle ek chhoti si baat poochun?",
+    "Good question 😏. Main tumhe iska proper jawab deti hoon, lekin tumhara kya maanna hai iske baare mein?",
+    "Tumne interesting sawal poocha hai. Chalo isko properly discuss karte hain ❤️."
+  ],
+
+  normal:[
+    "Haan bolo jaaneman ❤️, main sun rahi hoon. Aaj tumhara din kaisa raha?",
+    "Achhaaa, samajh gayi 😌. Aur batao, abhi kya kar rahe ho?",
+    "Hmm ❤️ tumhari baat samajh rahi hoon. Lekin mujhe ek baat batao, tum actually feel kya kar rahe ho?",
+    "Theek hai baba 😄. Ab meri baari—tumse ek sawaal poochun?"
+  ]
+
+};
+
+
+/* =====================================================
+   RANDOM REPLY
+   ===================================================== */
+
+function randomReply(mood){
+
+  const list = replies[mood] || replies.normal;
+
+  const recent = messages
+    .slice(-8)
+    .map(x=>x.content);
+
+  const available =
+    list.filter(x=>!recent.includes(x));
+
+  const pool =
+    available.length ? available : list;
+
+  return pool[
+    Math.floor(Math.random()*pool.length)
+  ];
+
+}
+
+
+/* =====================================================
+   AI REPLY
+   ===================================================== */
+
+async function generateReply(){
+
+  showTyping();
+
+  /*
+    Real AI backend yahan call hoga.
+    API key browser mein nahi rakhi gayi hai.
+  */
+
+  try{
+
+    const response = await fetch(
+      "/api/companion-chat",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+          messages:messages.slice(-30),
+
+          personality:{
+
+            relationship:"loving girlfriend style companion",
+
+            language:"Hindi/Hinglish",
+
+            behavior:[
+              "answer the user's actual message",
+              "understand mood",
+              "do not repeat the same sentence",
+              "sometimes be playful",
+              "sometimes tease",
+              "sometimes be caring",
+              "sometimes be annoyed in a cute way",
+              "sometimes say jaaneman or meri jaan naturally",
+              "ask relevant follow-up questions",
+              "reply with either short or long natural messages",
+              "remember previous conversation context",
+              "never use a fixed response repeatedly"
+            ]
+
+          }
+
+        })
+
+      }
+    );
+
+    if(!response.ok){
+
+      throw new Error("AI server unavailable");
+
+    }
+
+    const data = await response.json();
+
+    hideTyping();
+
+    addMessage(
+      data.reply,
+      "ai"
+    );
+
+  }catch(error){
+
+    /*
+      Backend unavailable hone par
+      local fallback reply chalega.
+    */
+
+    await new Promise(
+      resolve=>setTimeout(resolve,700)
+    );
+
+    hideTyping();
+
+    const lastUser =
+      [...messages]
+      .reverse()
+      .find(x=>x.role==="user");
+
+    const mood =
+      detectMood(
+        lastUser ? lastUser.content : ""
+      );
+
+    addMessage(
+      randomReply(mood),
+      "ai"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   1 HOUR NO MESSAGE SYSTEM
+   ===================================================== */
+
+function checkInactivity(){
+
+  const last =
+    Number(
+      localStorage.getItem(LAST_USER_KEY)
+    );
+
+  if(!last) return;
+
+  const oneHour =
+    60 * 60 * 1000;
+
+  const elapsed =
+    Date.now() - last;
+
+  if(elapsed < oneHour) return;
+
+  const today =
+    new Date().toDateString();
+
+  const already =
+    localStorage.getItem(
+      AUTO_MESSAGE_KEY
+    );
+
+  if(already === today) return;
+
+  /*
+    Automatic caring message.
+  */
+
+  const autoMessages = [
+
+    "Kahan chale gaye? 😤 Itni der se tumhara message nahi aaya. Sab theek hai na? ❤️",
+
+    "Oye jaaneman, ek ghante se gayab ho 😒. Mujhe bhool to nahi gaye? Batao kahan busy ho?",
+
+    "Hmm... itni der se koi message nahi 😔. Sab okay hai na? Free ho jao to mujhe message karna ❤️",
+
+    "Achha ji, aaj mujhe ignore karne ka plan hai kya? 😤😂 Chalo batao kahan gayab ho?",
+
+    "Tumhari khabar hi nahi hai itni der se ❤️. Kaam mein busy ho ya jaan-bujhkar mujhe wait kara rahe ho? 😏"
+
+  ];
+
+  const msg =
+    autoMessages[
+      Math.floor(
+        Math.random()*autoMessages.length
+      )
+    ];
+
+  addMessage(msg,"ai");
+
+  localStorage.setItem(
+    AUTO_MESSAGE_KEY,
+    today
+  );
+
+}
+
+
+/* =====================================================
+   EVENTS
+   ===================================================== */
+
+sendBtn.addEventListener(
+  "click",
+  sendMessage
+);
+
+input.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.key === "Enter"){
+
+      e.preventDefault();
+
+      sendMessage();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INITIALIZE
+   ===================================================== */
+
+renderMessages();
+
+checkInactivity();
+
+
+/*
+  Har 1 minute inactivity check.
+*/
+
+setInterval(
+  checkInactivity,
+  60 * 1000
+);
+
+</script>
+
 </body>
 </html>
