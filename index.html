@@ -2,10 +2,13 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Mystreem AI Companion</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0">
+
+<title>Mystreem - Meri Jaan</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -25,87 +28,103 @@ body{
   flex-direction:column;
 }
 
+/* HEADER */
+
 .header{
-  height:70px;
+  height:78px;
   background:#075e54;
   color:white;
   display:flex;
   align-items:center;
-  padding:10px 15px;
+  padding:8px 14px;
   gap:12px;
 }
 
-.avatar{
-  width:48px;
-  height:48px;
+.dpBox{
+  width:56px;
+  height:56px;
   border-radius:50%;
+  overflow:hidden;
+  border:2px solid white;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.dpBox img{
+  width:100%;
+  height:100%;
   object-fit:cover;
-  border:2px solid #fff;
 }
 
 .headerInfo{
   flex:1;
 }
 
-.headerInfo h3{
-  font-size:19px;
+.headerInfo h2{
+  font-size:20px;
+  font-weight:700;
 }
 
 .status{
   font-size:13px;
-  margin-top:3px;
+  margin-top:4px;
   opacity:.85;
 }
+
+/* CHAT */
 
 .chat{
   flex:1;
   overflow-y:auto;
-  padding:15px 10px 85px;
-  background:
-  radial-gradient(#ddd 1px,transparent 1px);
-  background-size:20px 20px;
+  padding:12px 9px 82px;
+  background:#efeae2;
 }
 
 .message{
-  max-width:82%;
+  max-width:84%;
   padding:9px 12px;
   margin:7px 0;
   border-radius:10px;
   font-size:16px;
-  line-height:1.4;
-  word-wrap:break-word;
+  line-height:1.45;
   white-space:pre-wrap;
+  word-wrap:break-word;
 }
 
 .ai{
-  background:white;
+  background:#fff;
   margin-right:auto;
   border-top-left-radius:2px;
 }
 
 .user{
-  background:#d9ffc8;
+  background:#d9ffc7;
   margin-left:auto;
   border-top-right-radius:2px;
 }
 
 .time{
   display:block;
+  text-align:right;
   font-size:10px;
   color:#777;
-  text-align:right;
   margin-top:4px;
 }
+
+/* TYPING */
 
 .typing{
   display:none;
   width:max-content;
   background:#fff;
-  padding:8px 12px;
+  padding:8px 13px;
   border-radius:10px;
-  margin:5px 0;
+  margin:6px 0;
   color:#777;
+  font-size:14px;
 }
+
+/* INPUT */
 
 .bottom{
   position:fixed;
@@ -113,29 +132,38 @@ body{
   left:0;
   right:0;
   background:#f0f0f0;
-  padding:8px;
+  padding:7px;
   display:flex;
   gap:7px;
 }
 
 .input{
   flex:1;
-  border:0;
-  outline:0;
+  border:none;
+  outline:none;
   border-radius:25px;
   padding:13px 17px;
   font-size:16px;
+  background:white;
 }
 
 .send{
-  width:48px;
-  height:48px;
-  border:0;
+  width:50px;
+  height:50px;
+  border:none;
   border-radius:50%;
   background:#075e54;
   color:white;
-  font-size:20px;
+  font-size:22px;
+  cursor:pointer;
 }
+
+/* DP FILE */
+
+#avatarInput{
+  display:none;
+}
+
 </style>
 </head>
 
@@ -143,27 +171,56 @@ body{
 
 <div class="app">
 
+  <!-- HEADER -->
+
   <div class="header">
-    <img
-      class="avatar"
-      src="https://i.pravatar.cc/150?img=47"
+
+    <!-- DP पर click करने से Gallery खुलेगी -->
+
+    <label class="dpBox" for="avatarInput">
+      <img id="avatar"
+           src="https://i.pravatar.cc/200?img=47">
+    </label>
+
+    <input
+      id="avatarInput"
+      type="file"
+      accept="image/*"
     >
 
     <div class="headerInfo">
-      <h3>Meri Jaan ❤️</h3>
-      <div class="status" id="status">online</div>
+
+      <h2>Meri Jaan ❤️</h2>
+
+      <div class="status"
+           id="status">
+        online
+      </div>
+
     </div>
+
   </div>
 
-  <div class="chat" id="chat">
 
-    <div class="typing" id="typing">
+  <!-- CHAT -->
+
+  <div
+    class="chat"
+    id="chat">
+
+    <div
+      class="typing"
+      id="typing">
       typing...
     </div>
 
   </div>
 
+
+  <!-- MESSAGE BOX -->
+
   <div class="bottom">
+
     <input
       id="messageInput"
       class="input"
@@ -171,7 +228,12 @@ body{
       autocomplete="off"
     >
 
-    <button class="send" id="sendBtn">➤</button>
+    <button
+      id="sendBtn"
+      class="send">
+      ➤
+    </button>
+
   </div>
 
 </div>
@@ -180,49 +242,108 @@ body{
 <script>
 
 /* =====================================================
-   MYSTREEM AI COMPANION
+   MYSTREEM COMPANION
    ===================================================== */
 
-const CHAT_KEY = "mystreem_companion_messages_v1";
-const LAST_USER_KEY = "mystreem_last_user_message_v1";
-const AUTO_MESSAGE_KEY = "mystreem_auto_message_v1";
+const CHAT_KEY =
+  "mystreem_ai_gf_chat_v3";
 
-const chat = document.getElementById("chat");
-const input = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-const typing = document.getElementById("typing");
+const AVATAR_KEY =
+  "mystreem_ai_gf_avatar_v3";
 
-let messages = loadMessages();
+const LAST_USER_MESSAGE =
+  "mystreem_last_user_message_v3";
+
+const LAST_AUTO_MESSAGE =
+  "mystreem_last_auto_message_v3";
+
+
+const chat =
+  document.getElementById("chat");
+
+const input =
+  document.getElementById("messageInput");
+
+const sendBtn =
+  document.getElementById("sendBtn");
+
+const typing =
+  document.getElementById("typing");
+
+const avatar =
+  document.getElementById("avatar");
+
+const avatarInput =
+  document.getElementById("avatarInput");
+
+
+let messages =
+  JSON.parse(
+    localStorage.getItem(CHAT_KEY) || "[]"
+  );
 
 
 /* =====================================================
-   LOAD SAVED CHAT
+   DP LOAD
    ===================================================== */
 
-function loadMessages(){
+const savedAvatar =
+  localStorage.getItem(AVATAR_KEY);
 
-  try{
+if(savedAvatar){
 
-    const saved = localStorage.getItem(CHAT_KEY);
-
-    if(!saved) return [];
-
-    return JSON.parse(saved);
-
-  }catch(e){
-
-    return [];
-
-  }
+  avatar.src = savedAvatar;
 
 }
+
+
+/* =====================================================
+   DP CHANGE
+   ===================================================== */
+
+avatarInput.addEventListener(
+  "change",
+  function(){
+
+    const file =
+      this.files[0];
+
+    if(!file) return;
+
+    if(!file.type.startsWith("image/")){
+
+      alert("Sirf image select kijiye.");
+
+      return;
+    }
+
+    const reader =
+      new FileReader();
+
+    reader.onload =
+      function(e){
+
+        avatar.src =
+          e.target.result;
+
+        localStorage.setItem(
+          AVATAR_KEY,
+          e.target.result
+        );
+
+      };
+
+    reader.readAsDataURL(file);
+
+  }
+);
 
 
 /* =====================================================
    SAVE CHAT
    ===================================================== */
 
-function saveMessages(){
+function saveChat(){
 
   localStorage.setItem(
     CHAT_KEY,
@@ -238,84 +359,23 @@ function saveMessages(){
 
 function getTime(){
 
-  return new Date().toLocaleTimeString(
-    [],
-    {
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
-
-}
-
-
-/* =====================================================
-   SHOW MESSAGE
-   ===================================================== */
-
-function addMessage(text,type,save=true){
-
-  const div = document.createElement("div");
-
-  div.className = "message " + type;
-
-  div.innerHTML =
-    escapeHTML(text) +
-    `<span class="time">${getTime()}</span>`;
-
-  chat.insertBefore(div,typing);
-
-  if(save){
-
-    messages.push({
-
-      role:type === "user" ? "user" : "assistant",
-
-      content:text,
-
-      time:Date.now()
-
-    });
-
-    saveMessages();
-
-  }
-
-  scrollBottom();
-
-}
-
-
-/* =====================================================
-   LOAD ALL OLD MESSAGES
-   ===================================================== */
-
-function renderMessages(){
-
-  chat.innerHTML = "";
-
-  chat.appendChild(typing);
-
-  messages.forEach(m=>{
-
-    addMessage(
-      m.content,
-      m.role === "user" ? "user" : "ai",
-      false
+  return new Date()
+    .toLocaleTimeString(
+      [],
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
     );
 
-  });
-
-  scrollBottom();
-
 }
 
 
 /* =====================================================
-   ESCAPE HTML
+   ESCAPE
    ===================================================== */
 
-function escapeHTML(text){
+function safe(text){
 
   return String(text)
     .replaceAll("&","&amp;")
@@ -328,6 +388,85 @@ function escapeHTML(text){
 
 
 /* =====================================================
+   DISPLAY MESSAGE
+   ===================================================== */
+
+function displayMessage(
+  text,
+  type,
+  save=true
+){
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "message " + type;
+
+  div.innerHTML =
+    safe(text) +
+    `<span class="time">
+      ${getTime()}
+    </span>`;
+
+  chat.insertBefore(
+    div,
+    typing
+  );
+
+  if(save){
+
+    messages.push({
+
+      role:
+        type === "user"
+        ? "user"
+        : "assistant",
+
+      content:text,
+
+      timestamp:
+        Date.now()
+
+    });
+
+    saveChat();
+
+  }
+
+  scrollBottom();
+
+}
+
+
+/* =====================================================
+   RENDER OLD CHAT
+   ===================================================== */
+
+function renderChat(){
+
+  chat.innerHTML = "";
+
+  chat.appendChild(typing);
+
+  messages.forEach(m=>{
+
+    displayMessage(
+      m.content,
+      m.role === "user"
+      ? "user"
+      : "ai",
+      false
+    );
+
+  });
+
+  scrollBottom();
+
+}
+
+
+/* =====================================================
    SCROLL
    ===================================================== */
 
@@ -335,33 +474,10 @@ function scrollBottom(){
 
   setTimeout(()=>{
 
-    chat.scrollTop = chat.scrollHeight;
+    chat.scrollTop =
+      chat.scrollHeight;
 
   },50);
-
-}
-
-
-/* =====================================================
-   USER MESSAGE
-   ===================================================== */
-
-async function sendMessage(){
-
-  const text = input.value.trim();
-
-  if(!text) return;
-
-  input.value = "";
-
-  addMessage(text,"user");
-
-  localStorage.setItem(
-    LAST_USER_KEY,
-    Date.now()
-  );
-
-  await generateReply();
 
 }
 
@@ -372,7 +488,8 @@ async function sendMessage(){
 
 function showTyping(){
 
-  typing.style.display = "block";
+  typing.style.display =
+    "block";
 
   scrollBottom();
 
@@ -381,241 +498,129 @@ function showTyping(){
 
 function hideTyping(){
 
-  typing.style.display = "none";
+  typing.style.display =
+    "none";
 
 }
 
 
 /* =====================================================
-   MOOD DETECTION
+   SEND
    ===================================================== */
 
-function detectMood(text){
+async function sendMessage(){
 
-  const t = text.toLowerCase();
+  const text =
+    input.value.trim();
 
-  if(
-    /gussa|naraz|naraaz|ghussa|ignore|baat nahi|chhod do/.test(t)
-  ){
-    return "angry";
-  }
+  if(!text) return;
 
-  if(
-    /sad|dukhi|udaas|akela|ro raha|rona|tension|pareshan/.test(t)
-  ){
-    return "sad";
-  }
+  input.value = "";
 
-  if(
-    /khush|happy|mast|maza|accha din|achha din|excited/.test(t)
-  ){
-    return "happy";
-  }
+  displayMessage(
+    text,
+    "user"
+  );
 
-  if(
-    /love|pyaar|pyar|jaan|miss|kiss|romantic/.test(t)
-  ){
-    return "romantic";
-  }
+  localStorage.setItem(
+    LAST_USER_MESSAGE,
+    Date.now()
+  );
 
-  if(
-    /haha|lol|😂|🤣|mazaak|joke|funny/.test(t)
-  ){
-    return "playful";
-  }
-
-  if(
-    /\?|kya|kyun|kaise|kaisa|kab|kahan|kaun/.test(t)
-  ){
-    return "question";
-  }
-
-  return "normal";
+  await askAI();
 
 }
 
 
 /* =====================================================
-   FALLBACK REPLIES
+   REAL AI REQUEST
    ===================================================== */
 
-const replies = {
-
-  angry:[
-    "Achhaaa, to janab mujhse gussa hain 😤❤️. Theek hai, pehle batao maine aisa kya kar diya?",
-    "Arre baba itna gussa mat ho 😭. Chalo meri galti maan li, ab zara ye batao tumhe kis baat ne hurt kiya?",
-    "Haan haan samajh gayi, mood kharab hai tumhara 😒❤️. Lekin bina bataye main kaise manaungi tumhe?",
-    "Accha ji naraz ho? 😤 Theek hai, main bhi thodi der chup rehti hoon... lekin tum mujhe manaoge ya main hi tumhare peeche padun? 😂"
-  ],
-
-  sad:[
-    "Aao idhar ❤️. Batao kya hua? Aaj dil mein jo bhi hai bina soche mujhe bata sakte ho.",
-    "Tumhari baat se lag raha hai mood sach mein down hai 😔. Main sun rahi hoon, batao kya chal raha hai?",
-    "Akele mat jhelo sab kuch. Thoda mujhe bhi batao na... kis baat ki tension hai?",
-    "Hmm... aaj tumhari awaaz/message mein woh wali khushi nahi lag rahi 😔❤️. Kya hua?"
-  ],
-
-  happy:[
-    "Ohooo 😏 aaj bade khush ho! Aisa kya ho gaya? Mujhe bhi batao, main bhi khush ho jaun 😂❤️",
-    "Aaj to janab ka mood kamaal ka hai 😍. Chalo batao, is khushi ke peeche reason kya hai?",
-    "Waah! Aaj tumhe dekhkar lag raha hai kuch achha hua hai 😄. Secret hai ya mujhe bhi bataoge?",
-    "Itni khushi! 😏 Kahin mujhe yaad karke to nahi muskura rahe?"
-  ],
-
-  romantic:[
-    "Hmmm ❤️ aaj bade pyaar wale mood mein ho tum. Batao, itna pyaar achanak kahan se aa gaya? 😏",
-    "Jaaneman, tum aise messages karoge to main bhi tumhe chhedungi 😌❤️. Ab batao, kya kehna tha?",
-    "Achhaaa 😏 to aaj romance ka mood hai? Theek hai, phir main bhi thoda tumhe pareshan karti hoon ❤️",
-    "Tum bhi na... ek message mein mood badal dete ho ❤️. Ab sach-sach batao, mujhe kitna miss kiya?"
-  ],
-
-  playful:[
-    "Hahaha 😂 tum bhi na! Achha chalo, ab main tumhe ek baat bolun?",
-    "Ohooo 😏 bade smart ban rahe ho aaj! Dekhti hoon kitni der tak aise hi rahoge 😂",
-    "Bas bas 😂 itna bhi mat hasaao, warna main tumhari class lena shuru kar dungi.",
-    "Achha ji 😏 masti chal rahi hai? Phir tayyar raho, main bhi kam nahi hoon 😂❤️"
-  ],
-
-  question:[
-    "Hmm, iska jawab main tumhe clearly bataungi ❤️. Lekin pehle ek baat batao—tum ye kyun pooch rahe ho?",
-    "Haan, tumhara sawal samajh gayi. Iska answer dene se pehle ek chhoti si baat poochun?",
-    "Good question 😏. Main tumhe iska proper jawab deti hoon, lekin tumhara kya maanna hai iske baare mein?",
-    "Tumne interesting sawal poocha hai. Chalo isko properly discuss karte hain ❤️."
-  ],
-
-  normal:[
-    "Haan bolo jaaneman ❤️, main sun rahi hoon. Aaj tumhara din kaisa raha?",
-    "Achhaaa, samajh gayi 😌. Aur batao, abhi kya kar rahe ho?",
-    "Hmm ❤️ tumhari baat samajh rahi hoon. Lekin mujhe ek baat batao, tum actually feel kya kar rahe ho?",
-    "Theek hai baba 😄. Ab meri baari—tumse ek sawaal poochun?"
-  ]
-
-};
-
-
-/* =====================================================
-   RANDOM REPLY
-   ===================================================== */
-
-function randomReply(mood){
-
-  const list = replies[mood] || replies.normal;
-
-  const recent = messages
-    .slice(-8)
-    .map(x=>x.content);
-
-  const available =
-    list.filter(x=>!recent.includes(x));
-
-  const pool =
-    available.length ? available : list;
-
-  return pool[
-    Math.floor(Math.random()*pool.length)
-  ];
-
-}
-
-
-/* =====================================================
-   AI REPLY
-   ===================================================== */
-
-async function generateReply(){
+async function askAI(){
 
   showTyping();
 
-  /*
-    Real AI backend yahan call hoga.
-    API key browser mein nahi rakhi gayi hai.
-  */
-
   try{
 
-    const response = await fetch(
-      "/api/companion-chat",
-      {
-        method:"POST",
+    /*
+      Last 50 messages AI को context
+      के रूप में भेजे जाएंगे।
+    */
 
-        headers:{
-          "Content-Type":"application/json"
-        },
+    const conversation =
+      messages.slice(-50);
 
-        body:JSON.stringify({
 
-          messages:messages.slice(-30),
+    const response =
+      await fetch(
+        "/api/companion-chat",
+        {
 
-          personality:{
+          method:"POST",
 
-            relationship:"loving girlfriend style companion",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
 
-            language:"Hindi/Hinglish",
+          body:JSON.stringify({
 
-            behavior:[
-              "answer the user's actual message",
-              "understand mood",
-              "do not repeat the same sentence",
-              "sometimes be playful",
-              "sometimes tease",
-              "sometimes be caring",
-              "sometimes be annoyed in a cute way",
-              "sometimes say jaaneman or meri jaan naturally",
-              "ask relevant follow-up questions",
-              "reply with either short or long natural messages",
-              "remember previous conversation context",
-              "never use a fixed response repeatedly"
-            ]
+            messages:
+              conversation,
 
-          }
+            userLanguage:
+              "Hindi/Hinglish"
 
-        })
+          })
 
-      }
-    );
+        }
+      );
+
 
     if(!response.ok){
 
-      throw new Error("AI server unavailable");
+      throw new Error(
+        "AI server error"
+      );
 
     }
 
-    const data = await response.json();
+
+    const data =
+      await response.json();
+
 
     hideTyping();
 
-    addMessage(
+
+    if(
+      !data.reply ||
+      !data.reply.trim()
+    ){
+
+      throw new Error(
+        "Empty AI reply"
+      );
+
+    }
+
+
+    displayMessage(
       data.reply,
       "ai"
     );
 
+
   }catch(error){
-
-    /*
-      Backend unavailable hone par
-      local fallback reply chalega.
-    */
-
-    await new Promise(
-      resolve=>setTimeout(resolve,700)
-    );
 
     hideTyping();
 
-    const lastUser =
-      [...messages]
-      .reverse()
-      .find(x=>x.role==="user");
-
-    const mood =
-      detectMood(
-        lastUser ? lastUser.content : ""
-      );
-
-    addMessage(
-      randomReply(mood),
+    displayMessage(
+      "Mujhe abhi tumhari baat ka proper jawab dene mein problem aa rahi hai. Thoda sa time do, phir baat karte hain ❤️",
       "ai"
     );
+
+    console.error(error);
 
   }
 
@@ -623,66 +628,75 @@ async function generateReply(){
 
 
 /* =====================================================
-   1 HOUR NO MESSAGE SYSTEM
+   1 HOUR CHECK
    ===================================================== */
 
 function checkInactivity(){
 
   const last =
     Number(
-      localStorage.getItem(LAST_USER_KEY)
+      localStorage.getItem(
+        LAST_USER_MESSAGE
+      )
     );
 
   if(!last) return;
 
+
   const oneHour =
     60 * 60 * 1000;
 
-  const elapsed =
-    Date.now() - last;
 
-  if(elapsed < oneHour) return;
+  if(
+    Date.now() - last <
+    oneHour
+  ){
 
-  const today =
-    new Date().toDateString();
+    return;
 
-  const already =
-    localStorage.getItem(
-      AUTO_MESSAGE_KEY
+  }
+
+
+  const lastAuto =
+    Number(
+      localStorage.getItem(
+        LAST_AUTO_MESSAGE
+      )
     );
 
-  if(already === today) return;
 
   /*
-    Automatic caring message.
+    Same inactivity period में
+    baar-baar message नहीं।
   */
 
-  const autoMessages = [
+  if(
+    lastAuto &&
+    Date.now() - lastAuto <
+    oneHour
+  ){
 
-    "Kahan chale gaye? 😤 Itni der se tumhara message nahi aaya. Sab theek hai na? ❤️",
+    return;
 
-    "Oye jaaneman, ek ghante se gayab ho 😒. Mujhe bhool to nahi gaye? Batao kahan busy ho?",
+  }
 
-    "Hmm... itni der se koi message nahi 😔. Sab okay hai na? Free ho jao to mujhe message karna ❤️",
-
-    "Achha ji, aaj mujhe ignore karne ka plan hai kya? 😤😂 Chalo batao kahan gayab ho?",
-
-    "Tumhari khabar hi nahi hai itni der se ❤️. Kaam mein busy ho ya jaan-bujhkar mujhe wait kara rahe ho? 😏"
-
-  ];
-
-  const msg =
-    autoMessages[
-      Math.floor(
-        Math.random()*autoMessages.length
-      )
-    ];
-
-  addMessage(msg,"ai");
 
   localStorage.setItem(
-    AUTO_MESSAGE_KEY,
-    today
+    LAST_AUTO_MESSAGE,
+    Date.now()
+  );
+
+
+  /*
+    IMPORTANT:
+    ये message भी AI backend से
+    generate कराया जा सकता है।
+    अभी सिर्फ trigger है।
+  */
+
+  displayMessage(
+    "Kahan gayab ho gaye tum? 😒 Itni der se tumhara message nahi aaya. Sab theek hai na? ❤️",
+    "ai"
   );
 
 }
@@ -697,9 +711,10 @@ sendBtn.addEventListener(
   sendMessage
 );
 
+
 input.addEventListener(
   "keydown",
-  e=>{
+  function(e){
 
     if(e.key === "Enter"){
 
@@ -717,14 +732,8 @@ input.addEventListener(
    INITIALIZE
    ===================================================== */
 
-renderMessages();
+renderChat();
 
-checkInactivity();
-
-
-/*
-  Har 1 minute inactivity check.
-*/
 
 setInterval(
   checkInactivity,
